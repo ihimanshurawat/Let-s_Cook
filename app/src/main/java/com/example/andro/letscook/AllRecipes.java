@@ -1,5 +1,6 @@
 package com.example.andro.letscook;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -34,6 +35,10 @@ public class AllRecipes extends AppCompatActivity
     TextView nameTextView;
     TextView emailTextView;
 
+    //User Credentials
+    String userEmail;
+    String userName;
+    String userProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,19 +65,23 @@ public class AllRecipes extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        Intent i=getIntent();
+
+            userEmail = i.getStringExtra("Email");
+            userName = i.getStringExtra("Name");
+            userProfile = i.getStringExtra("Profile")+"";
+
+
 
 
         View NavigationHeader = navigationView.getHeaderView(0);
         nameTextView=NavigationHeader.findViewById(R.id.nav_header_all_recipies_name_text_view);
         emailTextView=NavigationHeader.findViewById(R.id.nav_header_all_recipies_email_text_view);
         profileImageView=NavigationHeader.findViewById(R.id.nav_header_all_recipies_profile_image_view);
-        nameTextView.setText("Himanshu Rawat");
-        emailTextView.setText("ihimanshurawatrocks@gmail.com");
-        Glide.with(this).load("https://yt3.ggpht.com/-bapiR5wuAzI/AAAAAAAAAAI/AAAAAAAAAAA/fMF0aVv3kYY/s88-c-k-no-mo-rj-c0xffffff/photo.jpg")
+        nameTextView.setText(userName);
+        emailTextView.setText(userEmail);
+        Glide.with(this).load(userProfile)
                 .apply(RequestOptions.circleCropTransform()).into(profileImageView);
-
-
-
 
 
     }

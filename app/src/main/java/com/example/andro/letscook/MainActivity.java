@@ -59,6 +59,9 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
         TwitterLoginButton twitterLoginButton;
         //FirebaseAuth Reference
         private FirebaseAuth mAuth;
+
+        private FirebaseUser user;
+
         //Vibrator Reference
         Vibrator vibrator;
 
@@ -68,9 +71,7 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
         //FirebaseAuthStateListener
         FirebaseAuth.AuthStateListener loginStateListener;
 
-        private boolean LoggedIn;
 
-        final static Object LOCK=new Object();
 
         @Override
         protected void onStart() {
@@ -78,9 +79,18 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
 
             mAuth.addAuthStateListener(loginStateListener);
 
+
+
         }
 
-        @Override
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        networkStateReceiver.removeListener(this);
+        this.unregisterReceiver(networkStateReceiver);
+    }
+
+    @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
@@ -96,31 +106,12 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
             //Initialize Firebase
             mAuth=FirebaseAuth.getInstance();
 
+            user=mAuth.getCurrentUser();
 
-//            loginStateListener = new FirebaseAuth.AuthStateListener() {
-//                @Override
-//                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-//                    if(firebaseAuth.getCurrentUser()!=null)
-//                    {
-//                        if(LoggedIn) {
-//                            loginStateListener.notifyAll();
-//                            startActivity(new Intent(MainActivity.this, AllRecipes.class));
-//                        }
-//                        else{
-//                            //loginStateListener.notify();
-//                            Snackbar.make(googleSignIn,"Unable to Login, Check Connectivity",BaseTransientBottomBar.LENGTH_LONG).show();
-//                        }
-//
-//                    }
-//                }
-//            };
 
             networkStateReceiver = new NetworkStateReceiver(this);
             networkStateReceiver.addListener(this);
             this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
-
-
-
 
 
             twitterLoginButton.setCallback(new Callback<TwitterSession>() {
@@ -199,10 +190,17 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("TAG", "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            user= mAuth.getCurrentUser();
+                            Intent i = new Intent(MainActivity.this,AllRecipes.class);
+                            i.putExtra("Name",user.getDisplayName()+"");
+                            i.putExtra("Email",user.getEmail());
+                            i.putExtra("Profile",user.getPhotoUrl()+"");
+                            startActivity(i);
                             Log.i("Email",user.getPhotoUrl()+"");
+                            Log.i("Email",user.getDisplayName()+"");
+                            Log.i("Email",user.getEmail()+"");
 
-                            startActivity(new Intent(MainActivity.this,AllRecipes.class));
+
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -231,9 +229,15 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             //Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            user = mAuth.getCurrentUser();
+                            Intent i = new Intent(MainActivity.this,AllRecipes.class);
+                            i.putExtra("Name",user.getDisplayName()+"");
+                            i.putExtra("Email",user.getEmail());
+                            i.putExtra("Profile",user.getPhotoUrl()+"");
                             Log.i("Email",user.getPhotoUrl()+"");
-                            startActivity(new Intent(MainActivity.this,AllRecipes.class));
+                            Log.i("Email",user.getDisplayName()+"");
+                            Log.i("Email",user.getEmail()+"");
+                            startActivity(i);
                             // updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -253,12 +257,16 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
     public void onNetworkAvailable() {
         Log.i("NetworkAvailable",1+"");
         //mAuth.addAuthStateListener(loginStateListener);
-        LoggedIn=true;
+
         loginStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(firebaseAuth.getCurrentUser()!=null) {
-                   startActivity(new Intent(MainActivity.this,AllRecipes.class));
+                    Intent i = new Intent(MainActivity.this,AllRecipes.class);
+                    i.putExtra("Name",firebaseAuth.getCurrentUser().getDisplayName());
+                    i.putExtra("Email",firebaseAuth.getCurrentUser().getEmail());
+                    i.putExtra("Profile",firebaseAuth.getCurrentUser().getPhotoUrl()+"");
+                    startActivity(i);
                 }
             }
         };
@@ -297,19 +305,25 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
         Log.i("NetworkAvailable",2+"");
         //mAuth.addAuthStateListener(loginStateListener);
 
+        Toast.makeText(this,"Connect to the Internet for Better Experience",Toast.LENGTH_LONG).show();
 
-        LoggedIn=false;
+
+
         loginStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(firebaseAuth.getCurrentUser()!=null) {
-                    Snackbar.make(googleSignIn,"Unable to Login, Check Connectivity",BaseTransientBottomBar.LENGTH_LONG).show();
+                    Intent i = new Intent(MainActivity.this,AllRecipes.class);
+                    i.putExtra("Name",firebaseAuth.getCurrentUser().getDisplayName());
+                    i.putExtra("Email",firebaseAuth.getCurrentUser().getEmail());
+                    i.putExtra("Profile",firebaseAuth.getCurrentUser().getPhotoUrl()+"");
+                    startActivity(i);
                 }
             }
         };
 
 
-        Toast.makeText(this,"App Requires an Active Internet Connection",Toast.LENGTH_LONG);
+        //Toast.makeText(this,"Connect to the Internet, Improves Experience",Toast.LENGTH_LONG);
 
         googleSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
