@@ -1,0 +1,15 @@
+<resources xmlns:android="http://schemas.android.com/tools">
+    <string name="app_name">Lets Cook</string>
+    <string name="title_activity_all_recipes">All Recipes</string>
+
+    <string name="com.twitter.sdk.android.CONSUMER_KEY">ODDGwSgCLmiMz826oHudEvXN3</string>
+    <string name="com.twitter.sdk.android.CONSUMER_SECRET">iSziIcWIsNcRxoD4DJbWQHvw1JwoRQiOlmDo6c3bIddd6oAoQg</string>
+
+
+
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+</resources>
