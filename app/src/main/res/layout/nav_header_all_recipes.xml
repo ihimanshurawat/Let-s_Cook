@@ -27,6 +27,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="38dp" />
     <TextView
+        android:alpha="0.9"
         android:textAlignment="center"
         android:textStyle="bold"
         style="@style/TextAppearance.AppCompat.Large"
@@ -49,6 +50,7 @@
         android:id="@+id/nav_header_all_recipies_email_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:alpha="0.85"
         android:text="android.studio@android.com"
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
@@ -58,15 +60,16 @@
         app:layout_constraintTop_toBottomOf="@+id/nav_header_all_recipies_name_text_view" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:alpha="0.9"
+        android:id="@+id/nav_header_all_recipies_edit_profile_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Edit Profile"
         android:textColor="@color/colorWhite"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="0dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

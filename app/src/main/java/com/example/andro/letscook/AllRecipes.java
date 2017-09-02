@@ -6,6 +6,9 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.View;
@@ -19,11 +22,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.andro.letscook.Fragments.EditProfileFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -42,8 +48,14 @@ public class AllRecipes extends AppCompatActivity
     String userName;
     String userProfile;
 
+    //Edit Profile
+    TextView editProfile;
+
+    //Firebase Auth
     FirebaseUser currentUser;
     FirebaseAuth mAuth;
+    //Firebase Database
+    FirebaseDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +65,7 @@ public class AllRecipes extends AppCompatActivity
         setSupportActionBar(toolbar);
         mAuth=FirebaseAuth.getInstance();
         currentUser=mAuth.getCurrentUser();
-
+        //database=FirebaseDatabase.getInstance();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -75,13 +87,29 @@ public class AllRecipes extends AppCompatActivity
         nameTextView=NavigationHeader.findViewById(R.id.nav_header_all_recipies_name_text_view);
         emailTextView=NavigationHeader.findViewById(R.id.nav_header_all_recipies_email_text_view);
         profileImageView=NavigationHeader.findViewById(R.id.nav_header_all_recipies_profile_image_view);
+        editProfile=NavigationHeader.findViewById(R.id.nav_header_all_recipies_edit_profile_text_view);
         nameTextView.setText("Hey, "+userName);
         emailTextView.setText(userEmail);
         Glide.with(this).load(userProfile)
                 .apply(RequestOptions.circleCropTransform()).into(profileImageView);
 
+        editProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(AllRecipes.this,"Edit Profile",Toast.LENGTH_LONG).show();
+                FragmentManager fragmentManager=getSupportFragmentManager();
+                EditProfileFragment editProfileFragment=new EditProfileFragment();
+                FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_all_recipies_frame_layout,editProfileFragment,"Edit Profile")
+                        .setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right).commit();
+
+            }
+        });
+
 
     }
+
+
 
     @Override
     public void onBackPressed() {
