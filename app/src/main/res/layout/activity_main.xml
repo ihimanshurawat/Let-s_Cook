@@ -31,8 +31,7 @@
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintHorizontal_bias="0.503" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
 
 
@@ -44,8 +43,9 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/google_sign_in"
-        android:id="@+id/twitter_sign_in" />
+        android:id="@+id/twitter_sign_in"
+        android:layout_marginTop="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/facebook_sign_in" />
 
     <com.twitter.sdk.android.core.identity.TwitterLoginButton
         android:id="@+id/twitter"
@@ -53,5 +53,27 @@
         android:layout_height="wrap_content"
         android:visibility="gone"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/login_facebook"
+        android:id="@+id/facebook_sign_in"
+        android:layout_marginTop="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/google_sign_in"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/made_in_india"
+
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="0dp" />
 </android.support.constraint.ConstraintLayout>
