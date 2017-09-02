@@ -34,13 +34,27 @@ dependencies {
     compile 'com.twitter.sdk.android:twitter-core:3.1.1'
     compile 'com.google.firebase:firebase-database:10.0.1'
 
+   // compile 'com.android.support:cardview-v7:26.0.0'
+
     //Dependencies for Glide
     compile 'com.github.bumptech.glide:glide:4.0.0'
     compile 'com.android.support:support-v4:26.+'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
+    //Dependencies for FB
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+
     testCompile 'junit:junit:4.12'
 }
-
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support') {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion '25.3.1'
+            }
+        }
+    }
+}
 
 
 
