@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "353540672040-j3jpnt0jsphlpamh542he1b8v1goeqqr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.andro.letscook",
+            "certificate_hash": "740e48b61aa087783c7fad20e6464eeffcd5ce15"
+          }
+        },
+        {
+          "client_id": "353540672040-a377irofukq3i9ual4n9gpihp867bqmv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.andro.letscook",
+            "certificate_hash": "946c774091a9a2487cb91c86649231aad4f7b3f0"
+          }
+        },
+        {
           "client_id": "353540672040-phed4lc9tfedjbv1hb8hmuako8o8nltu.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

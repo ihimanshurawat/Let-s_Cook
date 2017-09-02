@@ -192,13 +192,8 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
                             Log.d("TAG", "signInWithCredential:success");
                             user= mAuth.getCurrentUser();
                             Intent i = new Intent(MainActivity.this,AllRecipes.class);
-                            i.putExtra("Name",user.getDisplayName()+"");
-                            i.putExtra("Email",user.getEmail());
-                            i.putExtra("Profile",user.getPhotoUrl()+"");
                             startActivity(i);
-                            Log.i("Email",user.getPhotoUrl()+"");
-                            Log.i("Email",user.getDisplayName()+"");
-                            Log.i("Email",user.getEmail()+"");
+
 
 
                             //updateUI(user);
@@ -231,12 +226,6 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
                             //Log.d(TAG, "signInWithCredential:success");
                             user = mAuth.getCurrentUser();
                             Intent i = new Intent(MainActivity.this,AllRecipes.class);
-                            i.putExtra("Name",user.getDisplayName()+"");
-                            i.putExtra("Email",user.getEmail());
-                            i.putExtra("Profile",user.getPhotoUrl()+"");
-                            Log.i("Email",user.getPhotoUrl()+"");
-                            Log.i("Email",user.getDisplayName()+"");
-                            Log.i("Email",user.getEmail()+"");
                             startActivity(i);
                             // updateUI(user);
                         } else {
@@ -263,9 +252,6 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(firebaseAuth.getCurrentUser()!=null) {
                     Intent i = new Intent(MainActivity.this,AllRecipes.class);
-                    i.putExtra("Name",firebaseAuth.getCurrentUser().getDisplayName());
-                    i.putExtra("Email",firebaseAuth.getCurrentUser().getEmail());
-                    i.putExtra("Profile",firebaseAuth.getCurrentUser().getPhotoUrl()+"");
                     startActivity(i);
                 }
             }
@@ -314,9 +300,6 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(firebaseAuth.getCurrentUser()!=null) {
                     Intent i = new Intent(MainActivity.this,AllRecipes.class);
-                    i.putExtra("Name",firebaseAuth.getCurrentUser().getDisplayName());
-                    i.putExtra("Email",firebaseAuth.getCurrentUser().getEmail());
-                    i.putExtra("Profile",firebaseAuth.getCurrentUser().getPhotoUrl()+"");
                     startActivity(i);
                 }
             }

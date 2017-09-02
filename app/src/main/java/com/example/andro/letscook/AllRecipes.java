@@ -22,6 +22,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -40,21 +42,18 @@ public class AllRecipes extends AppCompatActivity
     String userName;
     String userProfile;
 
+    FirebaseUser currentUser;
+    FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_recipes);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mAuth=FirebaseAuth.getInstance();
+        currentUser=mAuth.getCurrentUser();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -65,11 +64,9 @@ public class AllRecipes extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Intent i=getIntent();
-
-            userEmail = i.getStringExtra("Email");
-            userName = i.getStringExtra("Name");
-            userProfile = i.getStringExtra("Profile")+"";
+            userEmail = currentUser.getEmail();
+            userName = currentUser.getDisplayName();
+            userProfile = currentUser.getPhotoUrl()+"";
 
 
 
@@ -78,7 +75,7 @@ public class AllRecipes extends AppCompatActivity
         nameTextView=NavigationHeader.findViewById(R.id.nav_header_all_recipies_name_text_view);
         emailTextView=NavigationHeader.findViewById(R.id.nav_header_all_recipies_email_text_view);
         profileImageView=NavigationHeader.findViewById(R.id.nav_header_all_recipies_profile_image_view);
-        nameTextView.setText(userName);
+        nameTextView.setText("Hey, "+userName);
         emailTextView.setText(userEmail);
         Glide.with(this).load(userProfile)
                 .apply(RequestOptions.circleCropTransform()).into(profileImageView);
