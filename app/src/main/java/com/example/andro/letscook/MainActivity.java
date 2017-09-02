@@ -20,6 +20,8 @@ package com.example.andro.letscook;
         import android.widget.Button;
         import android.widget.Toast;
 
+        import com.facebook.FacebookSdk;
+        import com.facebook.login.widget.LoginButton;
         import com.google.android.gms.auth.api.Auth;
         import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
         import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -54,9 +56,10 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
         GoogleApiClient mGoogleApiClient;
 
         //Button References
-        Button googleSignIn,twitterSignIn;
+        Button googleSignIn,twitterSignIn,facebookSignIn;
         //References of the Buttons that are Hidden
         TwitterLoginButton twitterLoginButton;
+        LoginButton facebookLoginButton;
         //FirebaseAuth Reference
         private FirebaseAuth mAuth;
 
@@ -96,6 +99,8 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
             setContentView(R.layout.activity_main);
             //Initialize Twitter
             Twitter.initialize(this);
+            //Initialize Facebook
+
 
             //Buttons
             googleSignIn = (Button)findViewById(R.id.google_sign_in);

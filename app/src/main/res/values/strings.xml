@@ -6,7 +6,7 @@
     <string name="com.twitter.sdk.android.CONSUMER_SECRET">iSziIcWIsNcRxoD4DJbWQHvw1JwoRQiOlmDo6c3bIddd6oAoQg</string>
 
 
-
+    <string name="facebook_app_id">140451399890062</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
