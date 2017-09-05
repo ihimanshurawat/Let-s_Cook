@@ -1,14 +1,33 @@
 package com.example.andro.letscook.Fragments;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AlertDialogLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
+import com.example.andro.letscook.MainActivity;
 import com.example.andro.letscook.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.twitter.sdk.android.core.AuthTokenAdapter;
 
 /**
  * Created by himanshurawat on 02/09/17.
@@ -16,11 +35,88 @@ import com.example.andro.letscook.R;
 
 public class EditProfileFragment extends Fragment {
 
+    Context context;
+
+    Button removeAccountButton;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v=inflater.inflate(R.layout.edit_profile_fragment,container,false);
-       // getActivity().getActionBar().
+        context=getContext();
+
+        removeAccountButton=v.findViewById(R.id.edit_profile_fragment_remove_account_button);
+
+
+        removeAccountButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder= new AlertDialog.Builder(getContext());
+                builder.setTitle("Remove Account");
+                builder.setCancelable(true);
+                builder.setMessage("Are you sure you want to remove your account from " +
+                        "Lets Cook");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            Log.i("IsNull","NotNull");
+                            user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<GetTokenResult> task) {
+                                    String token=task.getResult().getToken()+"";
+                                    Log.i("IsNull",token);
+                                    AuthCredential credential = GoogleAuthProvider.getCredential(user.getIdToken(true).toString(), null);
+                                    Log.i("IsNull",credential+"");
+                                    user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Log.i("IsNull", "Reauthenticate");
+                                            if (task.isSuccessful()) {
+                                                user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        Log.i("IsNull", "Inside Delete");
+                                                        if (task.isSuccessful()) {
+                                                            Log.d("TAG", "User account deleted.");
+                                                            Toast.makeText(context, "Removing Account", Toast.LENGTH_SHORT).show();
+                                                            startActivity(new Intent(context, MainActivity.class));
+                                                        }
+                                                    }
+                                                });
+
+
+                                            }
+                                        }
+                                    });
+
+
+                                }
+                            });
+
+
+
+
+
+
+                        }
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                AlertDialog dialog=builder.create();
+                dialog.show();
+
+
+            }
+        });
+
 
         return v;
     }

@@ -199,8 +199,6 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
                             Intent i = new Intent(MainActivity.this,AllRecipes.class);
                             startActivity(i);
 
-
-
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.

@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.andro.letscook.Fragments.EditProfileFragment;
+import com.example.andro.letscook.Fragments.RecipiesFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
@@ -56,6 +58,14 @@ public class AllRecipes extends AppCompatActivity
     FirebaseAuth mAuth;
     //Firebase Database
     FirebaseDatabase database;
+    //Drawer Reference
+    DrawerLayout drawer;
+
+    //FragmentManager Reference
+    FragmentManager fragmentManager;
+    //FragmentTransaction Referece
+    //FragmentTransaction fragmentTransaction;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +76,16 @@ public class AllRecipes extends AppCompatActivity
         mAuth=FirebaseAuth.getInstance();
         currentUser=mAuth.getCurrentUser();
         //database=FirebaseDatabase.getInstance();
+        fragmentManager=getSupportFragmentManager();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        RecipiesFragment recipiesFragment=new RecipiesFragment();
+        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.content_all_recipies_frame_layout,recipiesFragment,"Recipies Fragment")
+                .commit();
+
+
+
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -96,8 +114,12 @@ public class AllRecipes extends AppCompatActivity
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if (drawer.isDrawerOpen(GravityCompat.START)) {
+                    drawer.closeDrawer(GravityCompat.START);
+                }
                 Toast.makeText(AllRecipes.this,"Edit Profile",Toast.LENGTH_LONG).show();
-                FragmentManager fragmentManager=getSupportFragmentManager();
+                //FragmentManager fragmentManager=getSupportFragmentManager();
                 EditProfileFragment editProfileFragment=new EditProfileFragment();
                 FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.content_all_recipies_frame_layout,editProfileFragment,"Edit Profile")
@@ -113,7 +135,7 @@ public class AllRecipes extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -159,7 +181,14 @@ public class AllRecipes extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.log_out) {
+
+            String arr[]=userName.split(" ");
+            if(arr[0]!=null) {
+                Toast.makeText(this, "Goodbye " + arr[0]+", Eat Healthy", Toast.LENGTH_LONG).show();
+            }
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(this,MainActivity.class));
 
         }
 
