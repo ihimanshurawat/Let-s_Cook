@@ -20,6 +20,8 @@ package com.example.andro.letscook;
         import android.widget.Button;
         import android.widget.Toast;
 
+        import com.example.andro.letscook.PojoClass.User;
+        import com.example.andro.letscook.Support.FirebaseAuthUtility;
         import com.facebook.FacebookSdk;
         import com.facebook.login.widget.LoginButton;
         import com.google.android.gms.auth.api.Auth;
@@ -38,6 +40,11 @@ package com.example.andro.letscook;
         import com.google.firebase.auth.FirebaseUser;
         import com.google.firebase.auth.GoogleAuthProvider;
         import com.google.firebase.auth.TwitterAuthProvider;
+        import com.google.firebase.database.DataSnapshot;
+        import com.google.firebase.database.DatabaseError;
+        import com.google.firebase.database.DatabaseReference;
+        import com.google.firebase.database.FirebaseDatabase;
+        import com.google.firebase.database.ValueEventListener;
         import com.twitter.sdk.android.core.Callback;
         import com.twitter.sdk.android.core.Result;
         import com.twitter.sdk.android.core.Twitter;
@@ -75,6 +82,11 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
         FirebaseAuth.AuthStateListener loginStateListener;
 
 
+        //Firebase Database Instance
+        FirebaseDatabase firebaseDatabase;
+        DatabaseReference databaseReference;
+
+
 
         @Override
         protected void onStart() {
@@ -101,6 +113,8 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
             Twitter.initialize(this);
             //Initialize Facebook
 
+            //Database Reference
+           // firebaseDatabase=FirebaseDatabase.getInstance();
 
             //Buttons
             googleSignIn = (Button)findViewById(R.id.google_sign_in);
@@ -109,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
             twitterLoginButton=(TwitterLoginButton)findViewById(R.id.twitter);
 
             //Initialize Firebase
-            mAuth=FirebaseAuth.getInstance();
+            mAuth= FirebaseAuthUtility.getAuth();
 
             user=mAuth.getCurrentUser();
 
@@ -117,6 +131,11 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
             networkStateReceiver = new NetworkStateReceiver(this);
             networkStateReceiver.addListener(this);
             this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+
+
+
+
+
 
 
             twitterLoginButton.setCallback(new Callback<TwitterSession>() {
@@ -196,10 +215,8 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("TAG", "signInWithCredential:success");
                             user= mAuth.getCurrentUser();
-                            Intent i = new Intent(MainActivity.this,AllRecipes.class);
-                            startActivity(i);
+                            startActivity(new Intent(MainActivity.this,AllRecipes.class));
 
-                            //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("TAG", "signInWithCredential:failure", task.getException());

@@ -35,6 +35,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:text="Android Studio"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:id="@+id/nav_header_all_recipies_name_text_view"

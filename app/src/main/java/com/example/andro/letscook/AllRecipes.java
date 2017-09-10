@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -29,9 +30,16 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.andro.letscook.Fragments.EditProfileFragment;
 import com.example.andro.letscook.Fragments.RecipiesFragment;
+import com.example.andro.letscook.PojoClass.User;
+import com.example.andro.letscook.Support.DatabaseUtility;
+import com.example.andro.letscook.Support.FirebaseAuthUtility;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -57,14 +65,16 @@ public class AllRecipes extends AppCompatActivity
     FirebaseUser currentUser;
     FirebaseAuth mAuth;
     //Firebase Database
+
     FirebaseDatabase database;
+    DatabaseReference databaseReference;
     //Drawer Reference
     DrawerLayout drawer;
 
     //FragmentManager Reference
     FragmentManager fragmentManager;
-    //FragmentTransaction Referece
-    //FragmentTransaction fragmentTransaction;
+    String arr[];
+
 
 
     @Override
@@ -73,9 +83,43 @@ public class AllRecipes extends AppCompatActivity
         setContentView(R.layout.activity_all_recipes);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mAuth=FirebaseAuth.getInstance();
+        mAuth= FirebaseAuthUtility.getAuth();
         currentUser=mAuth.getCurrentUser();
-        //database=FirebaseDatabase.getInstance();
+
+
+        databaseReference= DatabaseUtility.getDatabase().getReference();
+
+
+        arr=currentUser.getEmail().split("\\.");
+
+
+        databaseReference.child("users").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild(arr[0])){
+                    User existingUser = dataSnapshot.child(arr[0]).getValue(User.class);
+                    userEmail=existingUser.getEmail();
+                    userProfile=existingUser.getProfileUrl();
+                    userName=existingUser.getName();
+
+                    nameTextView.setText(userName);
+                    emailTextView.setText(userEmail);
+                    Glide.with(AllRecipes.this).load(userProfile)
+                            .apply(RequestOptions.circleCropTransform()).into(profileImageView);
+
+                }else{
+                    User newUser=new User(currentUser.getEmail(),currentUser.getDisplayName()
+                            ,null,currentUser.getPhotoUrl()+"",0,null);
+                    databaseReference.child("users").child(arr[0]).setValue(newUser);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         fragmentManager=getSupportFragmentManager();
 
         RecipiesFragment recipiesFragment=new RecipiesFragment();
@@ -94,9 +138,11 @@ public class AllRecipes extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-            userEmail = currentUser.getEmail();
-            userName = currentUser.getDisplayName();
-            userProfile = currentUser.getPhotoUrl()+"";
+
+//
+//            userEmail = currentUser.getEmail();
+//            userName = currentUser.getDisplayName();
+//            userProfile = currentUser.getPhotoUrl()+"";
 
 
 
@@ -106,10 +152,7 @@ public class AllRecipes extends AppCompatActivity
         emailTextView=NavigationHeader.findViewById(R.id.nav_header_all_recipies_email_text_view);
         profileImageView=NavigationHeader.findViewById(R.id.nav_header_all_recipies_profile_image_view);
         editProfile=NavigationHeader.findViewById(R.id.nav_header_all_recipies_edit_profile_text_view);
-        nameTextView.setText("Hey, "+userName);
-        emailTextView.setText(userEmail);
-        Glide.with(this).load(userProfile)
-                .apply(RequestOptions.circleCropTransform()).into(profileImageView);
+
 
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
