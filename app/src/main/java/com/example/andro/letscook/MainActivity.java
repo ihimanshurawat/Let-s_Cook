@@ -91,16 +91,14 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
         @Override
         protected void onStart() {
             super.onStart();
-
             mAuth.addAuthStateListener(loginStateListener);
-
-
-
         }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mAuth.removeAuthStateListener(loginStateListener);
+
         networkStateReceiver.removeListener(this);
         this.unregisterReceiver(networkStateReceiver);
     }
@@ -112,9 +110,6 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
             //Initialize Twitter
             Twitter.initialize(this);
             //Initialize Facebook
-
-            //Database Reference
-           // firebaseDatabase=FirebaseDatabase.getInstance();
 
             //Buttons
             googleSignIn = (Button)findViewById(R.id.google_sign_in);
@@ -131,10 +126,6 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
             networkStateReceiver = new NetworkStateReceiver(this);
             networkStateReceiver.addListener(this);
             this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
-
-
-
-
 
 
 
@@ -173,6 +164,15 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
                     } /* OnConnectionFailedListener */)
                     .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                     .build();
+            loginStateListener=new FirebaseAuth.AuthStateListener() {
+                @Override
+                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                    if(firebaseAuth.getCurrentUser()!=null) {
+                        Intent i = new Intent(MainActivity.this,AllRecipes.class);
+                        startActivity(i);
+                    }
+                }
+            };
 
         }
 
@@ -264,19 +264,6 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
 
     @Override
     public void onNetworkAvailable() {
-        Log.i("NetworkAvailable",1+"");
-        //mAuth.addAuthStateListener(loginStateListener);
-
-        loginStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if(firebaseAuth.getCurrentUser()!=null) {
-                    Intent i = new Intent(MainActivity.this,AllRecipes.class);
-                    startActivity(i);
-                }
-            }
-        };
-
 
         twitterSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -308,35 +295,26 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
 
     @Override
     public void onNetworkUnavailable() {
-        Log.i("NetworkAvailable",2+"");
-        //mAuth.addAuthStateListener(loginStateListener);
-
         Toast.makeText(this,"Connect to the Internet for Better Experience",Toast.LENGTH_LONG).show();
-
-
-
-        loginStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if(firebaseAuth.getCurrentUser()!=null) {
-                    Intent i = new Intent(MainActivity.this,AllRecipes.class);
-                    startActivity(i);
-                }
-            }
-        };
-
-
-        //Toast.makeText(this,"Connect to the Internet, Improves Experience",Toast.LENGTH_LONG);
-
         googleSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                    vibrator.vibrate(VibrationEffect.createOneShot(50,VibrationEffect.DEFAULT_AMPLITUDE));
+                }
+                else
+                    vibrator.vibrate(50);
                 Snackbar.make(googleSignIn,"No Internet Detected",Snackbar.LENGTH_LONG).show();
             }
         });
         twitterSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                    vibrator.vibrate(VibrationEffect.createOneShot(50,VibrationEffect.DEFAULT_AMPLITUDE));
+                }
+                else
+                    vibrator.vibrate(50);
                 Snackbar.make(googleSignIn,"No Internet Detected",Snackbar.LENGTH_LONG).show();
             }
         });
