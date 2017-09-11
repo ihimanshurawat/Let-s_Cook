@@ -92,7 +92,7 @@ public class AllRecipes extends AppCompatActivity
         if(currentUser!=null) {
             arr = currentUser.getEmail().split("\\.");
         }else{
-            arr[0]=null;
+            finish();
         }
 
         databaseReference.child("users").addValueEventListener(new ValueEventListener() {
@@ -111,8 +111,9 @@ public class AllRecipes extends AppCompatActivity
                                 .apply(RequestOptions.circleCropTransform()).into(profileImageView);
 
                     } else {
+
                         User newUser = new User(currentUser.getEmail(), currentUser.getDisplayName()
-                                , null, currentUser.getPhotoUrl() + "", 0, null);
+                                ,null, currentUser.getPhotoUrl() + "", 0, null);
                         databaseReference.child("users").child(arr[0]).setValue(newUser);
                     }
                 }
@@ -230,10 +231,6 @@ public class AllRecipes extends AppCompatActivity
 
         } else if (id == R.id.log_out) {
 
-            String arr[]=userName.split(" ");
-            if(arr[0]!=null) {
-                Toast.makeText(this, "Goodbye " + arr[0]+", Eat Healthy", Toast.LENGTH_LONG).show();
-            }
             FirebaseAuth.getInstance().signOut();
             finish();
 

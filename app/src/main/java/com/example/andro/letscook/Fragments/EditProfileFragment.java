@@ -65,23 +65,28 @@ public class EditProfileFragment extends Fragment {
         context=getContext();
         databaseReference= DatabaseUtility.getDatabase().getReference();
         currentUser= FirebaseAuthUtility.getAuth().getCurrentUser();
-        arr=currentUser.getEmail().split("\\.");
+        if(currentUser!=null) {
+            arr = currentUser.getEmail().split("\\.");
+        }
 
-        removeAccountButton=v.findViewById(R.id.edit_profile_fragment_remove_account_button);
-        saveChangesButton=v.findViewById(R.id.edit_profile_fragment_save_changes_button);
-        nameEditText=v.findViewById(R.id.edit_profile_fragment_name_edit_text);
+        removeAccountButton= v.findViewById(R.id.edit_profile_fragment_remove_account_button);
+        saveChangesButton= v.findViewById(R.id.edit_profile_fragment_save_changes_button);
+        nameEditText= v.findViewById(R.id.edit_profile_fragment_name_edit_text);
         descriptionEditText=v.findViewById(R.id.edit_profile_fragment_description_edit_text);
 
         databaseReference.child("users").child(arr[0]).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                name=dataSnapshot.child("name").getValue()+"";
-                nameEditText.setText(name);
-                descriptionEditText.setText(dataSnapshot.child("description").getValue()+"");
-                if(TextUtils.isEmpty(name)){
-                    nameEditText.setError("Are you the BLANK? from No Game No Life");
-                }
+                if(currentUser!=null) {
+                    name = dataSnapshot.child("name").getValue() + "";
+                    nameEditText.setText(name);
+                    descriptionEditText.setText(dataSnapshot.child("description").getValue() + "");
+                    if (TextUtils.isEmpty(name)) {
+                        nameEditText.setError("Are you the BLANK? from No Game No Life");
+                    }
+                }else if(currentUser==null){
 
+                }
 
 
             }
