@@ -1,5 +1,6 @@
 package com.example.andro.letscook;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -75,7 +76,7 @@ public class AllRecipes extends AppCompatActivity
     FragmentManager fragmentManager;
     String arr[];
 
-
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +87,6 @@ public class AllRecipes extends AppCompatActivity
         mAuth= FirebaseAuthUtility.getAuth();
         currentUser=mAuth.getCurrentUser();
 
-
         databaseReference= DatabaseUtility.getDatabase().getReference();
 
         if(currentUser!=null) {
@@ -94,6 +94,7 @@ public class AllRecipes extends AppCompatActivity
         }else{
             finish();
         }
+        context=this;
 
         databaseReference.child("users").addValueEventListener(new ValueEventListener() {
             @Override
@@ -107,9 +108,10 @@ public class AllRecipes extends AppCompatActivity
 
                         nameTextView.setText(userName);
                         emailTextView.setText(userEmail);
+                        if(context!=null){
                         Glide.with(AllRecipes.this).load(userProfile)
                                 .apply(RequestOptions.circleCropTransform()).into(profileImageView);
-
+                        }
                     } else {
 
                         User newUser = new User(currentUser.getEmail(), currentUser.getDisplayName()

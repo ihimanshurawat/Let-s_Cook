@@ -43,7 +43,7 @@ dependencies {
     compile 'com.android.support:support-v4:26.+'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
     //Dependencies for FB
-    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    //compile 'com.facebook.android:facebook-android-sdk:4.5'
 
     testCompile 'junit:junit:4.12'
 }

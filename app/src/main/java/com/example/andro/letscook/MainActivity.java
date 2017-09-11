@@ -7,7 +7,6 @@ package com.example.andro.letscook;
         import android.net.ConnectivityManager;
         import android.net.NetworkInfo;
         import android.os.Build;
-        import android.os.Parcel;
         import android.os.VibrationEffect;
         import android.os.Vibrator;
         import android.support.annotation.NonNull;
@@ -19,18 +18,12 @@ package com.example.andro.letscook;
         import android.view.View;
         import android.widget.Button;
         import android.widget.Toast;
-
-        import com.example.andro.letscook.PojoClass.User;
         import com.example.andro.letscook.Support.FirebaseAuthUtility;
-        import com.facebook.FacebookSdk;
-        import com.facebook.login.widget.LoginButton;
         import com.google.android.gms.auth.api.Auth;
         import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
         import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
         import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-        import com.google.android.gms.auth.api.signin.SignInAccount;
         import com.google.android.gms.common.ConnectionResult;
-        import com.google.android.gms.common.SignInButton;
         import com.google.android.gms.common.api.GoogleApiClient;
         import com.google.android.gms.tasks.OnCompleteListener;
         import com.google.android.gms.tasks.Task;
@@ -40,11 +33,8 @@ package com.example.andro.letscook;
         import com.google.firebase.auth.FirebaseUser;
         import com.google.firebase.auth.GoogleAuthProvider;
         import com.google.firebase.auth.TwitterAuthProvider;
-        import com.google.firebase.database.DataSnapshot;
-        import com.google.firebase.database.DatabaseError;
         import com.google.firebase.database.DatabaseReference;
         import com.google.firebase.database.FirebaseDatabase;
-        import com.google.firebase.database.ValueEventListener;
         import com.twitter.sdk.android.core.Callback;
         import com.twitter.sdk.android.core.Result;
         import com.twitter.sdk.android.core.Twitter;
@@ -63,17 +53,18 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
         GoogleApiClient mGoogleApiClient;
 
         //Button References
-        Button googleSignIn,twitterSignIn,facebookSignIn;
+        private Button googleSignIn,twitterSignIn,facebookSignIn;
         //References of the Buttons that are Hidden
-        TwitterLoginButton twitterLoginButton;
-        LoginButton facebookLoginButton;
+        private TwitterLoginButton twitterLoginButton;
+        //LoginButton facebookLoginButton;
+
         //FirebaseAuth Reference
         private FirebaseAuth mAuth;
 
         private FirebaseUser user;
 
         //Vibrator Reference
-        Vibrator vibrator;
+        private Vibrator vibrator;
 
         //Network State Broadcast Receiver Reference
         private NetworkStateReceiver networkStateReceiver;
@@ -81,26 +72,25 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
         //FirebaseAuthStateListener
         FirebaseAuth.AuthStateListener loginStateListener;
 
-
-        //Firebase Database Instance
-        FirebaseDatabase firebaseDatabase;
-        DatabaseReference databaseReference;
-
-        int backButtonCount;
-
-
-
         @Override
         protected void onStart() {
             super.onStart();
+            //Attaching AuthStateListener
             mAuth.addAuthStateListener(loginStateListener);
         }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        mAuth.removeAuthStateListener(loginStateListener);
+
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        //mAuth.removeAuthStateListener(loginStateListener);
 
+        //Deattaching NetworkStateListener
         networkStateReceiver.removeListener(this);
         this.unregisterReceiver(networkStateReceiver);
     }
@@ -109,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
-            backButtonCount=0;
+
             //Initialize Twitter
             Twitter.initialize(this);
             //Initialize Facebook
@@ -135,16 +125,12 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
             twitterLoginButton.setCallback(new Callback<TwitterSession>() {
                 @Override
                 public void success(Result<TwitterSession> result) {
-                    Log.d("TAG", "twitterLogin:success" + result);
                     handleTwitterSession(result.data);
                 }
 
                 @Override
                 public void failure(TwitterException exception) {
-                    Log.w("TAG", "twitterLogin:failure", exception);
-
                     Snackbar.make(twitterLoginButton,"Cannot Establish Connection", BaseTransientBottomBar.LENGTH_SHORT).show();
-                    //updateUI(null);
                 }
             });
 
@@ -158,13 +144,12 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
                     .build();
 
             mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .enableAutoManage(this /* FragmentActivity */, new GoogleApiClient.OnConnectionFailedListener() {
+                    .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
                         @Override
                         public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
                             Snackbar.make(twitterLoginButton,"Connection Failed", BaseTransientBottomBar.LENGTH_SHORT).show();
-                            //Toast.makeText(MainActivity.this,"Connection Failed", Toast.LENGTH_SHORT).show();
                         }
-                    } /* OnConnectionFailedListener */)
+                    } )
                     .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                     .build();
 
@@ -189,17 +174,14 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
-                // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
             } else {
                 Snackbar.make(twitterLoginButton,"Cannot Establish Connection", BaseTransientBottomBar.LENGTH_SHORT).show();
-                // Google Sign In failed, update UI appropriately
-                // ...
+
             }
         }
         twitterLoginButton.onActivityResult(requestCode, resultCode,data);
@@ -215,18 +197,16 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("TAG", "signInWithCredential:success");
-                            user= mAuth.getCurrentUser();
-                            //startActivity(new Intent(MainActivity.this,AllRecipes.class));
 
+                            user= mAuth.getCurrentUser();
+                            onStart();
                         } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("TAG", "signInWithCredential:failure", task.getException());
+
+                            Snackbar.make(googleSignIn,"Authentication Failed",BaseTransientBottomBar.LENGTH_SHORT).show();
+
                             Toast.makeText(MainActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
-                        }
+                            }
 
                         // ...
                     }
@@ -234,8 +214,6 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
     }
 
     public void handleTwitterSession(TwitterSession session) {
-        //Log.d(TAG, "handleTwitterSession:" + session);
-
         AuthCredential credential = TwitterAuthProvider.getCredential(
                 session.getAuthToken().token,
                 session.getAuthToken().secret);
@@ -245,21 +223,11 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            //Log.d(TAG, "signInWithCredential:success");
                             user = mAuth.getCurrentUser();
-                            //Intent i = new Intent(MainActivity.this,AllRecipes.class);
-                            //startActivity(i);
-                            // updateUI(user);
+                            onStart();
                         } else {
-                            // If sign in fails, display a message to the user.
-                            //Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            // updateUI(null);
+                            Snackbar.make(googleSignIn, "Authentication Failed", BaseTransientBottomBar.LENGTH_SHORT).show();
                         }
-
-                        // ...
                     }
                 });
     }
