@@ -168,25 +168,17 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
                     .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                     .build();
 
-
+            loginStateListener=new FirebaseAuth.AuthStateListener() {
+                @Override
+                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                    if(firebaseAuth.getCurrentUser()!=null) {
+                    Intent i = new Intent(MainActivity.this,AllRecipes.class);
+                    startActivity(i);
+                    }
+                }
+            };
         }
 
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//        if(backButtonCount >= 1)
-//        {
-//            Intent intent = new Intent(Intent.ACTION_MAIN);
-//            intent.addCategory(Intent.CATEGORY_HOME);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            startActivity(intent);
-//        }
-//        else
-//        {
-//            Toast.makeText(this, "Press the back button once again to close the application.", Toast.LENGTH_SHORT).show();
-//            backButtonCount++;
-//        }
-//    }
 
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
@@ -276,16 +268,6 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
     @Override
     public void onNetworkAvailable() {
 
-        loginStateListener=new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if(firebaseAuth.getCurrentUser()!=null) {
-                    Intent i = new Intent(MainActivity.this,AllRecipes.class);
-                    startActivity(i);
-                }
-            }
-        };
-
         twitterSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -317,15 +299,7 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
     @Override
     public void onNetworkUnavailable() {
         Toast.makeText(this,"Connect to the Internet for Better Experience",Toast.LENGTH_LONG).show();
-        loginStateListener=new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if(firebaseAuth.getCurrentUser()!=null) {
-                    Intent i = new Intent(MainActivity.this,AllRecipes.class);
-                    startActivity(i);
-                }
-            }
-        };
+
         googleSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

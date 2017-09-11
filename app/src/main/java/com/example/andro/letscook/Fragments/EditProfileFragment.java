@@ -113,13 +113,13 @@ public class EditProfileFragment extends Fragment {
                         if(descriptionEditText.getText().toString()!=null){
                             databaseReference.child("users").child(arr[0]).child("description")
                                     .setValue(descriptionEditText.getText().toString());
-                            Toast.makeText(getContext(),"Changes Saved",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context,"Changes Saved",Toast.LENGTH_SHORT).show();
 
                         }
                         if(!(nameEditText.getText().toString().equals(dataSnapshot.child("name").getValue().toString()))){
                             name=nameEditText.getText().toString();
                             databaseReference.child("users").child(arr[0]).child("name").setValue(name);
-                            Toast.makeText(getContext(),"Changes Saved",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context,"Changes Saved",Toast.LENGTH_SHORT).show();
                         }
                         //nameEditText.setText(dataSnapshot.child("name").getValue()+"");
                         //descriptionEditText.setText(dataSnapshot.child("description").getValue()+"");
