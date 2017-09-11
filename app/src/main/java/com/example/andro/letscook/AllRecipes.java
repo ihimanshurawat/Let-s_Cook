@@ -89,28 +89,32 @@ public class AllRecipes extends AppCompatActivity
 
         databaseReference= DatabaseUtility.getDatabase().getReference();
 
-
-        arr=currentUser.getEmail().split("\\.");
-
+        if(currentUser!=null) {
+            arr = currentUser.getEmail().split("\\.");
+        }else{
+            arr[0]=null;
+        }
 
         databaseReference.child("users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild(arr[0])){
-                    User existingUser = dataSnapshot.child(arr[0]).getValue(User.class);
-                    userEmail=existingUser.getEmail();
-                    userProfile=existingUser.getProfileUrl();
-                    userName=existingUser.getName();
+                if (currentUser!= null) {
+                    if (dataSnapshot.hasChild(arr[0])) {
+                        User existingUser = dataSnapshot.child(arr[0]).getValue(User.class);
+                        userEmail = existingUser.getEmail() + "";
+                        userProfile = existingUser.getProfileUrl() + "";
+                        userName = existingUser.getName() + "";
 
-                    nameTextView.setText(userName);
-                    emailTextView.setText(userEmail);
-                    Glide.with(AllRecipes.this).load(userProfile)
-                            .apply(RequestOptions.circleCropTransform()).into(profileImageView);
+                        nameTextView.setText(userName);
+                        emailTextView.setText(userEmail);
+                        Glide.with(AllRecipes.this).load(userProfile)
+                                .apply(RequestOptions.circleCropTransform()).into(profileImageView);
 
-                }else{
-                    User newUser=new User(currentUser.getEmail(),currentUser.getDisplayName()
-                            ,null,currentUser.getPhotoUrl()+"",0,null);
-                    databaseReference.child("users").child(arr[0]).setValue(newUser);
+                    } else {
+                        User newUser = new User(currentUser.getEmail(), currentUser.getDisplayName()
+                                , null, currentUser.getPhotoUrl() + "", 0, null);
+                        databaseReference.child("users").child(arr[0]).setValue(newUser);
+                    }
                 }
             }
 
@@ -231,7 +235,7 @@ public class AllRecipes extends AppCompatActivity
                 Toast.makeText(this, "Goodbye " + arr[0]+", Eat Healthy", Toast.LENGTH_LONG).show();
             }
             FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(this,MainActivity.class));
+            finish();
 
         }
 

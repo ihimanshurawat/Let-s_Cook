@@ -86,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
         FirebaseDatabase firebaseDatabase;
         DatabaseReference databaseReference;
 
+        int backButtonCount;
+
 
 
         @Override
@@ -97,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mAuth.removeAuthStateListener(loginStateListener);
+        //mAuth.removeAuthStateListener(loginStateListener);
 
         networkStateReceiver.removeListener(this);
         this.unregisterReceiver(networkStateReceiver);
@@ -107,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
+            backButtonCount=0;
             //Initialize Twitter
             Twitter.initialize(this);
             //Initialize Facebook
@@ -164,18 +167,26 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
                     } /* OnConnectionFailedListener */)
                     .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                     .build();
-            loginStateListener=new FirebaseAuth.AuthStateListener() {
-                @Override
-                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                    if(firebaseAuth.getCurrentUser()!=null) {
-                        Intent i = new Intent(MainActivity.this,AllRecipes.class);
-                        startActivity(i);
-                    }
-                }
-            };
+
 
         }
 
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//        if(backButtonCount >= 1)
+//        {
+//            Intent intent = new Intent(Intent.ACTION_MAIN);
+//            intent.addCategory(Intent.CATEGORY_HOME);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            startActivity(intent);
+//        }
+//        else
+//        {
+//            Toast.makeText(this, "Press the back button once again to close the application.", Toast.LENGTH_SHORT).show();
+//            backButtonCount++;
+//        }
+//    }
 
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
@@ -215,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("TAG", "signInWithCredential:success");
                             user= mAuth.getCurrentUser();
-                            startActivity(new Intent(MainActivity.this,AllRecipes.class));
+                            //startActivity(new Intent(MainActivity.this,AllRecipes.class));
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -245,8 +256,8 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
                             // Sign in success, update UI with the signed-in user's information
                             //Log.d(TAG, "signInWithCredential:success");
                             user = mAuth.getCurrentUser();
-                            Intent i = new Intent(MainActivity.this,AllRecipes.class);
-                            startActivity(i);
+                            //Intent i = new Intent(MainActivity.this,AllRecipes.class);
+                            //startActivity(i);
                             // updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -264,6 +275,16 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
 
     @Override
     public void onNetworkAvailable() {
+
+        loginStateListener=new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if(firebaseAuth.getCurrentUser()!=null) {
+                    Intent i = new Intent(MainActivity.this,AllRecipes.class);
+                    startActivity(i);
+                }
+            }
+        };
 
         twitterSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -296,6 +317,15 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
     @Override
     public void onNetworkUnavailable() {
         Toast.makeText(this,"Connect to the Internet for Better Experience",Toast.LENGTH_LONG).show();
+        loginStateListener=new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if(firebaseAuth.getCurrentUser()!=null) {
+                    Intent i = new Intent(MainActivity.this,AllRecipes.class);
+                    startActivity(i);
+                }
+            }
+        };
         googleSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
