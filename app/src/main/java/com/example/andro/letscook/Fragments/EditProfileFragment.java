@@ -17,12 +17,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.andro.letscook.MainActivity;
 import com.example.andro.letscook.R;
 import com.example.andro.letscook.Support.DatabaseUtility;
 import com.example.andro.letscook.Support.FirebaseAuthUtility;
+import com.example.andro.letscook.Support.StorageUtility;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
@@ -36,6 +40,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.twitter.sdk.android.core.AuthTokenAdapter;
 
 /**
@@ -46,9 +53,11 @@ public class EditProfileFragment extends Fragment {
 
     Context context;
 
-    Button removeAccountButton,saveChangesButton;
+    Button removeAccountButton,saveChangesButton,uploadButton;
 
     EditText nameEditText,descriptionEditText;
+
+    ImageView profileImageView;
 
     String name;
 
@@ -56,23 +65,57 @@ public class EditProfileFragment extends Fragment {
 
     DatabaseReference databaseReference;
 
+    FirebaseStorage firebaseStorage;
+
     FirebaseUser currentUser;
+
+
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v=inflater.inflate(R.layout.edit_profile_fragment,container,false);
         context=getContext();
         databaseReference= DatabaseUtility.getDatabase().getReference();
         currentUser= FirebaseAuthUtility.getAuth().getCurrentUser();
+        firebaseStorage = StorageUtility.getFirebaseStorageReference();
+
         if(currentUser!=null) {
             arr = currentUser.getEmail().split("\\.");
         }
 
-        removeAccountButton= v.findViewById(R.id.edit_profile_fragment_remove_account_button);
-        saveChangesButton= v.findViewById(R.id.edit_profile_fragment_save_changes_button);
-        nameEditText= v.findViewById(R.id.edit_profile_fragment_name_edit_text);
-        descriptionEditText=v.findViewById(R.id.edit_profile_fragment_description_edit_text);
+        removeAccountButton = v.findViewById(R.id.edit_profile_fragment_remove_account_button);
+        uploadButton = v.findViewById(R.id.edit_profile_fragment_upload_button);
+        saveChangesButton = v.findViewById(R.id.edit_profile_fragment_save_changes_button);
+        nameEditText = v.findViewById(R.id.edit_profile_fragment_name_edit_text);
+        descriptionEditText = v.findViewById(R.id.edit_profile_fragment_description_edit_text);
+        profileImageView = v.findViewById(R.id.edit_profile_fragment_profile_imageview);
+
+
+
+        uploadButton.setOnClickListener(new View.OnClickListener() {
+
+
+
+
+            @Override
+            public void onClick(View view) {
+            //firebaseStorage.getReference().child("users").child()
+
+
+
+//                firebaseStorage.child("users").child(arr[0]).getFile().addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
+//
+//                    }
+//                });
+
+
+
+
+            }
+        });
 
         databaseReference.child("users").child(arr[0]).addValueEventListener(new ValueEventListener() {
             @Override
@@ -84,7 +127,10 @@ public class EditProfileFragment extends Fragment {
                     if (TextUtils.isEmpty(name)) {
                         nameEditText.setError("Are you the BLANK? from No Game No Life");
                     }
-                }else if(currentUser==null){
+                    if(context!=null) {
+                        Glide.with(context).load(dataSnapshot.child("profileUrl").getValue() + "")
+                                .apply(RequestOptions.circleCropTransform()).into(profileImageView);
+                    }
 
                 }
 
@@ -98,9 +144,6 @@ public class EditProfileFragment extends Fragment {
         });
 
 
-
-
-
         saveChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,12 +155,12 @@ public class EditProfileFragment extends Fragment {
 
                         if(descriptionEditText.getText().toString()!=null){
                             databaseReference.child("users").child(arr[0]).child("description")
-                                    .setValue(descriptionEditText.getText().toString());
+                                    .setValue(descriptionEditText.getText().toString().trim());
                             Toast.makeText(context,"Changes Saved",Toast.LENGTH_SHORT).show();
 
                         }
                         if(!(nameEditText.getText().toString().equals(dataSnapshot.child("name").getValue().toString()))){
-                            name=nameEditText.getText().toString();
+                            name=nameEditText.getText().toString().trim();
                             databaseReference.child("users").child(arr[0]).child("name").setValue(name);
                             Toast.makeText(context,"Changes Saved",Toast.LENGTH_SHORT).show();
                         }
@@ -138,32 +181,6 @@ public class EditProfileFragment extends Fragment {
 
             }
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

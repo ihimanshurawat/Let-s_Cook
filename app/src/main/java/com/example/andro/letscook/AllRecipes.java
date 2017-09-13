@@ -62,12 +62,11 @@ public class AllRecipes extends AppCompatActivity
     //Edit Profile
     TextView editProfile;
 
-    //Firebase Auth
+    //Firebase User
     FirebaseUser currentUser;
+    //FirebaseAuth Reference
     FirebaseAuth mAuth;
-    //Firebase Database
-
-    FirebaseDatabase database;
+    //Firebase DatabaseReference
     DatabaseReference databaseReference;
     //Drawer Reference
     DrawerLayout drawer;
@@ -233,6 +232,7 @@ public class AllRecipes extends AppCompatActivity
 
         } else if (id == R.id.log_out) {
 
+            Toast.makeText(this,"See you again :)",Toast.LENGTH_SHORT).show();
             FirebaseAuth.getInstance().signOut();
             finish();
 

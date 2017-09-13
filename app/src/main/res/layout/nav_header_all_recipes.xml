@@ -15,17 +15,18 @@
 
     <ImageView
         android:id="@+id/nav_header_all_recipies_profile_image_view"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="38dp"
+        android:layout_marginTop="16dp"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp" />
+        android:layout_marginEnd="8dp"
+        app:layout_constraintHorizontal_bias="0.502" />
     <TextView
         android:alpha="0.9"
         android:textAlignment="center"
