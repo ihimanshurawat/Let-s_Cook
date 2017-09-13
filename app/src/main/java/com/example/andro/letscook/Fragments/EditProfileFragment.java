@@ -1,9 +1,16 @@
 package com.example.andro.letscook.Fragments;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -28,6 +35,7 @@ import com.example.andro.letscook.Support.DatabaseUtility;
 import com.example.andro.letscook.Support.FirebaseAuthUtility;
 import com.example.andro.letscook.Support.StorageUtility;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthCredential;
@@ -42,8 +50,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.twitter.sdk.android.core.AuthTokenAdapter;
+
+import java.io.File;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by himanshurawat on 02/09/17.
@@ -71,6 +88,8 @@ public class EditProfileFragment extends Fragment {
 
 
 
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -93,6 +112,7 @@ public class EditProfileFragment extends Fragment {
 
 
 
+
         uploadButton.setOnClickListener(new View.OnClickListener() {
 
 
@@ -100,19 +120,11 @@ public class EditProfileFragment extends Fragment {
 
             @Override
             public void onClick(View view) {
-            //firebaseStorage.getReference().child("users").child()
 
-
-
-//                firebaseStorage.child("users").child(arr[0]).getFile().addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
-//
-//                    }
-//                });
-
-
-
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Choose Picture"), 1);
 
             }
         });
@@ -257,4 +269,35 @@ public class EditProfileFragment extends Fragment {
 
         return v;
     }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, final Intent data) {
+        if(resultCode==RESULT_OK)
+        {
+            Uri selectedimg = data.getData();
+            Log.i("ImageData",selectedimg+"");
+            StorageReference storageReference=firebaseStorage.getReference().child("users").child(arr[0]);
+            storageReference.putFile(selectedimg).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    databaseReference.child("users").child(arr[0]).child("profileUrl").setValue(taskSnapshot.getDownloadUrl()+"");
+
+
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+
+
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+
+                }
+            });
+
+
+
+        }
+    }
+
+
 }
