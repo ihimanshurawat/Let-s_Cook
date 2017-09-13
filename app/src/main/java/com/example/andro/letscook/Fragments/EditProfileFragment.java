@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -28,7 +29,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.example.andro.letscook.MainActivity;
 import com.example.andro.letscook.R;
 import com.example.andro.letscook.Support.DatabaseUtility;
@@ -54,6 +59,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.twitter.sdk.android.core.AuthTokenAdapter;
+import com.victor.loading.rotate.RotateLoading;
 
 import java.io.File;
 import java.net.URI;
@@ -86,6 +92,8 @@ public class EditProfileFragment extends Fragment {
 
     FirebaseUser currentUser;
 
+    RotateLoading rotateLoading;
+
 
 
 
@@ -109,7 +117,8 @@ public class EditProfileFragment extends Fragment {
         nameEditText = v.findViewById(R.id.edit_profile_fragment_name_edit_text);
         descriptionEditText = v.findViewById(R.id.edit_profile_fragment_description_edit_text);
         profileImageView = v.findViewById(R.id.edit_profile_fragment_profile_imageview);
-
+        rotateLoading=v.findViewById(R.id.edit_profile_fragment_rotate_loading);
+        rotateLoading.start();
 
 
 
@@ -140,8 +149,20 @@ public class EditProfileFragment extends Fragment {
                         nameEditText.setError("Are you the BLANK? from No Game No Life");
                     }
                     if(context!=null) {
-                        Glide.with(context).load(dataSnapshot.child("profileUrl").getValue() + "")
-                                .apply(RequestOptions.circleCropTransform()).into(profileImageView);
+
+                        Glide.with(profileImageView).load(dataSnapshot.child("profileUrl").getValue() + "").listener(new RequestListener<Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                rotateLoading.stop();
+                                return false;
+
+                            }
+                        }).apply(RequestOptions.circleCropTransform()).into(profileImageView);
                     }
 
                 }
@@ -281,7 +302,11 @@ public class EditProfileFragment extends Fragment {
             storageReference.putFile(selectedimg).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
                     databaseReference.child("users").child(arr[0]).child("profileUrl").setValue(taskSnapshot.getDownloadUrl()+"");
+                    uploadButton.setEnabled(true);
+                    profileImageView.setVisibility(View.VISIBLE);
+                    rotateLoading.stop();
 
 
                 }
@@ -290,6 +315,9 @@ public class EditProfileFragment extends Fragment {
 
                 @Override
                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    rotateLoading.start();
+                    profileImageView.setVisibility(View.INVISIBLE);
+                    uploadButton.setEnabled(false);
 
                 }
             });

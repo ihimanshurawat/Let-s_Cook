@@ -6,16 +6,6 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:id="@+id/edit_profile_fragment_profile_imageview"
-        android:layout_marginStart="16dp" />
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,7 +14,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="39dp"
         app:layout_constraintBottom_toTopOf="@+id/edit_profile_fragment_name_edit_text"
-        app:layout_constraintLeft_toRightOf="@+id/edit_profile_fragment_profile_imageview"
+        app:layout_constraintLeft_toRightOf="@+id/edit_profile_fragment_profile_relative_layout"
         android:layout_marginLeft="16dp"
         app:layout_constraintHorizontal_bias="0.535"
         android:id="@+id/edit_profile_fragment_upload_button"/>
@@ -66,7 +56,7 @@
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_profile_fragment_profile_imageview"
+        app:layout_constraintTop_toBottomOf="@+id/edit_profile_fragment_profile_relative_layout"
         android:layout_marginStart="16dp" />
     <EditText
         android:id="@+id/edit_profile_fragment_name_edit_text"
@@ -174,6 +164,33 @@
         android:id="@+id/edit_profile_fragment_remove_account_button"
         android:layout_marginBottom="-77dp" />
 
+    <RelativeLayout
+        android:id="@+id/edit_profile_fragment_profile_relative_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        android:layout_marginTop="14dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent">
+
+        <ImageView
+            android:layout_margin="2dp"
+            android:id="@+id/edit_profile_fragment_profile_imageview"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="fitXY"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_alignTop="@+id/edit_profile_fragment_rotate_loading"
+            android:layout_alignParentStart="true" />
+
+        <com.victor.loading.rotate.RotateLoading
+            android:id="@+id/edit_profile_fragment_rotate_loading"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerInParent="true"
+            app:loading_color="@color/colorPrimary"
+            app:loading_width="5dp" />
+        </RelativeLayout>
 
 
 </android.support.constraint.ConstraintLayout>
