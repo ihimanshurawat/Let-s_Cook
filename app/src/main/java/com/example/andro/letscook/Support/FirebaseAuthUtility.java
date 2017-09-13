@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuth;
  */
 
 public class FirebaseAuthUtility {
+    //FirebaseAuth Reference
     private static FirebaseAuth mAuth;
 
     public static FirebaseAuth getAuth(){
