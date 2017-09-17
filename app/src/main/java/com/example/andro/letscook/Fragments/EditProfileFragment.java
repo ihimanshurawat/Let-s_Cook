@@ -35,6 +35,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.example.andro.letscook.MainActivity;
+import com.example.andro.letscook.PojoClass.User;
 import com.example.andro.letscook.R;
 import com.example.andro.letscook.Support.DatabaseUtility;
 import com.example.andro.letscook.Support.FirebaseAuthUtility;
@@ -48,6 +49,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -84,6 +86,8 @@ public class EditProfileFragment extends Fragment {
 
     String name;
 
+    String key;
+
     String arr[];
 
     DatabaseReference databaseReference;
@@ -103,6 +107,13 @@ public class EditProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v=inflater.inflate(R.layout.edit_profile_fragment,container,false);
         context=getContext();
+        Bundle bundle= getArguments();
+        if(bundle!=null){
+            key=bundle.getString("Key");
+        }
+
+
+
         databaseReference= DatabaseUtility.getDatabase().getReference();
         currentUser= FirebaseAuthUtility.getAuth().getCurrentUser();
         firebaseStorage = StorageUtility.getFirebaseStorageReference();
@@ -138,19 +149,43 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
-        databaseReference.child("users").child(arr[0]).addValueEventListener(new ValueEventListener() {
+        databaseReference.child("users").child(key).child("name").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                name = dataSnapshot.getValue() + "";
+                nameEditText.setText(name);
+                if (TextUtils.isEmpty(name)) {
+                    nameEditText.setError("Are you the BLANK? from No Game No Life");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        databaseReference.child("users").child(key).child("description").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                descriptionEditText.setText(dataSnapshot.getValue() + "");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+        databaseReference.child("users").child(key).child("profileUrl").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(currentUser!=null) {
-                    name = dataSnapshot.child("name").getValue() + "";
-                    nameEditText.setText(name);
-                    descriptionEditText.setText(dataSnapshot.child("description").getValue() + "");
-                    if (TextUtils.isEmpty(name)) {
-                        nameEditText.setError("Are you the BLANK? from No Game No Life");
-                    }
                     if(context!=null) {
-
-                        Glide.with(profileImageView).load(dataSnapshot.child("profileUrl").getValue() + "").listener(new RequestListener<Drawable>() {
+                        Glide.with(profileImageView).load(dataSnapshot.getValue() + "").listener(new RequestListener<Drawable>() {
                             @Override
                             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                                 return false;
@@ -164,10 +199,7 @@ public class EditProfileFragment extends Fragment {
                             }
                         }).apply(RequestOptions.circleCropTransform()).into(profileImageView);
                     }
-
                 }
-
-
             }
 
             @Override
@@ -181,26 +213,24 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                databaseReference.child("users").child(arr[0]).addValueEventListener(new ValueEventListener() {
+
+
+                databaseReference.child("users").child(key).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
 
-                        if(descriptionEditText.getText().toString()!=null){
-                            databaseReference.child("users").child(arr[0]).child("description")
+                        if(!(descriptionEditText.getText().toString().equals(dataSnapshot.child("description").getValue()))){
+                            databaseReference.child("users").child(key).child("description")
                                     .setValue(descriptionEditText.getText().toString().trim());
                             Toast.makeText(context,"Changes Saved",Toast.LENGTH_SHORT).show();
 
                         }
                         if(!(nameEditText.getText().toString().equals(dataSnapshot.child("name").getValue().toString()))){
                             name=nameEditText.getText().toString().trim();
-                            databaseReference.child("users").child(arr[0]).child("name").setValue(name);
+                            databaseReference.child("users").child(key).child("name").setValue(name);
                             Toast.makeText(context,"Changes Saved",Toast.LENGTH_SHORT).show();
                         }
-                        //nameEditText.setText(dataSnapshot.child("name").getValue()+"");
-                        //descriptionEditText.setText(dataSnapshot.child("description").getValue()+"");
-
-
                     }
 
                     @Override
@@ -256,21 +286,11 @@ public class EditProfileFragment extends Fragment {
                                                         }
                                                     }
                                                 });
-
-
                                             }
                                         }
                                     });
-
-
                                 }
                             });
-
-
-
-
-
-
                         }
                     }
                 });
@@ -298,7 +318,7 @@ public class EditProfileFragment extends Fragment {
         {
             Uri selectedimg = data.getData();
             Log.i("ImageData",selectedimg+"");
-            StorageReference storageReference=firebaseStorage.getReference().child("users").child(arr[0]);
+            StorageReference storageReference=firebaseStorage.getReference().child("users").child(key);
             storageReference.putFile(selectedimg).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

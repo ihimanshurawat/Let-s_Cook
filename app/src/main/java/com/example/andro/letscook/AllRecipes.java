@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.andro.letscook.Fragments.AddRecipeFragment;
 import com.example.andro.letscook.Fragments.EditProfileFragment;
 import com.example.andro.letscook.Fragments.RecipiesFragment;
 import com.example.andro.letscook.PojoClass.User;
@@ -75,6 +76,8 @@ public class AllRecipes extends AppCompatActivity
     FragmentManager fragmentManager;
     String arr[];
 
+    String key;
+
     Context context;
 
     @Override
@@ -95,29 +98,40 @@ public class AllRecipes extends AppCompatActivity
         }
         context=this;
 
-        databaseReference.child("users").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("users").orderByChild("email").equalTo(currentUser.getEmail()).limitToFirst(1).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (currentUser!= null) {
-                    if (dataSnapshot.hasChild(arr[0])) {
-                        User existingUser = dataSnapshot.child(arr[0]).getValue(User.class);
-                        userEmail = existingUser.getEmail() + "";
-                        userProfile = existingUser.getProfileUrl() + "";
-                        userName = existingUser.getName() + "";
+                if(dataSnapshot.getChildrenCount()>0){
+                    for(DataSnapshot child : dataSnapshot.getChildren()) {
+                        key=child.getKey();
+                        Log.i("KeyID", key);
+                        databaseReference.child("users").child(key).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                User existingUser = dataSnapshot.getValue(User.class);
+                                userEmail = existingUser.getEmail();
+                                userProfile = existingUser.getProfileUrl();
+                                userName = existingUser.getName();
+                                nameTextView.setText(userName);
+                                emailTextView.setText(userEmail);
+                                Glide.with(context).load(userProfile).apply(RequestOptions.circleCropTransform()).into(profileImageView);
+                            }
 
-                        nameTextView.setText(userName);
-                        emailTextView.setText(userEmail);
-                        if(context!=null){
-                        Glide.with(AllRecipes.this).load(userProfile)
-                                .apply(RequestOptions.circleCropTransform()).into(profileImageView);
-                        }
-                    } else {
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
 
-                        User newUser = new User(currentUser.getEmail(), currentUser.getDisplayName()
-                                ,null, currentUser.getPhotoUrl() + "", 0, null);
-                        databaseReference.child("users").child(arr[0]).setValue(newUser);
+                            }
+                        });
                     }
+
                 }
+                else{
+                    User newUser = new User(currentUser.getEmail(), currentUser.getDisplayName()
+                            ,null, currentUser.getPhotoUrl() + "", 0, null);
+                    databaseReference.child("users").push().setValue(newUser);
+                }
+
+
             }
 
             @Override
@@ -125,6 +139,46 @@ public class AllRecipes extends AppCompatActivity
 
             }
         });
+
+
+
+
+
+
+
+//Old Working Code
+//
+//        databaseReference.child("users").addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                if (currentUser!= null) {
+//                    if (dataSnapshot.hasChild(arr[0])) {
+//                        User existingUser = dataSnapshot.child(arr[0]).getValue(User.class);
+//                        userEmail = existingUser.getEmail() + "";
+//                        userProfile = existingUser.getProfileUrl() + "";
+//                        userName = existingUser.getName() + "";
+//
+//                        nameTextView.setText(userName);
+//                        emailTextView.setText(userEmail);
+//                        if(context!=null){
+//                            Glide.with(AllRecipes.this).load(userProfile)
+//                                    .apply(RequestOptions.circleCropTransform()).into(profileImageView);
+//                        }
+//                    } else {
+//
+//                        User newUser = new User(currentUser.getEmail(), currentUser.getDisplayName()
+//                                ,null, currentUser.getPhotoUrl() + "", 0, null);
+//                        databaseReference.child("users").child(arr[0]).setValue(newUser);
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+
 
         fragmentManager=getSupportFragmentManager();
 
@@ -170,6 +224,9 @@ public class AllRecipes extends AppCompatActivity
                 Toast.makeText(AllRecipes.this,"Edit Profile",Toast.LENGTH_LONG).show();
                 //FragmentManager fragmentManager=getSupportFragmentManager();
                 EditProfileFragment editProfileFragment=new EditProfileFragment();
+                Bundle keyBundle=new Bundle();
+                keyBundle.putString("Key",key);
+                editProfileFragment.setArguments(keyBundle);
                 FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.content_all_recipies_frame_layout,editProfileFragment,"Edit Profile")
                         .setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right).commit();
@@ -218,6 +275,10 @@ public class AllRecipes extends AppCompatActivity
             return true;
         }
         if(id==R.id.all_recipies_add_recipie){
+            AddRecipeFragment addRecipeFragment=new AddRecipeFragment();
+            FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.content_all_recipies_frame_layout,addRecipeFragment,"Add Recipe Fragment")
+                    .commit();
 
         }
 
