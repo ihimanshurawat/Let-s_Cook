@@ -6,4 +6,8 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+    <item android:id="@+id/all_recipies_add_recipie"
+        android:title="Add Recipe"
+        android:visible="false"
+        />
 </menu>

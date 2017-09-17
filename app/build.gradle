@@ -49,6 +49,8 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
     //Loading Library
     compile 'com.victor:lib:1.0.4'
+    //Material EditText
+    compile 'com.rengwuxian.materialedittext:library:2.1.4'
 
     //Dependencies for FB
     //compile 'com.facebook.android:facebook-android-sdk:4.5'

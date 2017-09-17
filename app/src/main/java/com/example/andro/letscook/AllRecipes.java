@@ -193,9 +193,16 @@ public class AllRecipes extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.all_recipes, menu);
+        final MenuItem addRecipe=menu.findItem(R.id.all_recipies_add_recipie);
+        if(arr[0].equals("rawath54@gmail")){
+            addRecipe.setVisible(true);
+            this.invalidateOptionsMenu();
+        }
+
+
         return true;
     }
 
@@ -210,6 +217,10 @@ public class AllRecipes extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
+        if(id==R.id.all_recipies_add_recipie){
+
+        }
+
 
         return super.onOptionsItemSelected(item);
     }
