@@ -323,7 +323,7 @@ public class EditProfileFragment extends Fragment {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                    databaseReference.child("users").child(arr[0]).child("profileUrl").setValue(taskSnapshot.getDownloadUrl()+"");
+                    databaseReference.child("users").child(key).child("profileUrl").setValue(taskSnapshot.getDownloadUrl()+"");
                     uploadButton.setEnabled(true);
                     profileImageView.setVisibility(View.VISIBLE);
                     rotateLoading.stop();
