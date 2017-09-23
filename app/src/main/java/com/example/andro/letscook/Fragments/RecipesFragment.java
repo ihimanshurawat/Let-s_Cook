@@ -110,7 +110,7 @@ public class RecipesFragment extends Fragment {
         ValueEventListener dessertsValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //if(dataSnapshot.getChildrenCount()>0) {
+                if(dataSnapshot.getChildrenCount()>0) {
                 Log.i("ChildrenCount",dataSnapshot.getChildrenCount()+"");
                     dessertsRecipeList.clear();
                     for (DataSnapshot children : dataSnapshot.getChildren()) {
@@ -119,7 +119,7 @@ public class RecipesFragment extends Fragment {
                     }
                     Collections.reverse(dessertsRecipeList);
                     dessertsRecipeAdapter.notifyDataSetChanged();
-                //}
+                }
             }
 
             @Override
@@ -129,7 +129,7 @@ public class RecipesFragment extends Fragment {
         };
 
         databaseReference.child("recipes").orderByChild("type").equalTo("Vegetarian").addValueEventListener(vegetarianEventListener);
-        databaseReference.child("recipes").orderByChild("type").equalTo("Non-Vegetarian").addValueEventListener(nonVegetarianEventListener);
+        databaseReference.child("recipes").orderByChild("type").equalTo("Non-vegetarian").addValueEventListener(nonVegetarianEventListener);
         databaseReference.child("recipes").orderByChild("type").equalTo("Dessert").addValueEventListener(dessertsValueEventListener);
 
         return v;
