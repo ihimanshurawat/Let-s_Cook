@@ -3,7 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android" >
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:scrollbars="vertical"
+
+    >
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -34,13 +37,137 @@
         android:layout_marginEnd="8dp" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
-        android:layout_width="0dp"
+        android:id="@+id/add_recipe_fragment_recipe_id_material_edit_text"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="number"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelText="Recipe ID"
+        app:met_floatingLabelAlwaysShown="true"
+        app:met_floatingLabelTextSize="15sp"
+        app:met_clearButton="true"
+        tools:layout_editor_absoluteY="25dp"
+        tools:layout_editor_absoluteX="8dp"
+        />
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/add_recipe_fragment_recipe_name_material_edit_text"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
         app:met_floatingLabel="highlight"
         app:met_floatingLabelText="Name of the Recipe"
+        app:met_floatingLabelAlwaysShown="true"
+        app:met_floatingLabelTextSize="15sp"
+        app:met_clearButton="true"
         tools:layout_editor_absoluteY="25dp"
-        tools:layout_editor_absoluteX="8dp" />
+        tools:layout_editor_absoluteX="8dp"
+        />
 
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/add_recipe_fragment_cuisine_material_edit_text"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelText="Cuisine"
+        app:met_floatingLabelAlwaysShown="true"
+        app:met_floatingLabelTextSize="15sp"
+        app:met_clearButton="true"
+        tools:layout_editor_absoluteY="25dp"
+        tools:layout_editor_absoluteX="8dp"
+        />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/add_recipe_fragment_recipe_type_material_edit_text"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelText="Type"
+        app:met_floatingLabelAlwaysShown="true"
+        app:met_floatingLabelTextSize="15sp"
+        app:met_clearButton="true"
+        tools:layout_editor_absoluteY="25dp"
+        tools:layout_editor_absoluteX="8dp"
+        />
+
+
+    <Button
+        android:id="@+id/add_recipe_fragment_upload_image_button"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Upload Image"
+        />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/add_recipe_fragment_description_material_edit_text"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelText="Description"
+        app:met_floatingLabelAlwaysShown="true"
+        app:met_floatingLabelTextSize="15sp"
+        app:met_clearButton="true"
+        tools:layout_editor_absoluteY="25dp"
+        tools:layout_editor_absoluteX="8dp"
+        />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/add_recipe_fragment_servings_material_edit_text"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelText="Servings"
+        app:met_floatingLabelAlwaysShown="true"
+        app:met_floatingLabelTextSize="15sp"
+        app:met_clearButton="true"
+        tools:layout_editor_absoluteY="25dp"
+        tools:layout_editor_absoluteX="8dp"
+        />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/add_recipe_fragment_prep_time_material_edit_text"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelText="Prep Time (in mins)"
+        app:met_floatingLabelAlwaysShown="true"
+        app:met_floatingLabelTextSize="15sp"
+        app:met_clearButton="true"
+        tools:layout_editor_absoluteY="25dp"
+        tools:layout_editor_absoluteX="8dp"
+        />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/add_recipe_fragment_cook_time_material_edit_text"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelText="Cook Time (in mins)"
+        app:met_floatingLabelAlwaysShown="true"
+        app:met_floatingLabelTextSize="15sp"
+        app:met_clearButton="true"
+        tools:layout_editor_absoluteY="25dp"
+        tools:layout_editor_absoluteX="8dp"
+        />
+    <Button
+        android:id="@+id/add_recipe_fragment_submit_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Submit"/>
 
 
 
