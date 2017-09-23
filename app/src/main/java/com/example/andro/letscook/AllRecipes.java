@@ -1,17 +1,9 @@
 package com.example.andro.letscook;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -22,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +22,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.andro.letscook.Fragments.AddRecipeFragment;
 import com.example.andro.letscook.Fragments.EditProfileFragment;
-import com.example.andro.letscook.Fragments.RecipiesFragment;
+import com.example.andro.letscook.Fragments.RecipesFragment;
 import com.example.andro.letscook.PojoClass.User;
 import com.example.andro.letscook.Support.DatabaseUtility;
 import com.example.andro.letscook.Support.FirebaseAuthUtility;
@@ -40,12 +31,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class AllRecipes extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -141,50 +127,11 @@ public class AllRecipes extends AppCompatActivity
         });
 
 
-
-
-
-
-
-//Old Working Code
-//
-//        databaseReference.child("users").addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                if (currentUser!= null) {
-//                    if (dataSnapshot.hasChild(arr[0])) {
-//                        User existingUser = dataSnapshot.child(arr[0]).getValue(User.class);
-//                        userEmail = existingUser.getEmail() + "";
-//                        userProfile = existingUser.getProfileUrl() + "";
-//                        userName = existingUser.getName() + "";
-//
-//                        nameTextView.setText(userName);
-//                        emailTextView.setText(userEmail);
-//                        if(context!=null){
-//                            Glide.with(AllRecipes.this).load(userProfile)
-//                                    .apply(RequestOptions.circleCropTransform()).into(profileImageView);
-//                        }
-//                    } else {
-//
-//                        User newUser = new User(currentUser.getEmail(), currentUser.getDisplayName()
-//                                ,null, currentUser.getPhotoUrl() + "", 0, null);
-//                        databaseReference.child("users").child(arr[0]).setValue(newUser);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-
-
         fragmentManager=getSupportFragmentManager();
 
-        RecipiesFragment recipiesFragment=new RecipiesFragment();
+        RecipesFragment recipesFragment=new RecipesFragment();
         FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.content_all_recipies_frame_layout,recipiesFragment,"Recipies Fragment")
+        fragmentTransaction.replace(R.id.content_all_recipies_frame_layout,recipesFragment,"Recipies Fragment")
                 .commit();
 
 
@@ -197,14 +144,6 @@ public class AllRecipes extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
-//
-//            userEmail = currentUser.getEmail();
-//            userName = currentUser.getDisplayName();
-//            userProfile = currentUser.getPhotoUrl()+"";
-
-
 
 
         View NavigationHeader = navigationView.getHeaderView(0);
@@ -222,7 +161,7 @@ public class AllRecipes extends AppCompatActivity
                     drawer.closeDrawer(GravityCompat.START);
                 }
                 Toast.makeText(AllRecipes.this,"Edit Profile",Toast.LENGTH_LONG).show();
-                //FragmentManager fragmentManager=getSupportFragmentManager();
+
                 EditProfileFragment editProfileFragment=new EditProfileFragment();
                 Bundle keyBundle=new Bundle();
                 keyBundle.putString("Key",key);
@@ -277,7 +216,7 @@ public class AllRecipes extends AppCompatActivity
         if(id==R.id.all_recipies_add_recipie){
             AddRecipeFragment addRecipeFragment=new AddRecipeFragment();
             FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-            fragmentTransaction.add(R.id.content_all_recipies_frame_layout,addRecipeFragment,"Add Recipe Fragment")
+            fragmentTransaction.replace(R.id.content_all_recipies_frame_layout,addRecipeFragment,"Add Recipe Fragment")
                     .commit();
 
         }
