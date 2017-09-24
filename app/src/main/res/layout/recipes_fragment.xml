@@ -20,10 +20,16 @@
         android:textStyle="bold"
         android:text="Vegetarian"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"/>
+        <com.victor.loading.book.BookLoading
+            android:id="@+id/recipes_fragment_vegetarian_book_loading"
+            android:layout_gravity="center"
+            android:layout_width="150dp"
+            android:layout_height="100dp"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recipes_fragment_vegetarian_recycler_view"
         android:padding="10dp"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </android.support.v7.widget.RecyclerView>
@@ -40,9 +46,15 @@
             android:textStyle="bold"
             android:text="Non-Vegetarian"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"/>
+        <com.victor.loading.book.BookLoading
+            android:id="@+id/recipes_fragment_non_vegetarian_book_loading"
+            android:layout_gravity="center"
+            android:layout_width="150dp"
+            android:layout_height="100dp"/>
 
         <android.support.v7.widget.RecyclerView
             android:padding="10dp"
+            android:visibility="gone"
             android:id="@+id/recipes_fragment_non_vegetarian_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -61,9 +73,16 @@
             android:textStyle="bold"
             android:text="Desserts"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"/>
+        <com.victor.loading.book.BookLoading
+            android:id="@+id/recipes_fragment_desserts_book_loading"
+            android:layout_gravity="center"
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            />
 
         <android.support.v7.widget.RecyclerView
             android:padding="10dp"
+            android:visibility="gone"
             android:id="@+id/recipes_fragment_desserts_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

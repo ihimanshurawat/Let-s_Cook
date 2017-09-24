@@ -10,4 +10,10 @@
     <color name="colorText">#434B5B</color>
     <color name="colorTextLight">#8E939E</color>
 
+
+
+    <color name="book_loading_background">#ffffff</color>
+    <color name="book_loading_book">#E82D50</color>
+    <color name="book_loading_page">#ffffff</color>
+
 </resources>

@@ -18,6 +18,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.victor.loading.book.BookLoading;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,6 +41,9 @@ public class RecipesFragment extends Fragment {
 
     DatabaseReference databaseReference;
 
+    //BookLoading References
+    BookLoading vegetarianBookLoading,nonVegetarianBookLoading,dessertsBookLoading;
+
 
 
     @Nullable
@@ -48,6 +53,13 @@ public class RecipesFragment extends Fragment {
 
         Bundle bundle=getArguments();
 
+        vegetarianBookLoading=v.findViewById(R.id.recipes_fragment_vegetarian_book_loading);
+        nonVegetarianBookLoading=v.findViewById(R.id.recipes_fragment_non_vegetarian_book_loading);
+        dessertsBookLoading=v.findViewById(R.id.recipes_fragment_desserts_book_loading);
+
+        vegetarianBookLoading.start();
+        nonVegetarianBookLoading.start();
+        dessertsBookLoading.start();
 
         vegetarianRecipeRecyclerView= v.findViewById(R.id.recipes_fragment_vegetarian_recycler_view);
         nonVegetarianRecipeRecyclerView=v.findViewById(R.id.recipes_fragment_non_vegetarian_recycler_view);
@@ -71,19 +83,19 @@ public class RecipesFragment extends Fragment {
         dessertsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
 
 
-        if(bundle!=null) {
+        //if(bundle!=null) {
             //Do Something Here
-            String cuisine=bundle.getString("cuisine");
-            if(cuisine!=null) {
-                databaseReference.child("recipes").orderByChild(cuisine).addValueEventListener(cuisineValueEventListener);
-            }
+           // String cuisine=bundle.getString("cuisine");
+           // if(cuisine!=null) {
+                databaseReference.child("recipes").orderByChild("cuisine").equalTo("Indian").addValueEventListener(cuisineValueEventListener);
+           // }
 
 
-        }else{
-            databaseReference.child("recipes").orderByChild("type").equalTo("Vegetarian").addValueEventListener(vegetarianEventListener);
-            databaseReference.child("recipes").orderByChild("type").equalTo("Non-vegetarian").addValueEventListener(nonVegetarianEventListener);
-            databaseReference.child("recipes").orderByChild("type").equalTo("Dessert").addValueEventListener(dessertsValueEventListener);
-        }
+//        }else{
+//            databaseReference.child("recipes").orderByChild("type").equalTo("Vegetarian").addValueEventListener(vegetarianEventListener);
+//            databaseReference.child("recipes").orderByChild("type").equalTo("Non-vegetarian").addValueEventListener(nonVegetarianEventListener);
+//            databaseReference.child("recipes").orderByChild("type").equalTo("Dessert").addValueEventListener(dessertsValueEventListener);
+//        }
         return v;
     }
 
@@ -173,6 +185,18 @@ public class RecipesFragment extends Fragment {
                         dessertsRecipeList.add(recipe);
                     }
                 }
+                vegetarianBookLoading.stop();
+                nonVegetarianBookLoading.stop();
+                dessertsBookLoading.stop();
+
+                vegetarianBookLoading.setVisibility(View.GONE);
+                nonVegetarianBookLoading.setVisibility(View.GONE);
+                dessertsBookLoading.setVisibility(View.GONE);
+
+                vegetarianRecipeRecyclerView.setVisibility(View.VISIBLE);
+                nonVegetarianRecipeRecyclerView.setVisibility(View.VISIBLE);
+                dessertsRecyclerView.setVisibility(View.VISIBLE);
+
                 vegetarianRecipeAdapter.notifyDataSetChanged();
                 nonVegetarianRecipeAdapter.notifyDataSetChanged();
                 dessertsRecipeAdapter.notifyDataSetChanged();
