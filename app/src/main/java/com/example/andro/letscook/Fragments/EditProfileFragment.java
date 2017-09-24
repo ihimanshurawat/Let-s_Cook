@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.disklrucache.DiskLruCache;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
@@ -99,8 +100,15 @@ public class EditProfileFragment extends Fragment {
     RotateLoading rotateLoading;
 
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.i("DestroyCalled","Destroyed");
+        databaseReference.child("users").child(key).child("name").removeEventListener(nameEditTextEventListener);
+        databaseReference.child("users").child(key).child("description").removeEventListener(descriptionEditTextEventListener);
+        databaseReference.child("users").child(key).child("profileUrl").removeEventListener(profileImageEventListener);
 
-
+    }
 
     @Nullable
     @Override
@@ -149,104 +157,21 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
-        databaseReference.child("users").child(key).child("name").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                name = dataSnapshot.getValue() + "";
-                nameEditText.setText(name);
-                if (TextUtils.isEmpty(name)) {
-                    nameEditText.setError("Are you the BLANK? from No Game No Life");
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        databaseReference.child("users").child(key).child("description").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                descriptionEditText.setText(dataSnapshot.getValue() + "");
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
 
+        databaseReference.child("users").child(key).child("name").addValueEventListener(nameEditTextEventListener);
 
+        databaseReference.child("users").child(key).child("description").addValueEventListener(descriptionEditTextEventListener);
 
-        databaseReference.child("users").child(key).child("profileUrl").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(currentUser!=null) {
-                    if(context!=null) {
-                        Glide.with(profileImageView).load(dataSnapshot.getValue() + "").listener(new RequestListener<Drawable>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                rotateLoading.stop();
-                                return false;
-
-                            }
-                        }).apply(RequestOptions.circleCropTransform()).into(profileImageView);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        databaseReference.child("users").child(key).child("profileUrl").addValueEventListener(profileImageEventListener);
 
 
         saveChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-
-                databaseReference.child("users").child(key).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-                        if(!(descriptionEditText.getText().toString().equals(dataSnapshot.child("description").getValue()))){
-                            databaseReference.child("users").child(key).child("description")
-                                    .setValue(descriptionEditText.getText().toString().trim());
-                            Toast.makeText(context,"Changes Saved",Toast.LENGTH_SHORT).show();
-
-                        }
-                        if(!(nameEditText.getText().toString().equals(dataSnapshot.child("name").getValue().toString()))){
-                            name=nameEditText.getText().toString().trim();
-                            databaseReference.child("users").child(key).child("name").setValue(name);
-                            Toast.makeText(context,"Changes Saved",Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-
-
-
+                onSaveClicked();
             }
         });
-
-
-
 
         removeAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -328,7 +253,6 @@ public class EditProfileFragment extends Fragment {
                     profileImageView.setVisibility(View.VISIBLE);
                     rotateLoading.stop();
 
-
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
 
@@ -338,14 +262,105 @@ public class EditProfileFragment extends Fragment {
                     rotateLoading.start();
                     profileImageView.setVisibility(View.INVISIBLE);
                     uploadButton.setEnabled(false);
-
                 }
             });
-
-
-
         }
     }
+
+
+
+    //SaveButton Click Action
+    public void onSaveClicked(){
+        databaseReference.child("users").child(key).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+                if(!(descriptionEditText.getText().toString().equals(dataSnapshot.child("description").getValue()))){
+                    databaseReference.child("users").child(key).child("description")
+                            .setValue(descriptionEditText.getText().toString().trim());
+                    Toast.makeText(context,"Changes Saved",Toast.LENGTH_SHORT).show();
+
+                }
+                if(!(nameEditText.getText().toString().equals(dataSnapshot.child("name").getValue().toString()))){
+                    name=nameEditText.getText().toString().trim();
+                    databaseReference.child("users").child(key).child("name").setValue(name);
+                    Toast.makeText(context,"Changes Saved",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                
+
+            }
+        });
+
+    }
+
+
+    //Event Listener for Name Edit Text Field
+
+    ValueEventListener nameEditTextEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            name = dataSnapshot.getValue() + "";
+            nameEditText.setText(name);
+            if (TextUtils.isEmpty(name)) {
+                nameEditText.setError("Your Name is Required");
+            }
+
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
+
+    //Event Listener for Description Edit Text Field
+
+    ValueEventListener descriptionEditTextEventListener= new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            if(dataSnapshot.getValue()!=null) {
+                descriptionEditText.setText(dataSnapshot.getValue().toString());
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
+
+    //Event Listener for Profile Image
+
+    ValueEventListener profileImageEventListener= new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            Glide.with(getContext().getApplicationContext()).load(dataSnapshot.getValue() + "").listener(new RequestListener<Drawable>() {
+                @Override
+                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                    return false;
+                }
+
+                @Override
+                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                    rotateLoading.stop();
+                    return false;
+
+                }
+            }).apply(RequestOptions.circleCropTransform()).into(profileImageView);
+
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
+
 
 
 }

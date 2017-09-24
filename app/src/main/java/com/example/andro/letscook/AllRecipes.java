@@ -100,7 +100,7 @@ public class AllRecipes extends AppCompatActivity
                                 userName = existingUser.getName();
                                 nameTextView.setText(userName);
                                 emailTextView.setText(userEmail);
-                                Glide.with(context).load(userProfile).apply(RequestOptions.circleCropTransform()).into(profileImageView);
+                                Glide.with(context.getApplicationContext()).load(userProfile).apply(RequestOptions.circleCropTransform()).into(profileImageView);
                             }
 
                             @Override
