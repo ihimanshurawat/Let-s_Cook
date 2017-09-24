@@ -44,7 +44,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         holder.recipeName.setText(recipe.getName()+"");
 //        holder.recipeFavourite.setText(recipe.getFavourites()+"");
         holder.recipeTotalTime.setText(recipe.getCookTime()+"");
-        Glide.with(context).load(recipe.getImageUrl()).apply(RequestOptions.circleCropTransform()).into(holder.recipeImageView);
+        Glide.with(context.getApplicationContext()).load(recipe.getImageUrl()).apply(RequestOptions.circleCropTransform()).into(holder.recipeImageView);
 
     }
 

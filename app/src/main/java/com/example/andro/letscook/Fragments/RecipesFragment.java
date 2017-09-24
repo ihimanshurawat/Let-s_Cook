@@ -40,10 +40,14 @@ public class RecipesFragment extends Fragment {
     DatabaseReference databaseReference;
 
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v=inflater.inflate(R.layout.recipes_fragment,container,false);
+
+        Bundle bundle=getArguments();
+
 
         vegetarianRecipeRecyclerView= v.findViewById(R.id.recipes_fragment_vegetarian_recycler_view);
         nonVegetarianRecipeRecyclerView=v.findViewById(R.id.recipes_fragment_non_vegetarian_recycler_view);
@@ -67,71 +71,118 @@ public class RecipesFragment extends Fragment {
         dessertsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
 
 
-        ValueEventListener vegetarianEventListener= new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getChildrenCount()>0) {
-                    vegetarianRecipeList.clear();
-                    for (DataSnapshot children : dataSnapshot.getChildren()) {
-                            Recipe recipe = children.getValue(Recipe.class);
-                            vegetarianRecipeList.add(recipe);
-                    }
-                    Collections.reverse(vegetarianRecipeList);
-                    vegetarianRecipeAdapter.notifyDataSetChanged();
-                }
+        if(bundle!=null) {
+            //Do Something Here
+            String cuisine=bundle.getString("cuisine");
+            if(cuisine!=null) {
+                databaseReference.child("recipes").orderByChild(cuisine).addValueEventListener(cuisineValueEventListener);
             }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
 
-            }
-        };
-
-        ValueEventListener nonVegetarianEventListener= new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getChildrenCount()>0) {
-                    nonVegetarianRecipeList.clear();
-                    for (DataSnapshot children : dataSnapshot.getChildren()) {
-                        Recipe recipe = children.getValue(Recipe.class);
-                        nonVegetarianRecipeList.add(recipe);
-                    }
-                    Collections.reverse(nonVegetarianRecipeList);
-                    nonVegetarianRecipeAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-
-        ValueEventListener dessertsValueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getChildrenCount()>0) {
-                Log.i("ChildrenCount",dataSnapshot.getChildrenCount()+"");
-                    dessertsRecipeList.clear();
-                    for (DataSnapshot children : dataSnapshot.getChildren()) {
-                        Recipe recipe = children.getValue(Recipe.class);
-                        dessertsRecipeList.add(recipe);
-                    }
-                    Collections.reverse(dessertsRecipeList);
-                    dessertsRecipeAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-
-        databaseReference.child("recipes").orderByChild("type").equalTo("Vegetarian").addValueEventListener(vegetarianEventListener);
-        databaseReference.child("recipes").orderByChild("type").equalTo("Non-vegetarian").addValueEventListener(nonVegetarianEventListener);
-        databaseReference.child("recipes").orderByChild("type").equalTo("Dessert").addValueEventListener(dessertsValueEventListener);
-
+        }else{
+            databaseReference.child("recipes").orderByChild("type").equalTo("Vegetarian").addValueEventListener(vegetarianEventListener);
+            databaseReference.child("recipes").orderByChild("type").equalTo("Non-vegetarian").addValueEventListener(nonVegetarianEventListener);
+            databaseReference.child("recipes").orderByChild("type").equalTo("Dessert").addValueEventListener(dessertsValueEventListener);
+        }
         return v;
     }
+
+
+
+
+    ValueEventListener vegetarianEventListener= new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            if(dataSnapshot.getChildrenCount()>0) {
+                vegetarianRecipeList.clear();
+                for (DataSnapshot children : dataSnapshot.getChildren()) {
+                    Recipe recipe = children.getValue(Recipe.class);
+                    vegetarianRecipeList.add(recipe);
+                }
+                Collections.reverse(vegetarianRecipeList);
+                vegetarianRecipeAdapter.notifyDataSetChanged();
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
+
+    ValueEventListener nonVegetarianEventListener= new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            if(dataSnapshot.getChildrenCount()>0) {
+                nonVegetarianRecipeList.clear();
+                for (DataSnapshot children : dataSnapshot.getChildren()) {
+                    Recipe recipe = children.getValue(Recipe.class);
+                    nonVegetarianRecipeList.add(recipe);
+                }
+                Collections.reverse(nonVegetarianRecipeList);
+                nonVegetarianRecipeAdapter.notifyDataSetChanged();
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
+
+    ValueEventListener dessertsValueEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            if(dataSnapshot.getChildrenCount()>0) {
+                Log.i("ChildrenCount",dataSnapshot.getChildrenCount()+"");
+                dessertsRecipeList.clear();
+                for (DataSnapshot children : dataSnapshot.getChildren()) {
+                    Recipe recipe = children.getValue(Recipe.class);
+                    dessertsRecipeList.add(recipe);
+                }
+                Collections.reverse(dessertsRecipeList);
+                dessertsRecipeAdapter.notifyDataSetChanged();
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
+
+
+    ValueEventListener cuisineValueEventListener= new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            vegetarianRecipeList.clear();
+            nonVegetarianRecipeList.clear();
+            dessertsRecipeList.clear();
+            if(dataSnapshot.getChildrenCount()>0) {
+                for (DataSnapshot children : dataSnapshot.getChildren()){
+                    if(children.child("type").getValue().toString().equals("Vegetarian")){
+                        Recipe recipe=children.getValue(Recipe.class);
+                        vegetarianRecipeList.add(recipe);
+                    }
+                    if(children.child("type").getValue().toString().equals("Non-vegetarian")){
+                        Recipe recipe=children.getValue(Recipe.class);
+                        nonVegetarianRecipeList.add(recipe);
+                    }
+                    if(children.child("type").getValue().toString().equals("Dessert")){
+                        Recipe recipe= children.getValue(Recipe.class);
+                        dessertsRecipeList.add(recipe);
+                    }
+                }
+                vegetarianRecipeAdapter.notifyDataSetChanged();
+                nonVegetarianRecipeAdapter.notifyDataSetChanged();
+                dessertsRecipeAdapter.notifyDataSetChanged();
+
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
 }
