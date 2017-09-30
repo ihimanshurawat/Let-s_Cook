@@ -50,8 +50,8 @@ public class AddRecipeFragment extends Fragment {
     private int id;
     private String name;
     private String description;
-    private String prepTime;
-    private String cookTime;
+    private int prepTime;
+    private int cookTime;
     private int servings;
     private String cuisine;
     private String type;
@@ -97,8 +97,8 @@ public class AddRecipeFragment extends Fragment {
                 description=recipeDescription.getText().toString();
                 cuisine=recipeCuisine.getText().toString();
                 servings=Integer.parseInt(recipeServing.getText().toString());
-                cookTime=recipeCookTime.getText().toString();
-                prepTime=recipePrepTime.getText().toString();
+                cookTime=Integer.parseInt(recipeCookTime.getText().toString());
+                prepTime=Integer.parseInt(recipePrepTime.getText().toString());
                 type=recipeType.getText().toString();
                 Recipe newRecipe= new Recipe(id,name,cuisine,type,recipeImageUrl,description,servings,prepTime,cookTime,0);
                 databaseReference.child("recipes").push().setValue(newRecipe).addOnCompleteListener(new OnCompleteListener<Void>() {
