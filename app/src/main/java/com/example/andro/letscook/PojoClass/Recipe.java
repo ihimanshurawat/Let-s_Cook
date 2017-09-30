@@ -13,8 +13,8 @@ public class Recipe {
     private String imageUrl;
     private String description;
     private int servings;
-    private String prepTime;
-    private String cookTime;
+    private int prepTime;
+    private int cookTime;
     private int favourites;
 
     //Required By FireBase Database
@@ -22,7 +22,7 @@ public class Recipe {
 
     }
 
-    public Recipe(int id, String name, String cuisine, String type, String imageUrl, String description, int servings, String prepTime, String cookTime, int favourites) {
+    public Recipe(int id, String name, String cuisine, String type, String imageUrl, String description, int servings, int prepTime, int cookTime, int favourites) {
         this.id = id;
         this.name = name;
         this.cuisine = cuisine;
@@ -91,19 +91,19 @@ public class Recipe {
         this.servings = servings;
     }
 
-    public String getPrepTime() {
+    public int getPrepTime() {
         return prepTime;
     }
 
-    public void setPrepTime(String prepTime) {
+    public void setPrepTime(int prepTime) {
         this.prepTime = prepTime;
     }
 
-    public String getCookTime() {
+    public int getCookTime() {
         return cookTime;
     }
 
-    public void setCookTime(String cookTime) {
+    public void setCookTime(int cookTime) {
         this.cookTime = cookTime;
     }
 
