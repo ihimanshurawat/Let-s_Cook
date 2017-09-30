@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-</LinearLayout>
+
+            <TextView
+                android:id="@+id/view_recipe_fragment_ingredient_item_view_ingredient_text_view"
+                android:padding="5dp"
+                android:textStyle="bold"
+                android:layout_margin="5dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="oil"
+                android:textColor="@color/colorText"
+                android:gravity="end"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                android:layout_gravity="center_horizontal|center_vertical"
+                />
+
+            <TextView
+                android:padding="5dp"
+                android:id="@+id/view_recipe_fragment_ingredient_item_view_quantity_text_view"
+                android:layout_margin="5dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorTextLight"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                android:textStyle="bold|italic"
+                android:text="1 tbsp canola oil"
+                />
+
+    </LinearLayout>
