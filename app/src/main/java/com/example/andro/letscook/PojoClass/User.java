@@ -1,10 +1,12 @@
 package com.example.andro.letscook.PojoClass;
 
+import java.io.Serializable;
+
 /**
  * Created by himanshurawat on 08/09/17.
  */
 
-public class User {
+public class User implements Serializable {
 
     private String email;
     private String name;
@@ -12,19 +14,20 @@ public class User {
     private String profileUrl;
     private int numberOfFavourites;
     private String favouriteIds;
+    private String cuisine;
 
     public User(){
 
     }
 
-    public User(String email, String name, String description, String profileUrl, int numberOfFavourites, String favouriteIds) {
-
+    public User(String email, String name, String description, String profileUrl, int numberOfFavourites, String favouriteIds, String cuisine) {
         this.email = email;
         this.name = name;
         this.description = description;
         this.profileUrl = profileUrl;
         this.numberOfFavourites = numberOfFavourites;
         this.favouriteIds = favouriteIds;
+        this.cuisine = cuisine;
     }
 
     public String getEmail() {
@@ -73,5 +76,13 @@ public class User {
 
     public void setFavouriteIds(String favouriteIds) {
         this.favouriteIds = favouriteIds;
+    }
+
+    public String getCuisine() {
+        return cuisine;
+    }
+
+    public void setCuisine(String cuisine) {
+        this.cuisine = cuisine;
     }
 }
