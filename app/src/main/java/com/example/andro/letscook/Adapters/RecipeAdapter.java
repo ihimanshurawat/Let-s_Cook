@@ -40,12 +40,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     public void onBindViewHolder(RecipeViewHolder holder, int position) {
 
         Recipe recipe=recipeList.get(position);
-
-        holder.recipeName.setText(recipe.getName()+"");
-//        holder.recipeFavourite.setText(recipe.getFavourites()+"");
-        holder.recipeTotalTime.setText(recipe.getCookTime()+"");
-        Glide.with(context.getApplicationContext()).load(recipe.getImageUrl()).apply(RequestOptions.circleCropTransform()).into(holder.recipeImageView);
-
+        if(recipe!=null) {
+            holder.recipeName.setText(recipe.getName());
+    //      holder.recipeFavourite.setText(recipe.getFavourites()+"");
+            holder.recipeTotalTime.setText(getTime(recipe.getCookTime()+recipe.getPrepTime()));
+            Glide.with(context.getApplicationContext()).load(recipe.getImageUrl()).apply(RequestOptions.circleCropTransform()).into(holder.recipeImageView);
+        }
     }
 
     @Override
@@ -68,6 +68,18 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
           //  recipeFavourite=itemView.findViewById(R.id.recipes_fragment_recipe_favourite_text_view);
 
 
+        }
+    }
+
+    public String getTime(int x){
+
+        if(x>60){
+
+            return (x/60)+"h "+ (x%60)+"'";
+        }
+        else{
+
+            return (x%60)+"m";
         }
     }
 
