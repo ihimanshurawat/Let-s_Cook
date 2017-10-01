@@ -64,6 +64,8 @@ public class AllRecipes extends AppCompatActivity
 
     String key;
 
+    User existingUser;
+
     Context context;
 
     @Override
@@ -89,12 +91,13 @@ public class AllRecipes extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getChildrenCount()>0){
                     for(DataSnapshot child : dataSnapshot.getChildren()) {
+
                         key=child.getKey();
-                        Log.i("KeyID", key);
+
                         databaseReference.child("users").child(key).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                User existingUser = dataSnapshot.getValue(User.class);
+                                existingUser = dataSnapshot.getValue(User.class);
                                 userEmail = existingUser.getEmail();
                                 userProfile = existingUser.getProfileUrl();
                                 userName = existingUser.getName();
@@ -113,10 +116,9 @@ public class AllRecipes extends AppCompatActivity
                 }
                 else{
                     User newUser = new User(currentUser.getEmail(), currentUser.getDisplayName()
-                            ,null, currentUser.getPhotoUrl() + "", 0, null);
+                            ,null, currentUser.getPhotoUrl() + "", 0, null,"All");
                     databaseReference.child("users").push().setValue(newUser);
                 }
-
 
             }
 
@@ -125,16 +127,10 @@ public class AllRecipes extends AppCompatActivity
 
             }
         });
-
-
+        //Fragment Manager
         fragmentManager=getSupportFragmentManager();
 
-        RecipesFragment recipesFragment=new RecipesFragment();
-        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.content_all_recipies_frame_layout,recipesFragment,"Recipies Fragment")
-                .commit();
-
-
+        launchRecipeFragment(existingUser);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -146,6 +142,7 @@ public class AllRecipes extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
+        //Nav Header
         View NavigationHeader = navigationView.getHeaderView(0);
         nameTextView=NavigationHeader.findViewById(R.id.nav_header_all_recipies_name_text_view);
         emailTextView=NavigationHeader.findViewById(R.id.nav_header_all_recipies_email_text_view);
@@ -160,20 +157,11 @@ public class AllRecipes extends AppCompatActivity
                 if (drawer.isDrawerOpen(GravityCompat.START)) {
                     drawer.closeDrawer(GravityCompat.START);
                 }
-                Toast.makeText(AllRecipes.this,"Edit Profile",Toast.LENGTH_LONG).show();
-
-                EditProfileFragment editProfileFragment=new EditProfileFragment();
-                Bundle keyBundle=new Bundle();
-                keyBundle.putString("Key",key);
-                editProfileFragment.setArguments(keyBundle);
-                FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.content_all_recipies_frame_layout,editProfileFragment,"Edit Profile")
-                        .setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right).commit();
-
+                Toast.makeText(AllRecipes.this,"Edit Profile",Toast.LENGTH_SHORT).show();
+                //Launch Edit Profile Fragment
+                launchEditProfileFragment(key);
             }
         });
-
-
     }
 
 
@@ -252,5 +240,25 @@ public class AllRecipes extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void launchRecipeFragment(User existingUser){
+        RecipesFragment recipesFragment = new RecipesFragment();
+        Bundle bundle=new Bundle();
+        bundle.putSerializable("User",existingUser);
+        recipesFragment.setArguments(bundle);
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.content_all_recipies_frame_layout, recipesFragment, "Recipes Fragment")
+                .commit();
+    }
+
+    public void launchEditProfileFragment(String key){
+        EditProfileFragment editProfileFragment=new EditProfileFragment();
+        Bundle keyBundle=new Bundle();
+        keyBundle.putString("Key",key);
+        editProfileFragment.setArguments(keyBundle);
+        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.content_all_recipies_frame_layout,editProfileFragment,"Edit Profile")
+                .setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right).commit();
     }
 }
