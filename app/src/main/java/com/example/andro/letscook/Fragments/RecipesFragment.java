@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.example.andro.letscook.Adapters.RecipeAdapter;
 import com.example.andro.letscook.PojoClass.Recipe;
+import com.example.andro.letscook.PojoClass.User;
 import com.example.andro.letscook.R;
 import com.example.andro.letscook.Support.DatabaseUtility;
 import com.google.firebase.database.DataSnapshot;
@@ -44,6 +45,9 @@ public class RecipesFragment extends Fragment {
     //BookLoading References
     BookLoading vegetarianBookLoading,nonVegetarianBookLoading,dessertsBookLoading;
 
+    //User Reference
+    User existingUser;
+
 
 
     @Nullable
@@ -57,6 +61,7 @@ public class RecipesFragment extends Fragment {
         nonVegetarianBookLoading=v.findViewById(R.id.recipes_fragment_non_vegetarian_book_loading);
         dessertsBookLoading=v.findViewById(R.id.recipes_fragment_desserts_book_loading);
 
+        //Book Loading Start
         vegetarianBookLoading.start();
         nonVegetarianBookLoading.start();
         dessertsBookLoading.start();
@@ -68,38 +73,33 @@ public class RecipesFragment extends Fragment {
         databaseReference= DatabaseUtility.getDatabase().getReference();
 
         vegetarianRecipeList= new ArrayList<>();
-        vegetarianRecipeAdapter=new RecipeAdapter(getContext(),vegetarianRecipeList);
+        vegetarianRecipeAdapter=new RecipeAdapter(getContext(),vegetarianRecipeList,getActivity().getSupportFragmentManager());
         vegetarianRecipeRecyclerView.setAdapter(vegetarianRecipeAdapter);
         vegetarianRecipeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
 
         nonVegetarianRecipeList = new ArrayList<>();
-        nonVegetarianRecipeAdapter=new RecipeAdapter(getContext(),nonVegetarianRecipeList);
+        nonVegetarianRecipeAdapter=new RecipeAdapter(getContext(),nonVegetarianRecipeList,getActivity().getSupportFragmentManager());
         nonVegetarianRecipeRecyclerView.setAdapter(nonVegetarianRecipeAdapter);
         nonVegetarianRecipeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
 
         dessertsRecipeList = new ArrayList<>();
-        dessertsRecipeAdapter=new RecipeAdapter(getContext(),dessertsRecipeList);
+        dessertsRecipeAdapter=new RecipeAdapter(getContext(),dessertsRecipeList,getActivity().getSupportFragmentManager());
         dessertsRecyclerView.setAdapter(dessertsRecipeAdapter);
         dessertsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
 
 
-        //if(bundle!=null) {
-            //Do Something Here
-           // String cuisine=bundle.getString("cuisine");
-           // if(cuisine!=null) {
-                databaseReference.child("recipes").orderByChild("cuisine").equalTo("Indian").addValueEventListener(cuisineValueEventListener);
-           // }
-
-
-//        }else{
-//            databaseReference.child("recipes").orderByChild("type").equalTo("Vegetarian").addValueEventListener(vegetarianEventListener);
-//            databaseReference.child("recipes").orderByChild("type").equalTo("Non-vegetarian").addValueEventListener(nonVegetarianEventListener);
-//            databaseReference.child("recipes").orderByChild("type").equalTo("Dessert").addValueEventListener(dessertsValueEventListener);
+//        existingUser=(User)bundle.getSerializable("User");
+//        String cuisine=existingUser.getCuisine();
+//        if(cuisine!=null) {
+//            databaseReference.child("recipes").orderByChild("cuisine").equalTo(cuisine).addValueEventListener(cuisineValueEventListener);
 //        }
+        //else {
+            databaseReference.child("recipes").orderByChild("type").equalTo("Vegetarian").addValueEventListener(vegetarianEventListener);
+            databaseReference.child("recipes").orderByChild("type").equalTo("Non-vegetarian").addValueEventListener(nonVegetarianEventListener);
+            databaseReference.child("recipes").orderByChild("type").equalTo("Dessert").addValueEventListener(dessertsValueEventListener);
+     //  }
         return v;
     }
-
-
 
 
     ValueEventListener vegetarianEventListener= new ValueEventListener() {
@@ -112,7 +112,11 @@ public class RecipesFragment extends Fragment {
                     vegetarianRecipeList.add(recipe);
                 }
                 Collections.reverse(vegetarianRecipeList);
+                vegetarianBookLoading.stop();
+                vegetarianBookLoading.setVisibility(View.GONE);
+                vegetarianRecipeRecyclerView.setVisibility(View.VISIBLE);
                 vegetarianRecipeAdapter.notifyDataSetChanged();
+
             }
         }
 
@@ -132,7 +136,11 @@ public class RecipesFragment extends Fragment {
                     nonVegetarianRecipeList.add(recipe);
                 }
                 Collections.reverse(nonVegetarianRecipeList);
+                nonVegetarianBookLoading.stop();
+                nonVegetarianBookLoading.setVisibility(View.GONE);
+                nonVegetarianRecipeRecyclerView.setVisibility(View.VISIBLE);
                 nonVegetarianRecipeAdapter.notifyDataSetChanged();
+
             }
         }
 
@@ -153,6 +161,9 @@ public class RecipesFragment extends Fragment {
                     dessertsRecipeList.add(recipe);
                 }
                 Collections.reverse(dessertsRecipeList);
+                dessertsBookLoading.stop();
+                dessertsBookLoading.setVisibility(View.GONE);
+                dessertsRecyclerView.setVisibility(View.VISIBLE);
                 dessertsRecipeAdapter.notifyDataSetChanged();
             }
         }
@@ -172,16 +183,16 @@ public class RecipesFragment extends Fragment {
             dessertsRecipeList.clear();
             if(dataSnapshot.getChildrenCount()>0) {
                 for (DataSnapshot children : dataSnapshot.getChildren()){
-                    if(children.child("type").getValue().toString().equals("Vegetarian")){
-                        Recipe recipe=children.getValue(Recipe.class);
+                    if (children.child("type").getValue().toString().equals("Vegetarian")) {
+                        Recipe recipe = children.getValue(Recipe.class);
                         vegetarianRecipeList.add(recipe);
                     }
-                    if(children.child("type").getValue().toString().equals("Non-vegetarian")){
-                        Recipe recipe=children.getValue(Recipe.class);
+                    if (children.child("type").getValue().toString().equals("Non-vegetarian")) {
+                        Recipe recipe = children.getValue(Recipe.class);
                         nonVegetarianRecipeList.add(recipe);
                     }
-                    if(children.child("type").getValue().toString().equals("Dessert")){
-                        Recipe recipe= children.getValue(Recipe.class);
+                    if (children.child("type").getValue().toString().equals("Dessert")) {
+                        Recipe recipe = children.getValue(Recipe.class);
                         dessertsRecipeList.add(recipe);
                     }
                 }
@@ -200,7 +211,6 @@ public class RecipesFragment extends Fragment {
                 vegetarianRecipeAdapter.notifyDataSetChanged();
                 nonVegetarianRecipeAdapter.notifyDataSetChanged();
                 dessertsRecipeAdapter.notifyDataSetChanged();
-
             }
         }
 

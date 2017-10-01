@@ -16,7 +16,7 @@
                 android:text="oil"
                 android:textColor="@color/colorText"
                 android:gravity="end"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:layout_gravity="center_horizontal|center_vertical"
                 />
 
@@ -28,7 +28,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorTextLight"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textStyle="bold|italic"
                 android:text="1 tbsp canola oil"
                 />

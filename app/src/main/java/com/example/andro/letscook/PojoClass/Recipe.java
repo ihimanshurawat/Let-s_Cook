@@ -1,10 +1,12 @@
 package com.example.andro.letscook.PojoClass;
 
+import java.io.Serializable;
+
 /**
  * Created by himanshurawat on 13/09/17.
  */
 
-public class Recipe {
+public class Recipe implements Serializable {
 
     private int id;
     private String name;
