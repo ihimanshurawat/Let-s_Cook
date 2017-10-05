@@ -4,10 +4,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +47,9 @@ public class ViewRecipeFragment extends Fragment {
 
     IngredientAdapter ingredientAdapter;
 
+    ViewGroup.LayoutParams layoutParams;
+    LinearLayout.LayoutParams textViewLayoutParams;
+
 
     @Nullable
     @Override
@@ -76,102 +81,16 @@ public class ViewRecipeFragment extends Fragment {
             recipeTotalTimeTextView.setText("total time"+getTime(recipe.getCookTime()+recipe.getPrepTime()));
             recipeDescriptionTextView.setText(recipe.getDescription());
             Glide.with(getContext().getApplicationContext()).load(recipe.getImageUrl()).into(recipeImageView);
-
         }
-
-
-        final ViewGroup.LayoutParams layoutParams=new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        final LinearLayout.LayoutParams textViewLayoutParams= new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-
-
-        databaseReference.child("ingredients").child("1").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                if(dataSnapshot.getChildrenCount()==1){
-                    ingredientList=new ArrayList<>();
-                    ingredientAdapter=new IngredientAdapter(getContext(),ingredientList);
-                    ingredientList.clear();
-                    String heading=null;
-                    for(DataSnapshot children : dataSnapshot.getChildren()){
-                        for(DataSnapshot insideChildren: children.getChildren()) {
-                            if (insideChildren.getKey().equals("heading")) {
-                                heading = insideChildren.getValue().toString();
-                            } else {
-                                ingredientList.add(insideChildren.getValue().toString());
-                            }
-                            Log.i("IsInfinite",insideChildren.getKey());
-                        }
-                    }
-                    TextView headingTextView= new TextView(getContext());
-                    if(heading!=null) {
-                        headingTextView.setText(heading);
-                    }
-                    //Padding and Margin for Heading TextView
-                    headingTextView.setPadding(5,5,5,5);
-                    textViewLayoutParams.setMargins(20,5,20,5);
-                    headingTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorText));
-                    RecyclerView ingredientRecyclerView= new RecyclerView(getContext());
-                    ingredientRecyclerView.setAdapter(ingredientAdapter);
-                    ingredientRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
-                    ingredientAdapter.notifyDataSetChanged();
-                    ingredientsLinearLayout.addView(headingTextView,textViewLayoutParams);
-                    ingredientsLinearLayout.addView(ingredientRecyclerView,layoutParams);
-                }
-
-
-                if(dataSnapshot.getChildrenCount()>1) {
-                    for (DataSnapshot children : dataSnapshot.getChildren()) {
-
-                        ingredientList=new ArrayList<>();
-                        ingredientAdapter=new IngredientAdapter(getContext(),ingredientList);
-                        ingredientList.clear();
-                        String heading=null;
-                        Log.i("getKey",children.getKey());
-
-                        for(DataSnapshot insideChild:children.getChildren()){
-                            Log.i("getKey",insideChild.getKey());
-                            if(insideChild.getKey().equals("heading")){
-                                heading=insideChild.getValue().toString();
-                            }else{
-                                ingredientList.add(insideChild.getValue().toString());
-                            }
-
-                            TextView headingTextView= new TextView(getContext());
-                            if(heading!=null) {
-                                headingTextView.setText(heading);
-                            }
-                            //Padding and Margin for Heading TextView
-                            headingTextView.setPadding(5,5,5,5);
-                            textViewLayoutParams.setMargins(20,5,20,5);
-                            headingTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorText));
-
-                            RecyclerView ingredientRecyclerView= new RecyclerView(getContext());
-                            ingredientRecyclerView.setAdapter(ingredientAdapter);
-                            ingredientRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
-                            ingredientAdapter.notifyDataSetChanged();
-                            ingredientsLinearLayout.addView(headingTextView,textViewLayoutParams);
-                            ingredientsLinearLayout.addView(ingredientRecyclerView,layoutParams);
-
-
-                        }
-
-                    }
-                }
-
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        
+        layoutParams=new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        textViewLayoutParams= new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
 
 
-
+        databaseReference.child("ingredients").
+                child(Integer.toString(recipe.getId())).
+                addValueEventListener(ingredientValueEventListener);
 
 
 
@@ -189,5 +108,52 @@ public class ViewRecipeFragment extends Fragment {
             return (x%60)+"m";
         }
     }
+
+
+    ValueEventListener ingredientValueEventListener= new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            if(dataSnapshot.getChildrenCount()>0){
+                String heading=null;
+                for(DataSnapshot children : dataSnapshot.getChildren()) {
+                    Log.i("GetKey", children.getKey());
+                    ingredientList = new ArrayList<>();
+                    ingredientAdapter = new IngredientAdapter(getContext(), ingredientList);
+                    for (DataSnapshot insideChildren : children.getChildren()) {
+                        if (insideChildren.getKey().equals("heading")) {
+                            heading = insideChildren.getValue().toString();
+                        } else {
+                            ingredientList.add(insideChildren.getValue().toString());
+                        }
+                        Log.i("IsInfinite", insideChildren.getKey());
+                    }
+
+                    TextView headingTextView = new TextView(getContext());
+                    if (heading != null) {
+                        headingTextView.setText(heading);
+                    }
+                    //Padding and Margin for Heading TextView
+                    headingTextView.setPadding(5, 5, 5, 5);
+                    textViewLayoutParams.setMargins(20, 5, 20, 5);
+                    headingTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+                    headingTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    headingTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorText));
+
+                    RecyclerView ingredientRecyclerView = new RecyclerView(getContext());
+                    ingredientRecyclerView.setAdapter(ingredientAdapter);
+                    ingredientRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                    ingredientAdapter.notifyDataSetChanged();
+                    ingredientsLinearLayout.addView(headingTextView, textViewLayoutParams);
+                    ingredientsLinearLayout.addView(ingredientRecyclerView, layoutParams);
+                }
+            }
+
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
 
 }

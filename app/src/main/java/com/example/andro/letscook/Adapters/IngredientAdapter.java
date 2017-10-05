@@ -12,7 +12,6 @@ import com.example.andro.letscook.R;
 import java.util.List;
 
 
-
 public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.IngredientViewHolder> {
 
     public Context context;
@@ -39,7 +38,6 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
             String arr[]=ingredientList.get(position).split(":");
             holder.ingredientTextView.setText(arr[0]);
             holder.quantityTextView.setText(arr[1]);
-
         }
 
     }
