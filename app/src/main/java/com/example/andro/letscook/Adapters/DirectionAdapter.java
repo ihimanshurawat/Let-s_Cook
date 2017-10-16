@@ -12,10 +12,6 @@ import com.example.andro.letscook.R;
 
 import java.util.List;
 
-/**
- * Created by himanshurawat on 13/10/17.
- */
-
 public class DirectionAdapter extends RecyclerView.Adapter<DirectionAdapter.DirectionViewHolder> {
 
     public Context context;
@@ -56,7 +52,6 @@ public class DirectionAdapter extends RecyclerView.Adapter<DirectionAdapter.Dire
 
             directionTextView=itemView.findViewById(R.id.view_recipe_fragment_direction_item_view_direction_text_view);
             directionCheckBox=itemView.findViewById(R.id.view_recipe_fragment_direction_item_view_direction_checkbox);
-
 
         }
 
