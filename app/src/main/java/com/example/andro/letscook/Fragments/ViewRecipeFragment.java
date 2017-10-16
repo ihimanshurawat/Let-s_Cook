@@ -1,10 +1,8 @@
 package com.example.andro.letscook.Fragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,16 +14,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
+import com.example.andro.letscook.Adapters.DirectionAdapter;
 import com.example.andro.letscook.Adapters.IngredientAdapter;
 import com.example.andro.letscook.PojoClass.Recipe;
 import com.example.andro.letscook.R;
+import com.example.andro.letscook.Support.FireStoreUtility;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,22 +33,26 @@ import java.util.List;
 
 public class ViewRecipeFragment extends Fragment {
 
-
     TextView recipeNameTextView, recipeTotalTimeTextView,recipeCookTimeTextView
             ,recipePrepTimeTextView,recipeServingTextView,recipeDescriptionTextView;
 
     ImageView recipeImageView;
 
     List<String> ingredientList;
+    List<String> directionList;
 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     LinearLayout ingredientsLinearLayout;
+    LinearLayout directionsLinearLayout;
 
     IngredientAdapter ingredientAdapter;
+    DirectionAdapter directionAdapter;
 
     ViewGroup.LayoutParams layoutParams;
     LinearLayout.LayoutParams textViewLayoutParams;
+
+    FirebaseFirestore db;
 
 
     @Nullable
@@ -60,7 +64,9 @@ public class ViewRecipeFragment extends Fragment {
 
         firebaseDatabase=FirebaseDatabase.getInstance();
         databaseReference=firebaseDatabase.getReference();
+        db= FireStoreUtility.getFirebaseFirestore();
         ingredientsLinearLayout=v.findViewById(R.id.view_recipe_fragment_ingredient_linear_layout);
+        directionsLinearLayout=v.findViewById(R.id.view_recipe_fragment_directions_linear_layout);
 
         //Recipe ImageView
         recipeImageView= v.findViewById(R.id.view_recipe_fragment_recipe_image_view);
@@ -75,10 +81,10 @@ public class ViewRecipeFragment extends Fragment {
 
         if(recipe!=null) {
             recipeNameTextView.setText(recipe.getName());
-            recipeServingTextView.setText(recipe.getServings()+" servings");
-            recipePrepTimeTextView.setText("prep time"+getTime(recipe.getPrepTime()));
-            recipeCookTimeTextView.setText("cook time"+getTime(recipe.getCookTime()));
-            recipeTotalTimeTextView.setText("total time"+getTime(recipe.getCookTime()+recipe.getPrepTime()));
+            recipeServingTextView.setText(Integer.toString(recipe.getServings()));
+            recipePrepTimeTextView.setText(getTime(recipe.getPrepTime()));
+            recipeCookTimeTextView.setText(getTime(recipe.getCookTime()));
+            recipeTotalTimeTextView.setText(getTime(recipe.getCookTime()+recipe.getPrepTime()));
             recipeDescriptionTextView.setText(recipe.getDescription());
             Glide.with(getContext().getApplicationContext()).load(recipe.getImageUrl()).into(recipeImageView);
         }
@@ -87,10 +93,13 @@ public class ViewRecipeFragment extends Fragment {
         textViewLayoutParams= new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
 
-
         databaseReference.child("ingredients").
                 child(Integer.toString(recipe.getId())).
                 addValueEventListener(ingredientValueEventListener);
+
+        databaseReference.child("directions").
+                child(Integer.toString(recipe.getId())).
+                addValueEventListener(directionValueEventListener);
 
 
 
@@ -108,6 +117,50 @@ public class ViewRecipeFragment extends Fragment {
             return (x%60)+"m";
         }
     }
+
+    ValueEventListener directionValueEventListener= new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            if(dataSnapshot.getChildrenCount()>0){
+                String heading=null;
+                for(DataSnapshot children:dataSnapshot.getChildren()){
+                    directionList=new ArrayList<>();
+                    directionAdapter=new DirectionAdapter(getContext(),directionList);
+                    for(DataSnapshot insideChildren: children.getChildren()){
+                        if (insideChildren.getKey().equals("heading")) {
+                            heading = insideChildren.getValue().toString();
+                        } else {
+                            directionList.add(insideChildren.getValue().toString());
+                        }
+                    }
+                    TextView headingTextView = new TextView(getContext());
+                    if (heading != null) {
+                        headingTextView.setText(heading);
+                    }
+                    //Padding and Margin for Heading TextView
+                    headingTextView.setPadding(5, 5, 5, 5);
+                    textViewLayoutParams.setMargins(20, 5, 20, 5);
+                    headingTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+                    headingTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    headingTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorText));
+
+                    RecyclerView directionRecyclerView = new RecyclerView(getContext());
+                    directionRecyclerView.setAdapter(directionAdapter);
+                    directionRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                    directionAdapter.notifyDataSetChanged();
+                    directionsLinearLayout.addView(headingTextView, textViewLayoutParams);
+                    directionsLinearLayout.addView(directionRecyclerView, layoutParams);
+
+
+                }
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
 
 
     ValueEventListener ingredientValueEventListener= new ValueEventListener() {
@@ -139,15 +192,14 @@ public class ViewRecipeFragment extends Fragment {
                     headingTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                     headingTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorText));
 
-                    RecyclerView ingredientRecyclerView = new RecyclerView(getContext());
-                    ingredientRecyclerView.setAdapter(ingredientAdapter);
-                    ingredientRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                    RecyclerView directionRecyclerView = new RecyclerView(getContext());
+                    directionRecyclerView.setAdapter(ingredientAdapter);
+                    directionRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
                     ingredientAdapter.notifyDataSetChanged();
                     ingredientsLinearLayout.addView(headingTextView, textViewLayoutParams);
-                    ingredientsLinearLayout.addView(ingredientRecyclerView, layoutParams);
+                    ingredientsLinearLayout.addView(directionRecyclerView, layoutParams);
                 }
             }
-
         }
 
         @Override

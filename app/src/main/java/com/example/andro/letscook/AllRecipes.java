@@ -2,6 +2,7 @@ package com.example.andro.letscook;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -27,6 +28,9 @@ import com.example.andro.letscook.PojoClass.User;
 import com.example.andro.letscook.Support.DatabaseUtility;
 import com.example.andro.letscook.Support.FireStoreUtility;
 import com.example.andro.letscook.Support.FirebaseAuthUtility;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -37,6 +41,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
@@ -79,6 +85,11 @@ public class AllRecipes extends AppCompatActivity
 
     Context context;
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        databaseReference.child("users").removeEventListener(userProfileValueEventListener);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +102,7 @@ public class AllRecipes extends AppCompatActivity
 
         databaseReference= DatabaseUtility.getDatabase().getReference();
 
-        db=FireStoreUtility.getFirebaseFirestore();
+        //db=FireStoreUtility.getFirebaseFirestore();
 
         if(currentUser!=null) {
             arr = currentUser.getEmail().split("\\.");
@@ -100,76 +111,32 @@ public class AllRecipes extends AppCompatActivity
         }
         context=this;
 
-        db.collection("users").whereEqualTo("email",currentUser.getEmail()).limit(1).addSnapshotListener(this, new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                if(documentSnapshots.isEmpty()){
-                    User newUser = new User(currentUser.getEmail(), currentUser.getDisplayName()
-                            ,null, currentUser.getPhotoUrl() + "", 0, null,"All");
-                    db.collection("users").add(newUser);
-
-                }else{
-                    List<DocumentSnapshot> documentSnapshot=documentSnapshots.getDocuments();
-                    Log.i("IsWorking",documentSnapshot.get(0).getId());
-                    key=documentSnapshot.get(0).getId();
-                    existingUser=documentSnapshot.get(0).toObject(User.class);
-                    userEmail = existingUser.getEmail();
-                    userProfile = existingUser.getProfileUrl();
-                    userName = existingUser.getName();
-                    nameTextView.setText(userName);
-                    emailTextView.setText(userEmail);
-                    Glide.with(context.getApplicationContext()).load(userProfile).apply(RequestOptions.circleCropTransform()).into(profileImageView);
-
-
-                }
-
-            }
-        });
-
-
-
-//        databaseReference.child("users").orderByChild("email").equalTo(currentUser.getEmail()).limitToFirst(1).addValueEventListener(new ValueEventListener() {
+//        db.collection("users").whereEqualTo("email",currentUser.getEmail()).limit(1).get().addOnSuccessListener(this, new OnSuccessListener<QuerySnapshot>() {
 //            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                if(dataSnapshot.getChildrenCount()>0){
-//                    for(DataSnapshot child : dataSnapshot.getChildren()) {
-//
-//                        key=child.getKey();
-//
-//                        databaseReference.child("users").child(key).addValueEventListener(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(DataSnapshot dataSnapshot) {
-//                                existingUser = dataSnapshot.getValue(User.class);
-//                                userEmail = existingUser.getEmail();
-//                                userProfile = existingUser.getProfileUrl();
-//                                userName = existingUser.getName();
-//                                nameTextView.setText(userName);
-//                                emailTextView.setText(userEmail);
-//                                Glide.with(context.getApplicationContext()).load(userProfile).apply(RequestOptions.circleCropTransform()).into(profileImageView);
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(DatabaseError databaseError) {
-//
-//                            }
-//                        });
-//                    }
-//
-//                }
-//                else{
+//            public void onSuccess(QuerySnapshot documentSnapshots) {
+//                if(documentSnapshots.isEmpty()){
 //                    User newUser = new User(currentUser.getEmail(), currentUser.getDisplayName()
 //                            ,null, currentUser.getPhotoUrl() + "", 0, null,"All");
-//                    databaseReference.child("users").push().setValue(newUser);
+//                    db.collection("users").add(newUser);
+//
+//                }else{
+//                    List<DocumentSnapshot> documentSnapshot=documentSnapshots.getDocuments();
+//                    Log.i("IsWorking",documentSnapshot.get(0).getId());
+//                    key=documentSnapshot.get(0).getId();
+//                    existingUser=documentSnapshot.get(0).toObject(User.class);
+//                    userEmail = existingUser.getEmail();
+//                    userProfile = existingUser.getProfileUrl();
+//                    userName = existingUser.getName();
+//                    nameTextView.setText(userName);
+//                    emailTextView.setText(userEmail);
+//                    Glide.with(context.getApplicationContext()).load(userProfile).apply(RequestOptions.circleCropTransform()).into(profileImageView);
 //                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
 //
 //            }
 //        });
-        //Fragment Manager
+
+        //To Manage User Profiles
+        databaseReference.child("users").orderByChild("email").equalTo(currentUser.getEmail()).limitToFirst(1).addValueEventListener(userProfileValueEventListener);
 
         fragmentManager=getSupportFragmentManager();
 
@@ -304,4 +271,46 @@ public class AllRecipes extends AppCompatActivity
         fragmentTransaction.replace(R.id.content_all_recipies_frame_layout,editProfileFragment,"Edit Profile")
                 .setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right).commit();
     }
+
+    ValueEventListener userProfileValueEventListener= new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            if(dataSnapshot.getChildrenCount()>0){
+                for(DataSnapshot child : dataSnapshot.getChildren()) {
+
+                    key=child.getKey();
+
+                    databaseReference.child("users").child(key).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            existingUser = dataSnapshot.getValue(User.class);
+                            userEmail = existingUser.getEmail();
+                            userProfile = existingUser.getProfileUrl();
+                            userName = existingUser.getName();
+                            nameTextView.setText(userName);
+                            emailTextView.setText(userEmail);
+                            Glide.with(context.getApplicationContext()).load(userProfile).apply(RequestOptions.circleCropTransform()).into(profileImageView);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
+            }
+            else{
+                User newUser = new User(currentUser.getEmail(), currentUser.getDisplayName()
+                        ,null, currentUser.getPhotoUrl() + "", 0, null,"All");
+                databaseReference.child("users").push().setValue(newUser);
+            }
+
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
 }

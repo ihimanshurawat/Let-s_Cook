@@ -35,10 +35,12 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.example.andro.letscook.AllRecipes;
 import com.example.andro.letscook.MainActivity;
 import com.example.andro.letscook.PojoClass.User;
 import com.example.andro.letscook.R;
 import com.example.andro.letscook.Support.DatabaseUtility;
+import com.example.andro.letscook.Support.FireStoreUtility;
 import com.example.andro.letscook.Support.FirebaseAuthUtility;
 import com.example.andro.letscook.Support.StorageUtility;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -56,6 +58,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -67,6 +74,7 @@ import com.victor.loading.rotate.RotateLoading;
 import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -89,6 +97,7 @@ public class EditProfileFragment extends Fragment {
 
     String key;
 
+
     String arr[];
 
     DatabaseReference databaseReference;
@@ -110,6 +119,8 @@ public class EditProfileFragment extends Fragment {
 
     }
 
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -118,9 +129,8 @@ public class EditProfileFragment extends Fragment {
         Bundle bundle= getArguments();
         if(bundle!=null){
             key=bundle.getString("Key");
+
         }
-
-
 
         databaseReference= DatabaseUtility.getDatabase().getReference();
         currentUser= FirebaseAuthUtility.getAuth().getCurrentUser();
@@ -156,6 +166,40 @@ public class EditProfileFragment extends Fragment {
 
             }
         });
+
+//        db.collection("users").document(key).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//            @Override
+//            public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                if(documentSnapshot.exists()) {
+//                    Log.i("DocumentSnapshot","Working");
+//                    name = documentSnapshot.get("name").toString();
+//                    nameEditText.setText(name);
+//                    if (TextUtils.isEmpty(name)) {
+//                        nameEditText.setError("Your Name is Required");
+//                    }
+//                    if(documentSnapshot.get("description")!=null) {
+//                        descriptionEditText.setText(documentSnapshot.get("description").toString());
+//                    }
+//
+//
+//                    Glide.with(getContext().getApplicationContext()).load(documentSnapshot.get("profileUrl").toString()).listener(new RequestListener<Drawable>() {
+//                        @Override
+//                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+//                            rotateLoading.stop();
+//                            return false;
+//
+//                        }
+//                    }).apply(RequestOptions.circleCropTransform()).into(profileImageView);
+//
+//                }
+//
+//            }
+//        });
 
 
 
@@ -253,6 +297,7 @@ public class EditProfileFragment extends Fragment {
                     profileImageView.setVisibility(View.VISIBLE);
                     rotateLoading.stop();
 
+
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
 
@@ -271,31 +316,50 @@ public class EditProfileFragment extends Fragment {
 
     //SaveButton Click Action
     public void onSaveClicked(){
-        databaseReference.child("users").child(key).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+//        if(TextUtils.isEmpty(nameEditText.getText().toString())) {
+//            Toast.makeText(getContext(),"Please Enter Name to Continue",Toast.LENGTH_SHORT).show();
+//            nameEditText.setError("Your Name is Required");
+//        }
+//        else{
+//            HashMap<String, Object> map = new HashMap<>();
+//            if (descriptionEditText.getText() != null) {
+//                map.put("description", descriptionEditText.getText().toString());
+//            }
+//            map.put("name", nameEditText.getText().toString());
+//
+//            db.collection("users").document(key).update(map);
+//        }
 
 
-                if(!(descriptionEditText.getText().toString().equals(dataSnapshot.child("description").getValue()))){
-                    databaseReference.child("users").child(key).child("description")
-                            .setValue(descriptionEditText.getText().toString().trim());
-                    Toast.makeText(context,"Changes Saved",Toast.LENGTH_SHORT).show();
+        if(TextUtils.isEmpty(nameEditText.getText().toString())) {
+            Toast.makeText(getContext(),"Please Enter Name to Continue",Toast.LENGTH_SHORT).show();
+            nameEditText.setError("Your Name is Required");
+        }else {
+            databaseReference.child("users").child(key).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+                    if (!(descriptionEditText.getText().toString().equals(dataSnapshot.child("description").getValue()))) {
+                        databaseReference.child("users").child(key).child("description")
+                                .setValue(descriptionEditText.getText().toString().trim());
+                        Toast.makeText(context, "Changes Saved", Toast.LENGTH_SHORT).show();
+
+                    }
+                    if (!(nameEditText.getText().toString().equals(dataSnapshot.child("name").getValue().toString()))) {
+                        name = nameEditText.getText().toString().trim();
+                        databaseReference.child("users").child(key).child("name").setValue(name);
+                        Toast.makeText(context, "Changes Saved", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
 
                 }
-                if(!(nameEditText.getText().toString().equals(dataSnapshot.child("name").getValue().toString()))){
-                    name=nameEditText.getText().toString().trim();
-                    databaseReference.child("users").child(key).child("name").setValue(name);
-                    Toast.makeText(context,"Changes Saved",Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                
-
-            }
-        });
-
+            });
+        }
     }
 
 

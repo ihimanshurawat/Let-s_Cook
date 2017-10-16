@@ -47,9 +47,7 @@ public class RecipesFragment extends Fragment {
 
     //User Reference
     User existingUser;
-
-
-
+    
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

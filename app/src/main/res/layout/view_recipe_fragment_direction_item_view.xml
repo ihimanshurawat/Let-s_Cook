@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <CheckBox
+            android:id="@+id/view_recipe_fragment_direction_item_view_direction_checkbox"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/view_recipe_fragment_direction_item_view_direction_text_view"
+            android:layout_gravity="clip_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hello rrjfojoi jfijg odijfg m ogdfphpdoidfjgofdn gofgpofhodkfpoodfkgkfgdp"
+            android:textStyle="bold"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+
+    </LinearLayout>
+</LinearLayout>

@@ -77,22 +77,21 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
             super.onStart();
             //Attaching AuthStateListener
             mAuth.addAuthStateListener(loginStateListener);
+
+            networkStateReceiver = new NetworkStateReceiver(this);
+            networkStateReceiver.addListener(this);
+            this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+
         }
 
     @Override
     protected void onPause() {
         super.onPause();
         mAuth.removeAuthStateListener(loginStateListener);
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        //Deattaching NetworkStateListener
         networkStateReceiver.removeListener(this);
         this.unregisterReceiver(networkStateReceiver);
+
+
     }
 
     @Override
@@ -102,15 +101,13 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
 
             //Initialize Twitter
             Twitter.initialize(this);
-            //Initialize Facebook
-
             //Buttons
-            googleSignIn = (Button)findViewById(R.id.google_sign_in);
-            twitterSignIn=(Button)findViewById(R.id.twitter_sign_in);
+            googleSignIn= findViewById(R.id.google_sign_in);
+            twitterSignIn= findViewById(R.id.twitter_sign_in);
             //HiddenButtons
-            twitterLoginButton=(TwitterLoginButton)findViewById(R.id.twitter);
+            twitterLoginButton= findViewById(R.id.twitter);
 
-            //Initialize Firebase
+            //Initialize FireBase
             mAuth= FirebaseAuthUtility.getAuth();
 
             user=mAuth.getCurrentUser();

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:scrollbars="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,8 +27,11 @@
                 android:layout_height="wrap_content"
                 android:text="Nachini Barfi"
                 android:textAllCaps="true"
+                android:layout_margin="5dp"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
                 android:textColor="@color/colorText"
-                android:textAlignment="center"
+                android:textAlignment="textStart"
                 android:textStyle="bold"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
 
@@ -48,15 +51,30 @@
                         android:layout_marginStart="30dp"
                         android:layout_marginTop="5dp">
                         <ImageView
+                            android:layout_gravity="center_horizontal|center_vertical"
                             android:layout_width="20dp"
-                            android:layout_height="20dp" />
-                        <TextView
-                            android:id="@+id/view_recipe_fragment_servings_text_view"
-                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"
+                            android:layout_margin="2dp" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/colorTextLight"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                            android:text="Servings"/>
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/colorText"
+                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                                android:text="serves"/>
+                            <TextView
+                                android:id="@+id/view_recipe_fragment_servings_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="4"
+                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                                android:textColor="@color/colorTextLight"
+                                />
+
+                        </LinearLayout>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -64,15 +82,29 @@
                         android:layout_marginStart="30dp"
                         android:layout_marginTop="5dp">
                         <ImageView
+                            android:layout_gravity="center_horizontal|center_vertical"
                             android:layout_width="20dp"
                             android:layout_height="20dp" />
-                        <TextView
-                            android:id="@+id/view_recipe_fragment_cook_time_text_view"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/colorTextLight"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                            android:text="Cook Time"/>
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/colorText"
+                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                                android:text="cook time"/>
+                            <TextView
+                                android:id="@+id/view_recipe_fragment_cook_time_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/colorTextLight"
+                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                                />
+                        </LinearLayout>
+
+
                     </LinearLayout>
 
 
@@ -88,15 +120,29 @@
                         android:layout_marginStart="30dp"
                         android:layout_marginTop="5dp">
                         <ImageView
+                            android:layout_gravity="center_horizontal|center_vertical"
                             android:layout_width="20dp"
                             android:layout_height="20dp" />
-                        <TextView
-                            android:id="@+id/view_recipe_fragment_prep_time_text_view"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/colorTextLight"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                            android:text="Prep Time"/>
+                            android:orientation="vertical">
+                            <TextView
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/colorText"
+                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                                android:text="prep time"/>
+                            <TextView
+                                android:id="@+id/view_recipe_fragment_prep_time_text_view"
+                                android:textColor="@color/colorTextLight"
+                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                />
+                        </LinearLayout>
+
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -104,15 +150,29 @@
                         android:layout_marginStart="30dp"
                         android:layout_marginTop="5dp">
                         <ImageView
+                            android:layout_gravity="center_horizontal|center_vertical"
                             android:layout_width="20dp"
                             android:layout_height="20dp" />
-                        <TextView
-                            android:id="@+id/view_recipe_fragment_total_time_text_view"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/colorTextLight"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                            android:text="Total Time"/>
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/colorText"
+                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                                android:text="total time"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/colorTextLight"
+                                android:id="@+id/view_recipe_fragment_total_time_text_view"
+                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+
+                                />
+                        </LinearLayout>
+
                     </LinearLayout>
 
                 </LinearLayout>
@@ -120,16 +180,48 @@
 
             </LinearLayout>
             <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                android:textColor="@color/colorText"
+                android:layout_margin="5dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                />
+            <TextView
                 android:id="@+id/view_recipe_fragment_description_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Description"
-                android:textColor="@color/colorTextLight"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginTop="5dp"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                android:textColor="@color/colorText"
+                android:layout_margin="5dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ingredients"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:textColor="@color/colorText"
+            android:textAlignment="textStart"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:layout_margin="5dp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/view_recipe_fragment_ingredient_linear_layout">
 
 
         </LinearLayout>
@@ -137,21 +229,35 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ingredients"
-            android:textAlignment="center"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
-
+            android:textStyle="bold"
+            android:layout_margin="5dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:textColor="@color/colorText"
+            android:text="Directions"
+            android:textAllCaps="true"
+            android:textAlignment="textStart"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:id="@+id/view_recipe_fragment_ingredient_linear_layout"
-            >
-
-
-        </LinearLayout>
-
-
+            android:id="@+id/view_recipe_fragment_directions_linear_layout"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textStyle="bold"
+            android:layout_margin="5dp"
+            android:paddingEnd="20dp"
+            android:paddingStart="20dp"
+            android:textColor="@color/colorText"
+            android:text="Comments"
+            android:textAllCaps="true"
+            android:textAlignment="textStart"
+            />
 
     </LinearLayout>
 

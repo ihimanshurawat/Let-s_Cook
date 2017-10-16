@@ -16,12 +16,14 @@ import android.widget.Toast;
 import com.example.andro.letscook.PojoClass.Recipe;
 import com.example.andro.letscook.R;
 import com.example.andro.letscook.Support.DatabaseUtility;
+import com.example.andro.letscook.Support.FireStoreUtility;
 import com.example.andro.letscook.Support.StorageUtility;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -46,6 +48,8 @@ public class AddRecipeFragment extends Fragment {
     FirebaseStorage firebaseStorage;
     DatabaseReference databaseReference;
 
+    FirebaseFirestore db;
+
 
     private int id;
     private String name;
@@ -64,6 +68,8 @@ public class AddRecipeFragment extends Fragment {
         firebaseStorage= StorageUtility.getFirebaseStorageReference();
 
         databaseReference= DatabaseUtility.getDatabase().getReference();
+
+        db= FireStoreUtility.getFirebaseFirestore();
 
         recipeUploadImage=v.findViewById(R.id.add_recipe_fragment_upload_image_button);
         submitButton=v.findViewById(R.id.add_recipe_fragment_submit_button);
@@ -91,7 +97,6 @@ public class AddRecipeFragment extends Fragment {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 id=Integer.parseInt(recipeID.getText().toString());
                 name=recipeName.getText().toString();
                 description=recipeDescription.getText().toString();
@@ -107,9 +112,6 @@ public class AddRecipeFragment extends Fragment {
                         Toast.makeText(getContext(),"Recipe Added ",Toast.LENGTH_SHORT).show();
                     }
                 });
-
-
-
             }
         });
 
@@ -131,7 +133,6 @@ public class AddRecipeFragment extends Fragment {
                     recipeUploadImage.setEnabled(true);
                     recipeImageUrl=taskSnapshot.getDownloadUrl()+"";
                     Toast.makeText(getContext(),"Image Uploaded",Toast.LENGTH_SHORT).show();
-
 
 
                 }
