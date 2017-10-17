@@ -3,9 +3,6 @@ package com.example.andro.letscook.Support;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-/**
- * Created by himanshurawat on 12/09/17.
- */
 
 public class StorageUtility {
     //Storage Root Reference

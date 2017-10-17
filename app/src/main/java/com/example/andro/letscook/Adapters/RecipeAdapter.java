@@ -28,9 +28,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     public FragmentManager fragmentManager;
     public List<Recipe> recipeList;
 
-
-
-
     public RecipeAdapter(Context context,List<Recipe> recipeList,FragmentManager fragmentManager){
         this.context=context;
         this.recipeList=recipeList;

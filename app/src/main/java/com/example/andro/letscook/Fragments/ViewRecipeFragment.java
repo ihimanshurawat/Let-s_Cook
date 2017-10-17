@@ -54,6 +54,15 @@ public class ViewRecipeFragment extends Fragment {
 
     FirebaseFirestore db;
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        //Removing Event Listeners
+        databaseReference.child("ingredients").removeEventListener(ingredientValueEventListener);
+        databaseReference.child("directions").removeEventListener(directionValueEventListener);
+
+    }
 
     @Nullable
     @Override
@@ -86,7 +95,9 @@ public class ViewRecipeFragment extends Fragment {
             recipeCookTimeTextView.setText(getTime(recipe.getCookTime()));
             recipeTotalTimeTextView.setText(getTime(recipe.getCookTime()+recipe.getPrepTime()));
             recipeDescriptionTextView.setText(recipe.getDescription());
+            //Glide
             Glide.with(getContext().getApplicationContext()).load(recipe.getImageUrl()).into(recipeImageView);
+
         }
         
         layoutParams=new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
