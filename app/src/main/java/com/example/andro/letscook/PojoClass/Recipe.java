@@ -2,13 +2,10 @@ package com.example.andro.letscook.PojoClass;
 
 import java.io.Serializable;
 
-/**
- * Created by himanshurawat on 13/09/17.
- */
 
 public class Recipe implements Serializable {
 
-    private int id;
+    private String id;
     private String name;
     private String cuisine;
     private String type;
@@ -24,7 +21,8 @@ public class Recipe implements Serializable {
 
     }
 
-    public Recipe(int id, String name, String cuisine, String type, String imageUrl, String description, int servings, int prepTime, int cookTime, int favourites) {
+    public Recipe(String id, String name, String cuisine, String type, String imageUrl, String description, int servings, int prepTime, int cookTime, int favourites) {
+
         this.id = id;
         this.name = name;
         this.cuisine = cuisine;
@@ -37,11 +35,11 @@ public class Recipe implements Serializable {
         this.favourites = favourites;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

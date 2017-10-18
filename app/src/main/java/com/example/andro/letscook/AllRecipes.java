@@ -2,10 +2,9 @@ package com.example.andro.letscook;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
+
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,24 +25,15 @@ import com.example.andro.letscook.Fragments.EditProfileFragment;
 import com.example.andro.letscook.Fragments.RecipesFragment;
 import com.example.andro.letscook.PojoClass.User;
 import com.example.andro.letscook.Support.DatabaseUtility;
-import com.example.andro.letscook.Support.FireStoreUtility;
 import com.example.andro.letscook.Support.FirebaseAuthUtility;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
+
 
 import java.util.List;
 
@@ -301,7 +291,7 @@ public class AllRecipes extends AppCompatActivity
 
             }
             else{
-                User newUser = new User(currentUser.getEmail(), currentUser.getDisplayName()
+                User newUser = new User(currentUser.getUid(),currentUser.getEmail(), currentUser.getDisplayName()
                         ,null, currentUser.getPhotoUrl() + "", 0, null,"All");
                 databaseReference.child("users").push().setValue(newUser);
             }

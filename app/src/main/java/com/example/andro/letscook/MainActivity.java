@@ -90,8 +90,6 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
         mAuth.removeAuthStateListener(loginStateListener);
         networkStateReceiver.removeListener(this);
         this.unregisterReceiver(networkStateReceiver);
-
-
     }
 
     @Override

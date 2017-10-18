@@ -73,7 +73,7 @@ public class ViewRecipeFragment extends Fragment {
 
         firebaseDatabase=FirebaseDatabase.getInstance();
         databaseReference=firebaseDatabase.getReference();
-        db= FireStoreUtility.getFirebaseFirestore();
+
         ingredientsLinearLayout=v.findViewById(R.id.view_recipe_fragment_ingredient_linear_layout);
         directionsLinearLayout=v.findViewById(R.id.view_recipe_fragment_directions_linear_layout);
 
@@ -105,11 +105,11 @@ public class ViewRecipeFragment extends Fragment {
 
 
         databaseReference.child("ingredients").
-                child(Integer.toString(recipe.getId())).
+                child(recipe.getId()).
                 addValueEventListener(ingredientValueEventListener);
 
         databaseReference.child("directions").
-                child(Integer.toString(recipe.getId())).
+                child(recipe.getId()).
                 addValueEventListener(directionValueEventListener);
 
 

@@ -18,6 +18,7 @@ import com.example.andro.letscook.R;
 import com.example.andro.letscook.Support.DatabaseUtility;
 import com.example.andro.letscook.Support.FireStoreUtility;
 import com.example.andro.letscook.Support.StorageUtility;
+import com.example.andro.letscook.Support.UniqueIdGenerator;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -39,7 +40,7 @@ public class AddRecipeFragment extends Fragment {
     //Material EditText References
     MaterialEditText recipeID,recipeName,recipeDescription,recipeCuisine,
             recipeServing,recipeCookTime,recipePrepTime,recipeType;
-    //Upload Url Reference
+    //Upload Url
     String recipeImageUrl;
 
     //Button References
@@ -51,7 +52,7 @@ public class AddRecipeFragment extends Fragment {
     FirebaseFirestore db;
 
 
-    private int id;
+    private String id;
     private String name;
     private String description;
     private int prepTime;
@@ -97,7 +98,7 @@ public class AddRecipeFragment extends Fragment {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                id=Integer.parseInt(recipeID.getText().toString());
+                id= new UniqueIdGenerator().getUniqueID();
                 name=recipeName.getText().toString();
                 description=recipeDescription.getText().toString();
                 cuisine=recipeCuisine.getText().toString();
