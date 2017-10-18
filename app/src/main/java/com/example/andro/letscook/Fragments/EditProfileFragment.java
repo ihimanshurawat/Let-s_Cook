@@ -79,10 +79,6 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
-/**
- * Created by himanshurawat on 02/09/17.
- */
-
 public class EditProfileFragment extends Fragment {
 
     Context context;
@@ -208,7 +204,6 @@ public class EditProfileFragment extends Fragment {
         databaseReference.child("users").child(key).child("description").addValueEventListener(descriptionEditTextEventListener);
 
         databaseReference.child("users").child(key).child("profileUrl").addValueEventListener(profileImageEventListener);
-
 
         saveChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override

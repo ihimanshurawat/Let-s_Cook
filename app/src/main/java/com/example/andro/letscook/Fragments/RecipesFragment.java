@@ -1,6 +1,7 @@
 package com.example.andro.letscook.Fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,10 +16,21 @@ import com.example.andro.letscook.PojoClass.Recipe;
 import com.example.andro.letscook.PojoClass.User;
 import com.example.andro.letscook.R;
 import com.example.andro.letscook.Support.DatabaseUtility;
+import com.example.andro.letscook.Support.FireStoreUtility;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.victor.loading.book.BookLoading;
 
 import java.util.ArrayList;
@@ -42,18 +54,23 @@ public class RecipesFragment extends Fragment {
 
     DatabaseReference databaseReference;
 
+    FirebaseFirestore db;
+
     //BookLoading References
     BookLoading vegetarianBookLoading,nonVegetarianBookLoading,dessertsBookLoading;
 
     //User Reference
     User existingUser;
-    
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v=inflater.inflate(R.layout.recipes_fragment,container,false);
 
         Bundle bundle=getArguments();
+
+        db= FireStoreUtility.getFirebaseFirestore();
+        databaseReference= DatabaseUtility.getDatabase().getReference();
 
         vegetarianBookLoading=v.findViewById(R.id.recipes_fragment_vegetarian_book_loading);
         nonVegetarianBookLoading=v.findViewById(R.id.recipes_fragment_non_vegetarian_book_loading);
@@ -67,8 +84,6 @@ public class RecipesFragment extends Fragment {
         vegetarianRecipeRecyclerView= v.findViewById(R.id.recipes_fragment_vegetarian_recycler_view);
         nonVegetarianRecipeRecyclerView=v.findViewById(R.id.recipes_fragment_non_vegetarian_recycler_view);
         dessertsRecyclerView=v.findViewById(R.id.recipes_fragment_desserts_recycler_view);
-
-        databaseReference= DatabaseUtility.getDatabase().getReference();
 
         vegetarianRecipeList= new ArrayList<>();
         vegetarianRecipeAdapter=new RecipeAdapter(getContext(),vegetarianRecipeList,getActivity().getSupportFragmentManager());
@@ -85,6 +100,61 @@ public class RecipesFragment extends Fragment {
         dessertsRecyclerView.setAdapter(dessertsRecipeAdapter);
         dessertsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
 
+        db.collection("recipes").whereEqualTo("type","Vegetarian").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    vegetarianRecipeList.clear();
+                    for(DocumentSnapshot documentSnapshot:task.getResult()){
+                        Recipe recipe=documentSnapshot.toObject(Recipe.class);
+                        vegetarianRecipeList.add(recipe);
+                    }
+                    Collections.reverse(vegetarianRecipeList);
+                    vegetarianBookLoading.stop();
+                    vegetarianBookLoading.setVisibility(View.GONE);
+                    vegetarianRecipeRecyclerView.setVisibility(View.VISIBLE);
+                    vegetarianRecipeAdapter.notifyDataSetChanged();
+
+                }
+            }
+        });
+
+        db.collection("recipes").whereEqualTo("type","Non-vegetarian").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    nonVegetarianRecipeList.clear();
+                    for(DocumentSnapshot documentSnapshot:task.getResult()){
+                        Recipe recipe = documentSnapshot.toObject(Recipe.class);
+                        nonVegetarianRecipeList.add(recipe);
+                    }
+                    Collections.reverse(nonVegetarianRecipeList);
+                    nonVegetarianBookLoading.stop();
+                    nonVegetarianBookLoading.setVisibility(View.GONE);
+                    nonVegetarianRecipeRecyclerView.setVisibility(View.VISIBLE);
+                    nonVegetarianRecipeAdapter.notifyDataSetChanged();
+
+                }
+            }
+        });
+
+        db.collection("recipes").whereEqualTo("type","Dessert").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+                    dessertsRecipeList.clear();
+                    for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                        Recipe recipe=documentSnapshot.toObject(Recipe.class);
+                        dessertsRecipeList.add(recipe);
+                    }
+                    Collections.reverse(dessertsRecipeList);
+                    dessertsBookLoading.stop();
+                    dessertsBookLoading.setVisibility(View.GONE);
+                    dessertsRecyclerView.setVisibility(View.VISIBLE);
+                    dessertsRecipeAdapter.notifyDataSetChanged();
+                }
+            }
+        });
 
 //        existingUser=(User)bundle.getSerializable("User");
 //        String cuisine=existingUser.getCuisine();
@@ -92,9 +162,9 @@ public class RecipesFragment extends Fragment {
 //            databaseReference.child("recipes").orderByChild("cuisine").equalTo(cuisine).addValueEventListener(cuisineValueEventListener);
 //        }
         //else {
-            databaseReference.child("recipes").orderByChild("type").equalTo("Vegetarian").addValueEventListener(vegetarianEventListener);
-            databaseReference.child("recipes").orderByChild("type").equalTo("Non-vegetarian").addValueEventListener(nonVegetarianEventListener);
-            databaseReference.child("recipes").orderByChild("type").equalTo("Dessert").addValueEventListener(dessertsValueEventListener);
+            //databaseReference.child("recipes").orderByChild("type").equalTo("Vegetarian").addValueEventListener(vegetarianEventListener);
+            //databaseReference.child("recipes").orderByChild("type").equalTo("Non-vegetarian").addValueEventListener(nonVegetarianEventListener);
+            //databaseReference.child("recipes").orderByChild("type").equalTo("Dessert").addValueEventListener(dessertsValueEventListener);
      //  }
         return v;
     }

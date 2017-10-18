@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.andro.letscook.Adapters.DirectionAdapter;
 import com.example.andro.letscook.Adapters.IngredientAdapter;
+import com.example.andro.letscook.AllRecipes;
 import com.example.andro.letscook.PojoClass.Recipe;
 import com.example.andro.letscook.R;
 import com.example.andro.letscook.Support.FireStoreUtility;
@@ -71,6 +72,8 @@ public class ViewRecipeFragment extends Fragment {
         Bundle bundle=getArguments();
         Recipe recipe=(Recipe)bundle.getSerializable("Recipe");
 
+        ((AllRecipes)getActivity()).getSupportActionBar().setTitle(recipe.getName());
+
         firebaseDatabase=FirebaseDatabase.getInstance();
         databaseReference=firebaseDatabase.getReference();
 
@@ -80,7 +83,7 @@ public class ViewRecipeFragment extends Fragment {
         //Recipe ImageView
         recipeImageView= v.findViewById(R.id.view_recipe_fragment_recipe_image_view);
 
-        recipeNameTextView= v.findViewById(R.id.view_recipe_fragment_recipe_name_text_view);
+       // recipeNameTextView= v.findViewById(R.id.view_recipe_fragment_recipe_name_text_view);
         recipeTotalTimeTextView= v.findViewById(R.id.view_recipe_fragment_total_time_text_view);
         recipeCookTimeTextView= v.findViewById(R.id.view_recipe_fragment_cook_time_text_view);
         recipePrepTimeTextView= v.findViewById(R.id.view_recipe_fragment_prep_time_text_view);
@@ -89,7 +92,7 @@ public class ViewRecipeFragment extends Fragment {
 
 
         if(recipe!=null) {
-            recipeNameTextView.setText(recipe.getName());
+            //recipeNameTextView.setText(recipe.getName());
             recipeServingTextView.setText(Integer.toString(recipe.getServings()));
             recipePrepTimeTextView.setText(getTime(recipe.getPrepTime()));
             recipeCookTimeTextView.setText(getTime(recipe.getCookTime()));

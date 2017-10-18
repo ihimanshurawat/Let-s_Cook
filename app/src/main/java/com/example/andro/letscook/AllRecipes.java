@@ -75,9 +75,6 @@ public class AllRecipes extends AppCompatActivity
 
     Context context;
 
-    //Database References
-    DatabaseReference checkUserExist;
-    DatabaseReference loadUserData;
 
 
     @Override

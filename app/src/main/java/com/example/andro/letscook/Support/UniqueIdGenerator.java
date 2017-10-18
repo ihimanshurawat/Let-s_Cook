@@ -7,7 +7,7 @@ public class UniqueIdGenerator {
     private String uniqueID;
 
     public UniqueIdGenerator(){
-        uniqueID=null;
+        uniqueID="";
     }
 
     public String getUniqueID(){

@@ -88,6 +88,8 @@ public class AddRecipeFragment extends Fragment {
         recipeUploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Setting Recipe ID so that it can be used for Storing Image ID
+                id= new UniqueIdGenerator().getUniqueID();
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -98,7 +100,7 @@ public class AddRecipeFragment extends Fragment {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                id= new UniqueIdGenerator().getUniqueID();
+                //id= new UniqueIdGenerator().getUniqueID();
                 name=recipeName.getText().toString();
                 description=recipeDescription.getText().toString();
                 cuisine=recipeCuisine.getText().toString();
@@ -107,6 +109,7 @@ public class AddRecipeFragment extends Fragment {
                 prepTime=Integer.parseInt(recipePrepTime.getText().toString());
                 type=recipeType.getText().toString();
                 Recipe newRecipe= new Recipe(id,name,cuisine,type,recipeImageUrl,description,servings,prepTime,cookTime,0);
+                db.collection("recipes").add(newRecipe);
                 databaseReference.child("recipes").push().setValue(newRecipe).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -127,7 +130,7 @@ public class AddRecipeFragment extends Fragment {
         {
             Uri selectedimg = data.getData();
             Log.i("ImageData",selectedimg+"");
-            StorageReference storageReference=firebaseStorage.getReference().child("recipes").child(recipeID.getText()+"");
+            StorageReference storageReference=firebaseStorage.getReference().child("recipes").child(id);
             storageReference.putFile(selectedimg).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
