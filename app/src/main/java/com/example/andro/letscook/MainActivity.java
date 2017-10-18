@@ -15,6 +15,7 @@ package com.example.andro.letscook;
         import android.support.v7.app.AppCompatActivity;
         import android.os.Bundle;
         import android.util.Log;
+        import android.view.HapticFeedbackConstants;
         import android.view.View;
         import android.widget.Button;
         import android.widget.Toast;
@@ -77,19 +78,20 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
             super.onStart();
             //Attaching AuthStateListener
             mAuth.addAuthStateListener(loginStateListener);
-
-            networkStateReceiver = new NetworkStateReceiver(this);
-            networkStateReceiver.addListener(this);
-            this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+//            networkStateReceiver = new NetworkStateReceiver(this);
+//            networkStateReceiver.addListener(this);
+//            this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
 
         }
 
+
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onDestroy() {
+        super.onDestroy();
         mAuth.removeAuthStateListener(loginStateListener);
         networkStateReceiver.removeListener(this);
         this.unregisterReceiver(networkStateReceiver);
+
     }
 
     @Override
@@ -151,10 +153,7 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
             loginStateListener=new FirebaseAuth.AuthStateListener() {
                 @Override
                 public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                    if(firebaseAuth.getCurrentUser()!=null) {
-                    Intent i = new Intent(MainActivity.this,AllRecipes.class);
-                    startActivity(i);
-                    }
+                    updateUI(firebaseAuth.getCurrentUser());
                 }
             };
         }
@@ -194,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
                         if (task.isSuccessful()) {
 
                             user= mAuth.getCurrentUser();
-                            onStart();
+                            updateUI(user);
                         } else {
 
                             Snackbar.make(googleSignIn,"Authentication Failed",BaseTransientBottomBar.LENGTH_SHORT).show();
@@ -219,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             user = mAuth.getCurrentUser();
-                            onStart();
+                            updateUI(user);
                         } else {
                             Snackbar.make(googleSignIn, "Authentication Failed", BaseTransientBottomBar.LENGTH_SHORT).show();
                         }
@@ -238,6 +237,7 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
                     vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
                 } else
                     vibrator.vibrate(50);
+
                 //To Intentionally Click TwitterLoginButton
                 twitterLoginButton.performClick();
 
@@ -249,11 +249,11 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
             public void onClick(View view) {
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+
                     vibrator.vibrate(VibrationEffect.createOneShot(50,VibrationEffect.DEFAULT_AMPLITUDE));
                 }
                 else
                     vibrator.vibrate(50);
-
                 signIn();
             }
         });
@@ -286,6 +286,14 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
             }
         });
     }
+
+    public void updateUI(FirebaseUser user){
+        if(user!=null){
+            startActivity(new Intent(MainActivity.this,AllRecipes.class));
+        }
+    }
+
+
 }
 
 

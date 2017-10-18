@@ -3,9 +3,6 @@ package com.example.andro.letscook.Support;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
-/**
- * Created by himanshurawat on 10/09/17.
- */
 
 public class DatabaseUtility {
 

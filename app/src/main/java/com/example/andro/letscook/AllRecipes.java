@@ -75,17 +75,33 @@ public class AllRecipes extends AppCompatActivity
 
     Context context;
 
+    //Database References
+    DatabaseReference checkUserExist;
+    DatabaseReference loadUserData;
+
+
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        databaseReference.child("users").removeEventListener(userProfileValueEventListener);
+    protected void onStart() {
+        super.onStart();
+
+        databaseReference.child("users").orderByChild("email").
+                equalTo(currentUser.getEmail()).limitToFirst(1).
+                addValueEventListener(userProfileValueEventListener);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        databaseReference.child("users").
+                removeEventListener(userProfileValueEventListener);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_recipes);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mAuth= FirebaseAuthUtility.getAuth();
         currentUser=mAuth.getCurrentUser();
@@ -126,19 +142,20 @@ public class AllRecipes extends AppCompatActivity
 //        });
 
         //To Manage User Profiles
-        databaseReference.child("users").orderByChild("email").equalTo(currentUser.getEmail()).limitToFirst(1).addValueEventListener(userProfileValueEventListener);
-
+        if(currentUser!=null) {
+            databaseReference.child("users").orderByChild("email").equalTo(currentUser.getEmail()).limitToFirst(1).addListenerForSingleValueEvent(userProfileValueEventListener);
+        }
         fragmentManager=getSupportFragmentManager();
 
         launchRecipeFragment(existingUser);
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
 
@@ -301,6 +318,7 @@ public class AllRecipes extends AppCompatActivity
         @Override
         public void onCancelled(DatabaseError databaseError) {
 
+            //Toast.makeText(AllRecipes.this,"Unable to Access Database",Toast.LENGTH_SHORT).show();
         }
     };
 }
