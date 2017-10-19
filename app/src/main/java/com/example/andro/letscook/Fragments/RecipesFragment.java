@@ -109,7 +109,6 @@ public class RecipesFragment extends Fragment {
                         Recipe recipe=documentSnapshot.toObject(Recipe.class);
                         vegetarianRecipeList.add(recipe);
                     }
-                    Collections.reverse(vegetarianRecipeList);
                     vegetarianBookLoading.stop();
                     vegetarianBookLoading.setVisibility(View.GONE);
                     vegetarianRecipeRecyclerView.setVisibility(View.VISIBLE);
@@ -128,7 +127,6 @@ public class RecipesFragment extends Fragment {
                         Recipe recipe = documentSnapshot.toObject(Recipe.class);
                         nonVegetarianRecipeList.add(recipe);
                     }
-                    Collections.reverse(nonVegetarianRecipeList);
                     nonVegetarianBookLoading.stop();
                     nonVegetarianBookLoading.setVisibility(View.GONE);
                     nonVegetarianRecipeRecyclerView.setVisibility(View.VISIBLE);
@@ -147,7 +145,6 @@ public class RecipesFragment extends Fragment {
                         Recipe recipe=documentSnapshot.toObject(Recipe.class);
                         dessertsRecipeList.add(recipe);
                     }
-                    Collections.reverse(dessertsRecipeList);
                     dessertsBookLoading.stop();
                     dessertsBookLoading.setVisibility(View.GONE);
                     dessertsRecyclerView.setVisibility(View.VISIBLE);
