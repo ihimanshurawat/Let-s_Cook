@@ -3,6 +3,7 @@ package com.example.andro.letscook.Fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 public class AddIngredientFragment extends Fragment {
 
 
+    FragmentManager fragmentManager;
     DatabaseReference databaseReference;
 
     MaterialEditText headingMaterialEditText,ingredient1MaterialEditText,ingredient2MaterialEditText,
@@ -42,6 +44,8 @@ public class AddIngredientFragment extends Fragment {
 
         //Root Database Reference
         databaseReference= DatabaseUtility.getDatabase().getReference();
+
+        fragmentManager=getActivity().getSupportFragmentManager();
 
         //MaterialEditText
         headingMaterialEditText=v.findViewById(R.id.add_ingredient_fragment_heading_edit_text);
@@ -167,7 +171,6 @@ public class AddIngredientFragment extends Fragment {
                 Ingredients ingredients=new Ingredients(heading,ingredient_1,ingredient_2,ingredient_3,ingredient_4,ingredient_5,ingredient_6,ingredient_7,
                         ingredient_8,ingredient_9,ingredient_10,ingredient_11,ingredient_12,ingredient_13,ingredient_14,ingredient_15);
                 databaseReference.child("ingredients").child(id).push().setValue(ingredients);
-
 
 
             }

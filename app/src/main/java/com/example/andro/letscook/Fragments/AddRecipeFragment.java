@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +39,9 @@ import static android.app.Activity.RESULT_OK;
 
 public class AddRecipeFragment extends Fragment {
 
+    FragmentManager fragmentManager;
+
+
     //Material EditText References
     MaterialEditText recipeID,recipeName,recipeDescription,recipeCuisine,
             recipeServing,recipeCookTime,recipePrepTime,recipeType;
@@ -65,6 +70,8 @@ public class AddRecipeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v=inflater.inflate(R.layout.add_recipe_fragment,container,false);
+
+        fragmentManager=getActivity().getSupportFragmentManager();
 
         firebaseStorage= StorageUtility.getFirebaseStorageReference();
 
@@ -110,12 +117,8 @@ public class AddRecipeFragment extends Fragment {
                 type=recipeType.getText().toString();
                 Recipe newRecipe= new Recipe(id,name,cuisine,type,recipeImageUrl,description,servings,prepTime,cookTime,0);
                 db.collection("recipes").add(newRecipe);
-                databaseReference.child("recipes").push().setValue(newRecipe).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(getContext(),"Recipe Added ",Toast.LENGTH_SHORT).show();
-                    }
-                });
+                databaseReference.child("recipes").push().setValue(newRecipe);
+                launchAddIngredientFragment(id);
             }
         });
 
@@ -155,4 +158,14 @@ public class AddRecipeFragment extends Fragment {
         }
 
     }
+    public void launchAddIngredientFragment(String id){
+        AddIngredientFragment addIngredientFragment=new AddIngredientFragment();
+        Bundle bundle=new Bundle();
+        bundle.putString("id",id);
+        addIngredientFragment.setArguments(bundle);
+        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.content_all_recipies_frame_layout,addIngredientFragment).
+                setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right).commit();
+    }
+
 }
