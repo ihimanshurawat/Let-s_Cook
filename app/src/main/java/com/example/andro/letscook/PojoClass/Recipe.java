@@ -1,6 +1,7 @@
 package com.example.andro.letscook.PojoClass;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 public class Recipe implements Serializable {
@@ -16,14 +17,14 @@ public class Recipe implements Serializable {
     private int prepTime;
     private int cookTime;
     private int favourites;
-    private String[] mainIngredient;
+    private List<String> mainIngredient;
 
     //Required By FireBase Database
     public Recipe(){
 
     }
 
-    public Recipe(String id, String name, String cuisine, String type, String subType, String imageUrl, String description, int servings, int prepTime, int cookTime, int favourites, String[] mainIngredient) {
+    public Recipe(String id, String name, String cuisine, String type, String subType, String imageUrl, String description, int servings, int prepTime, int cookTime, int favourites, List<String> mainIngredient) {
         this.id = id;
         this.name = name;
         this.cuisine = cuisine;
@@ -126,11 +127,11 @@ public class Recipe implements Serializable {
         this.favourites = favourites;
     }
 
-    public String[] getMainIngredient() {
+    public List<String> getMainIngredient() {
         return mainIngredient;
     }
 
-    public void setMainIngredient(String[] mainIngredient) {
+    public void setMainIngredient(List<String> mainIngredient) {
         this.mainIngredient = mainIngredient;
     }
 }
