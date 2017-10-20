@@ -1,6 +1,256 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="5dp"
+            android:alpha="0.9"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="Add Ingredients"
+            android:textAlignment="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/add_ingredient_fragment_heading_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:inputType="text"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="Heading"
+                app:met_floatingLabelAlwaysShown="true"
+                app:met_floatingLabelTextSize="15sp"
+                app:met_clearButton="true"
+                />
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/add_ingredient_fragment_ingredient_1_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:inputType="text"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="Ingredient 1"
+                app:met_floatingLabelAlwaysShown="true"
+                app:met_floatingLabelTextSize="15sp"
+                app:met_clearButton="true"
+                />
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/add_ingredient_fragment_ingredient_2_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:inputType="text"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="Ingredient 2"
+                app:met_floatingLabelAlwaysShown="true"
+                app:met_floatingLabelTextSize="15sp"
+                app:met_clearButton="true"
+                />
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/add_ingredient_fragment_ingredient_3_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:inputType="text"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="Ingredient 3"
+                app:met_floatingLabelAlwaysShown="true"
+                app:met_floatingLabelTextSize="15sp"
+                app:met_clearButton="true"
+                />
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/add_ingredient_fragment_ingredient_4_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:inputType="text"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="Ingredient 4"
+                app:met_floatingLabelAlwaysShown="true"
+                app:met_floatingLabelTextSize="15sp"
+                app:met_clearButton="true"
+                />
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/add_ingredient_fragment_ingredient_5_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:inputType="text"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="Ingredient 5"
+                app:met_floatingLabelAlwaysShown="true"
+                app:met_floatingLabelTextSize="15sp"
+                app:met_clearButton="true"
+                />
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/add_ingredient_fragment_ingredient_6_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:inputType="text"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="Inredient 6"
+                app:met_floatingLabelAlwaysShown="true"
+                app:met_floatingLabelTextSize="15sp"
+                app:met_clearButton="true"
+                />
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/add_ingredient_fragment_ingredient_7_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:inputType="text"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="Ingredient 7"
+                app:met_floatingLabelAlwaysShown="true"
+                app:met_floatingLabelTextSize="15sp"
+                app:met_clearButton="true"
+                />
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/add_ingredient_fragment_ingredient_8_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:inputType="text"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="Ingredient 8"
+                app:met_floatingLabelAlwaysShown="true"
+                app:met_floatingLabelTextSize="15sp"
+                app:met_clearButton="true"
+                />
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/add_ingredient_fragment_ingredient_9_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:inputType="text"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="Ingredient 9"
+                app:met_floatingLabelAlwaysShown="true"
+                app:met_floatingLabelTextSize="15sp"
+                app:met_clearButton="true"
+                />
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/add_ingredient_fragment_ingredient_10_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:inputType="text"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="Ingredient 10"
+                app:met_floatingLabelAlwaysShown="true"
+                app:met_floatingLabelTextSize="15sp"
+                app:met_clearButton="true"
+                />
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/add_ingredient_fragment_ingredient_11_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:inputType="text"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="Ingredient 11"
+                app:met_floatingLabelAlwaysShown="true"
+                app:met_floatingLabelTextSize="15sp"
+                app:met_clearButton="true"
+                />
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/add_ingredient_fragment_ingredient_12_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:inputType="text"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="Ingredient 12"
+                app:met_floatingLabelAlwaysShown="true"
+                app:met_floatingLabelTextSize="15sp"
+                app:met_clearButton="true"
+                />
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/add_ingredient_fragment_ingredient_13_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:inputType="text"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="Ingredient 13"
+                app:met_floatingLabelAlwaysShown="true"
+                app:met_floatingLabelTextSize="15sp"
+                app:met_clearButton="true"
+            />
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/add_ingredient_fragment_ingredient_14_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:inputType="text"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="Ingredient 14"
+                app:met_floatingLabelAlwaysShown="true"
+                app:met_floatingLabelTextSize="15sp"
+                app:met_clearButton="true"
+                />
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/add_ingredient_fragment_ingredient_15_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:inputType="text"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="Ingredient 15"
+                app:met_floatingLabelAlwaysShown="true"
+                app:met_floatingLabelTextSize="15sp"
+                app:met_clearButton="true"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/add_ingredient_fragment_add_more_ingredient_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add More Ingredient"/>
+            <Button
+                android:id="@+id/add_ingredient_fragment_submit_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Submit"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+</android.support.v4.widget.NestedScrollView>
