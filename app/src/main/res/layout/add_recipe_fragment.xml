@@ -79,6 +79,20 @@
         tools:layout_editor_absoluteX="8dp"
         />
 
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/add_recipe_fragment_recipe_sub_type_material_edit_text"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelText="Sub Type"
+        app:met_floatingLabelAlwaysShown="true"
+        app:met_floatingLabelTextSize="15sp"
+        app:met_clearButton="true"
+        tools:layout_editor_absoluteY="25dp"
+        tools:layout_editor_absoluteX="8dp"
+        />
 
     <Button
         android:id="@+id/add_recipe_fragment_upload_image_button"

@@ -33,6 +33,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import java.io.Serializable;
+
 import static android.app.Activity.RESULT_OK;
 
 
@@ -66,7 +68,8 @@ public class AddRecipeFragment extends Fragment {
     private int servings;
     private String cuisine;
     private String type;
-    private String mainIngredient;
+    private String subType;
+    private String[] mainIngredient;
 
     @Nullable
     @Override
@@ -116,7 +119,8 @@ public class AddRecipeFragment extends Fragment {
                 cookTime=Integer.parseInt(recipeCookTimeMaterialEditText.getText().toString());
                 prepTime=Integer.parseInt(recipePrepTimeMaterialEditText.getText().toString());
                 type=recipeTypeMaterialEditText.getText().toString();
-                Recipe newRecipe= new Recipe(id,name,cuisine,type,recipeImageUrl,description,servings,prepTime,cookTime,0);
+                mainIngredient=recipeMainIngredientMaterialEditText.getText().toString().split(":");
+                Recipe newRecipe= new Recipe(id,name,cuisine,type,subType,recipeImageUrl,description,servings,prepTime,cookTime,0,mainIngredient);
                 db.collection("recipes").add(newRecipe);
                 databaseReference.child("recipes").push().setValue(newRecipe);
                 launchAddIngredientFragment(id);
