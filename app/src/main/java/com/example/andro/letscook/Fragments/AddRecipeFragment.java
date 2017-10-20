@@ -43,8 +43,9 @@ public class AddRecipeFragment extends Fragment {
 
 
     //Material EditText References
-    MaterialEditText recipeID,recipeName,recipeDescription,recipeCuisine,
-            recipeServing,recipeCookTime,recipePrepTime,recipeType;
+    MaterialEditText recipeIDMaterialEditText,recipeNameMaterialEditText,recipeDescriptionMaterialEditText,recipeCuisineMaterialEditText,
+            recipeServingMaterialEditText,recipeCookTimeMaterialEditText,
+            recipePrepTimeMaterialEditText,recipeTypeMaterialEditText,recipeMainIngredientMaterialEditText;
     //Upload Url
     String recipeImageUrl;
 
@@ -65,6 +66,7 @@ public class AddRecipeFragment extends Fragment {
     private int servings;
     private String cuisine;
     private String type;
+    private String mainIngredient;
 
     @Nullable
     @Override
@@ -82,15 +84,14 @@ public class AddRecipeFragment extends Fragment {
         recipeUploadImage=v.findViewById(R.id.add_recipe_fragment_upload_image_button);
         submitButton=v.findViewById(R.id.add_recipe_fragment_submit_button);
 
-        recipeID=v.findViewById(R.id.add_recipe_fragment_recipe_id_material_edit_text);
-        recipeName=v.findViewById(R.id.add_recipe_fragment_recipe_name_material_edit_text);
-        recipeDescription=v.findViewById(R.id.add_recipe_fragment_description_material_edit_text);
-        recipeCuisine=v.findViewById(R.id.add_recipe_fragment_cuisine_material_edit_text);
-        recipeServing=v.findViewById(R.id.add_recipe_fragment_servings_material_edit_text);
-        recipeCookTime=v.findViewById(R.id.add_recipe_fragment_cook_time_material_edit_text);
-        recipePrepTime=v.findViewById(R.id.add_recipe_fragment_prep_time_material_edit_text);
-        recipeType=v.findViewById(R.id.add_recipe_fragment_recipe_type_material_edit_text);
-
+        recipeNameMaterialEditText=v.findViewById(R.id.add_recipe_fragment_recipe_name_material_edit_text);
+        recipeDescriptionMaterialEditText=v.findViewById(R.id.add_recipe_fragment_description_material_edit_text);
+        recipeCuisineMaterialEditText=v.findViewById(R.id.add_recipe_fragment_cuisine_material_edit_text);
+        recipeServingMaterialEditText=v.findViewById(R.id.add_recipe_fragment_servings_material_edit_text);
+        recipeCookTimeMaterialEditText=v.findViewById(R.id.add_recipe_fragment_cook_time_material_edit_text);
+        recipePrepTimeMaterialEditText=v.findViewById(R.id.add_recipe_fragment_prep_time_material_edit_text);
+        recipeTypeMaterialEditText=v.findViewById(R.id.add_recipe_fragment_recipe_type_material_edit_text);
+        recipeMainIngredientMaterialEditText= v.findViewById(R.id.add_recipe_fragment_main_ingredients_edit_text);
 
         recipeUploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,13 +109,13 @@ public class AddRecipeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //id= new UniqueIdGenerator().getUniqueID();
-                name=recipeName.getText().toString();
-                description=recipeDescription.getText().toString();
-                cuisine=recipeCuisine.getText().toString();
-                servings=Integer.parseInt(recipeServing.getText().toString());
-                cookTime=Integer.parseInt(recipeCookTime.getText().toString());
-                prepTime=Integer.parseInt(recipePrepTime.getText().toString());
-                type=recipeType.getText().toString();
+                name=recipeNameMaterialEditText.getText().toString();
+                description=recipeDescriptionMaterialEditText.getText().toString();
+                cuisine=recipeCuisineMaterialEditText.getText().toString();
+                servings=Integer.parseInt(recipeServingMaterialEditText.getText().toString());
+                cookTime=Integer.parseInt(recipeCookTimeMaterialEditText.getText().toString());
+                prepTime=Integer.parseInt(recipePrepTimeMaterialEditText.getText().toString());
+                type=recipeTypeMaterialEditText.getText().toString();
                 Recipe newRecipe= new Recipe(id,name,cuisine,type,recipeImageUrl,description,servings,prepTime,cookTime,0);
                 db.collection("recipes").add(newRecipe);
                 databaseReference.child("recipes").push().setValue(newRecipe);
@@ -140,7 +141,6 @@ public class AddRecipeFragment extends Fragment {
                     recipeUploadImage.setEnabled(true);
                     recipeImageUrl=taskSnapshot.getDownloadUrl()+"";
                     Toast.makeText(getContext(),"Image Uploaded",Toast.LENGTH_SHORT).show();
-
 
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {

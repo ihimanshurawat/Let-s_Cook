@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,111 +69,20 @@ public class AddIngredientFragment extends Fragment {
         addMoreIngredientButton=v.findViewById(R.id.add_ingredient_fragment_add_more_ingredient_button);
         submitButton=v.findViewById(R.id.add_ingredient_fragment_submit_button);
 
+
+        addMoreIngredientButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addIngredient(id);
+                launchAddIngredientFragment(id);
+
+            }
+        });
+
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Heading
-                if(headingMaterialEditText.getText().length()==0){
-                    heading=null;
-                }else{
-                    heading=headingMaterialEditText.getText().toString();
-                }
-                //Ingredient_1
-                if(ingredient1MaterialEditText.getText().length()==0){
-                    ingredient_1=null;
-                }else{
-                    ingredient_1=ingredient1MaterialEditText.getText().toString();
-                }
-                //Ingredient_2
-                if(ingredient2MaterialEditText.getText().length()==0){
-                    ingredient_2=null;
-                }else{
-                    ingredient_2=ingredient2MaterialEditText.getText().toString();
-                }
-                //Ingredient_3
-                if(ingredient3MaterialEditText.getText().length()==0){
-                    ingredient_3=null;
-                }else{
-                    ingredient_3=ingredient3MaterialEditText.getText().toString();
-                }
-                //Ingredient_4
-                if(ingredient4MaterialEditText.getText().length()==0){
-                    ingredient_4=null;
-                }else{
-                    ingredient_4=ingredient4MaterialEditText.getText().toString();
-                }
-                //Ingredient_5
-                if(ingredient5MaterialEditText.getText().length()==0){
-                    ingredient_5=null;
-                }else{
-                    ingredient_5=ingredient5MaterialEditText.getText().toString();
-                }
-                //Ingredient_6
-                if(ingredient6MaterialEditText.getText().length()==0){
-                    ingredient_6=null;
-                }else{
-                    ingredient_6=ingredient6MaterialEditText.getText().toString();
-                }
-                //Ingredient_7
-                if(ingredient7MaterialEditText.getText().length()==0){
-                    ingredient_7=null;
-                }else{
-                    ingredient_7=ingredient7MaterialEditText.getText().toString();
-                }
-                //Ingredient_8
-                if(ingredient8MaterialEditText.getText().length()==0){
-                    ingredient_8=null;
-                }else{
-                    ingredient_8=ingredient8MaterialEditText.getText().toString();
-                }
-                //Ingredient_9
-                if(ingredient9MaterialEditText.getText().length()==0){
-                    ingredient_9=null;
-                }else{
-                    ingredient_9=ingredient9MaterialEditText.getText().toString();
-                }
-                //Ingredient_10
-                if(ingredient10MaterialEditText.getText().length()==0){
-                    ingredient_10=null;
-                }else{
-                    ingredient_10=ingredient10MaterialEditText.getText().toString();
-                }
-                //Ingredient_11
-                if(ingredient11MaterialEditText.getText().length()==0){
-                    ingredient_11=null;
-                }else{
-                    ingredient_11=ingredient11MaterialEditText.getText().toString();
-                }
-                //Ingredient_12
-                if(ingredient12MaterialEditText.getText().length()==0){
-                    ingredient_12=null;
-                }else{
-                    ingredient_12=ingredient12MaterialEditText.getText().toString();
-                }
-                //Ingredient_13
-                if(ingredient13MaterialEditText.getText().length()==0){
-                    ingredient_13=null;
-                }else{
-                    ingredient_13=ingredient13MaterialEditText.getText().toString();
-                }
-                //Ingredient_14
-                if(ingredient14MaterialEditText.getText().length()==0){
-                    ingredient_14=null;
-                }else{
-                    ingredient_14=ingredient14MaterialEditText.getText().toString();
-                }
-                //Ingredient_2
-                if(ingredient15MaterialEditText.getText().length()==0){
-                    ingredient_15=null;
-                }else{
-                    ingredient_15=ingredient15MaterialEditText.getText().toString();
-                }
-
-                Ingredients ingredients=new Ingredients(heading,ingredient_1,ingredient_2,ingredient_3,ingredient_4,ingredient_5,ingredient_6,ingredient_7,
-                        ingredient_8,ingredient_9,ingredient_10,ingredient_11,ingredient_12,ingredient_13,ingredient_14,ingredient_15);
-                databaseReference.child("ingredients").child(id).push().setValue(ingredients);
-
-
+               addIngredient(id);
             }
         });
 
@@ -181,5 +91,118 @@ public class AddIngredientFragment extends Fragment {
 
 
         return v;
+    }
+
+    public void launchAddIngredientFragment(String id){
+        AddIngredientFragment addIngredientFragment=new AddIngredientFragment();
+        Bundle bundle=new Bundle();
+        bundle.putString("id",id);
+        addIngredientFragment.setArguments(bundle);
+        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.content_all_recipies_frame_layout,addIngredientFragment).
+                setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right).commit();
+    }
+
+    public void addIngredient(String id){
+        //Heading
+        if(headingMaterialEditText.getText().length()==0){
+            heading=null;
+        }else{
+            heading=headingMaterialEditText.getText().toString();
+        }
+        //Ingredient_1
+        if(ingredient1MaterialEditText.getText().length()==0){
+            ingredient_1=null;
+        }else{
+            ingredient_1=ingredient1MaterialEditText.getText().toString();
+        }
+        //Ingredient_2
+        if(ingredient2MaterialEditText.getText().length()==0){
+            ingredient_2=null;
+        }else{
+            ingredient_2=ingredient2MaterialEditText.getText().toString();
+        }
+        //Ingredient_3
+        if(ingredient3MaterialEditText.getText().length()==0){
+            ingredient_3=null;
+        }else{
+            ingredient_3=ingredient3MaterialEditText.getText().toString();
+        }
+        //Ingredient_4
+        if(ingredient4MaterialEditText.getText().length()==0){
+            ingredient_4=null;
+        }else{
+            ingredient_4=ingredient4MaterialEditText.getText().toString();
+        }
+        //Ingredient_5
+        if(ingredient5MaterialEditText.getText().length()==0){
+            ingredient_5=null;
+        }else{
+            ingredient_5=ingredient5MaterialEditText.getText().toString();
+        }
+        //Ingredient_6
+        if(ingredient6MaterialEditText.getText().length()==0){
+            ingredient_6=null;
+        }else{
+            ingredient_6=ingredient6MaterialEditText.getText().toString();
+        }
+        //Ingredient_7
+        if(ingredient7MaterialEditText.getText().length()==0){
+            ingredient_7=null;
+        }else{
+            ingredient_7=ingredient7MaterialEditText.getText().toString();
+        }
+        //Ingredient_8
+        if(ingredient8MaterialEditText.getText().length()==0){
+            ingredient_8=null;
+        }else{
+            ingredient_8=ingredient8MaterialEditText.getText().toString();
+        }
+        //Ingredient_9
+        if(ingredient9MaterialEditText.getText().length()==0){
+            ingredient_9=null;
+        }else{
+            ingredient_9=ingredient9MaterialEditText.getText().toString();
+        }
+        //Ingredient_10
+        if(ingredient10MaterialEditText.getText().length()==0){
+            ingredient_10=null;
+        }else{
+            ingredient_10=ingredient10MaterialEditText.getText().toString();
+        }
+        //Ingredient_11
+        if(ingredient11MaterialEditText.getText().length()==0){
+            ingredient_11=null;
+        }else{
+            ingredient_11=ingredient11MaterialEditText.getText().toString();
+        }
+        //Ingredient_12
+        if(ingredient12MaterialEditText.getText().length()==0){
+            ingredient_12=null;
+        }else{
+            ingredient_12=ingredient12MaterialEditText.getText().toString();
+        }
+        //Ingredient_13
+        if(ingredient13MaterialEditText.getText().length()==0){
+            ingredient_13=null;
+        }else{
+            ingredient_13=ingredient13MaterialEditText.getText().toString();
+        }
+        //Ingredient_14
+        if(ingredient14MaterialEditText.getText().length()==0){
+            ingredient_14=null;
+        }else{
+            ingredient_14=ingredient14MaterialEditText.getText().toString();
+        }
+        //Ingredient_2
+        if(ingredient15MaterialEditText.getText().length()==0){
+            ingredient_15=null;
+        }else{
+            ingredient_15=ingredient15MaterialEditText.getText().toString();
+        }
+
+        Ingredients ingredients=new Ingredients(heading,ingredient_1,ingredient_2,ingredient_3,ingredient_4,ingredient_5,ingredient_6,ingredient_7,
+                ingredient_8,ingredient_9,ingredient_10,ingredient_11,ingredient_12,ingredient_13,ingredient_14,ingredient_15);
+        databaseReference.child("ingredients").child(id).push().setValue(ingredients);
     }
 }

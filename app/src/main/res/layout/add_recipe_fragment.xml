@@ -35,20 +35,6 @@
         android:layout_marginEnd="8dp" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/add_recipe_fragment_recipe_id_material_edit_text"
-        android:layout_margin="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        app:met_floatingLabel="highlight"
-        app:met_floatingLabelText="Recipe ID"
-        app:met_floatingLabelAlwaysShown="true"
-        app:met_floatingLabelTextSize="15sp"
-        app:met_clearButton="true"
-        tools:layout_editor_absoluteY="25dp"
-        tools:layout_editor_absoluteX="8dp"
-        />
-    <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/add_recipe_fragment_recipe_name_material_edit_text"
         android:layout_margin="5dp"
         android:layout_width="match_parent"
@@ -161,6 +147,23 @@
         tools:layout_editor_absoluteY="25dp"
         tools:layout_editor_absoluteX="8dp"
         />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/add_recipe_fragment_main_ingredients_edit_text"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelText="Main Ingredients Seperated by :"
+        app:met_floatingLabelAlwaysShown="true"
+        app:met_floatingLabelTextSize="15sp"
+        app:met_clearButton="true"
+        tools:layout_editor_absoluteY="25dp"
+        tools:layout_editor_absoluteX="8dp"
+        />
+
+
     <Button
         android:id="@+id/add_recipe_fragment_submit_button"
         android:layout_width="match_parent"
