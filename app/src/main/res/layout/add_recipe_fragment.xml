@@ -167,7 +167,7 @@
         android:layout_margin="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="number"
+        android:inputType="text"
         app:met_floatingLabel="highlight"
         app:met_floatingLabelText="Main Ingredients Seperated by :"
         app:met_floatingLabelAlwaysShown="true"

@@ -34,6 +34,8 @@ import com.google.firebase.storage.UploadTask;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -45,9 +47,10 @@ public class AddRecipeFragment extends Fragment {
 
 
     //Material EditText References
-    MaterialEditText recipeIDMaterialEditText,recipeNameMaterialEditText,recipeDescriptionMaterialEditText,recipeCuisineMaterialEditText,
-            recipeServingMaterialEditText,recipeCookTimeMaterialEditText,
-            recipePrepTimeMaterialEditText,recipeTypeMaterialEditText,recipeMainIngredientMaterialEditText;
+    MaterialEditText recipeNameMaterialEditText,recipeDescriptionMaterialEditText,
+            recipeCuisineMaterialEditText, recipeServingMaterialEditText,recipeCookTimeMaterialEditText,
+            recipePrepTimeMaterialEditText,recipeTypeMaterialEditText,recipeSubTypeMaterialEditText,
+            recipeMainIngredientMaterialEditText;
     //Upload Url
     String recipeImageUrl;
 
@@ -69,7 +72,7 @@ public class AddRecipeFragment extends Fragment {
     private String cuisine;
     private String type;
     private String subType;
-    private String[] mainIngredient;
+    private List<String> mainIngredient;
 
     @Nullable
     @Override
@@ -84,6 +87,8 @@ public class AddRecipeFragment extends Fragment {
 
         db= FireStoreUtility.getFirebaseFirestore();
 
+        mainIngredient=new ArrayList<>();
+
         recipeUploadImage=v.findViewById(R.id.add_recipe_fragment_upload_image_button);
         submitButton=v.findViewById(R.id.add_recipe_fragment_submit_button);
 
@@ -94,6 +99,7 @@ public class AddRecipeFragment extends Fragment {
         recipeCookTimeMaterialEditText=v.findViewById(R.id.add_recipe_fragment_cook_time_material_edit_text);
         recipePrepTimeMaterialEditText=v.findViewById(R.id.add_recipe_fragment_prep_time_material_edit_text);
         recipeTypeMaterialEditText=v.findViewById(R.id.add_recipe_fragment_recipe_type_material_edit_text);
+        recipeSubTypeMaterialEditText= v.findViewById(R.id.add_recipe_fragment_recipe_sub_type_material_edit_text);
         recipeMainIngredientMaterialEditText= v.findViewById(R.id.add_recipe_fragment_main_ingredients_edit_text);
 
         recipeUploadImage.setOnClickListener(new View.OnClickListener() {
@@ -119,10 +125,14 @@ public class AddRecipeFragment extends Fragment {
                 cookTime=Integer.parseInt(recipeCookTimeMaterialEditText.getText().toString());
                 prepTime=Integer.parseInt(recipePrepTimeMaterialEditText.getText().toString());
                 type=recipeTypeMaterialEditText.getText().toString();
-                mainIngredient=recipeMainIngredientMaterialEditText.getText().toString().split(":");
+                subType=recipeSubTypeMaterialEditText.getText().toString();
+                String []ingredient=recipeMainIngredientMaterialEditText.getText().toString().split(":");
+                for(String i:ingredient){
+                    mainIngredient.add(i);
+                }
                 Recipe newRecipe= new Recipe(id,name,cuisine,type,subType,recipeImageUrl,description,servings,prepTime,cookTime,0,mainIngredient);
                 db.collection("recipes").add(newRecipe);
-                databaseReference.child("recipes").push().setValue(newRecipe);
+                //databaseReference.child("recipes").push().setValue(newRecipe);
                 launchAddIngredientFragment(id);
             }
         });

@@ -21,19 +21,6 @@
                 android:layout_height="200dp"
                 android:scaleType="fitXY"/>
 
-            <TextView
-                android:id="@+id/view_recipe_fragment_recipe_name_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Nachini Barfi"
-                android:textAllCaps="true"
-                android:layout_margin="5dp"
-                android:paddingEnd="20dp"
-                android:paddingStart="20dp"
-                android:textColor="@color/colorText"
-                android:textAlignment="textStart"
-                android:textStyle="bold"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -44,17 +31,17 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="20dp"
                         android:layout_marginTop="5dp">
                         <ImageView
                             android:layout_gravity="center_horizontal|center_vertical"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_margin="2dp" />
+                            android:src="@drawable/serving_icon"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_margin="5dp" />
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -64,11 +51,13 @@
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/colorText"
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                                android:text="serves"/>
+                                android:text="Serves"/>
                             <TextView
                                 android:id="@+id/view_recipe_fragment_servings_text_view"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:paddingStart="10dp"
+                                android:paddingEnd="10dp"
                                 android:text="4"
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                                 android:textColor="@color/colorTextLight"
@@ -79,12 +68,16 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="20dp"
                         android:layout_marginTop="5dp">
-                        <ImageView
+                        <rm.com.clocks.ClockImageView
+                            android:layout_margin="5dp"
+                            android:id="@+id/view_recipe_fragment_cook_time_clock_image_view"
+                            app:clockColor="@color/colorIcon"
                             android:layout_gravity="center_horizontal|center_vertical"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp" />
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            />
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -94,8 +87,10 @@
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/colorText"
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                                android:text="cook time"/>
+                                android:text="Cook Time"/>
                             <TextView
+                                android:paddingEnd="10dp"
+                                android:paddingStart="10dp"
                                 android:id="@+id/view_recipe_fragment_cook_time_text_view"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -117,29 +112,33 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="20dp"
                         android:layout_marginTop="5dp">
-                        <ImageView
+                        <rm.com.clocks.ClockImageView
+                            android:layout_margin="5dp"
+                            app:clockColor="@color/colorIcon"
+                            android:id="@+id/view_recipe_fragment_prep_time_clock_image_view"
                             android:layout_gravity="center_horizontal|center_vertical"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp" />
+                            android:layout_width="40dp"
+                            android:layout_height="40dp" />
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
                             <TextView
-
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/colorText"
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                                android:text="prep time"/>
+                                android:text="Prep Time"/>
                             <TextView
                                 android:id="@+id/view_recipe_fragment_prep_time_text_view"
                                 android:textColor="@color/colorTextLight"
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:paddingEnd="10dp"
+                                android:paddingStart="10dp"
                                 />
                         </LinearLayout>
 
@@ -147,12 +146,15 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
+                        android:layout_marginStart="20dp"
                         android:layout_marginTop="5dp">
-                        <ImageView
+                        <rm.com.clocks.ClockImageView
+                            app:clockColor="@color/colorIcon"
+                            android:layout_margin="5dp"
+                            android:id="@+id/view_recipe_fragment_total_time_clock_image_view"
                             android:layout_gravity="center_horizontal|center_vertical"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp" />
+                            android:layout_width="40dp"
+                            android:layout_height="40dp" />
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -162,13 +164,15 @@
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/colorText"
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                                android:text="total time"/>
+                                android:text="Total Time"/>
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/colorTextLight"
                                 android:id="@+id/view_recipe_fragment_total_time_text_view"
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                                android:paddingEnd="10dp"
+                                android:paddingStart="10dp"
 
                                 />
                         </LinearLayout>

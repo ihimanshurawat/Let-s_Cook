@@ -77,15 +77,6 @@ public class AllRecipes extends AppCompatActivity
 
 
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        databaseReference.child("users").orderByChild("email").
-                equalTo(currentUser.getEmail()).limitToFirst(1).
-                addValueEventListener(userProfileValueEventListener);
-
-    }
 
     @Override
     protected void onStop() {
@@ -140,7 +131,7 @@ public class AllRecipes extends AppCompatActivity
 
         //To Manage User Profiles
         if(currentUser!=null) {
-            databaseReference.child("users").orderByChild("email").equalTo(currentUser.getEmail()).limitToFirst(1).addListenerForSingleValueEvent(userProfileValueEventListener);
+            databaseReference.child("users").orderByChild("email").equalTo(currentUser.getEmail()).limitToFirst(1).addValueEventListener(userProfileValueEventListener);
         }
         fragmentManager=getSupportFragmentManager();
 
@@ -195,10 +186,10 @@ public class AllRecipes extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.all_recipes, menu);
         final MenuItem addRecipe=menu.findItem(R.id.all_recipies_add_recipie);
-        if(arr[0].equals("rawath54@gmail")){
+        //if(arr[0].equals("rawath54@gmail")){
             addRecipe.setVisible(true);
             this.invalidateOptionsMenu();
-        }
+      //  }
 
 
         return true;
@@ -233,11 +224,12 @@ public class AllRecipes extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.activity_all_recipes_drawer_edit_profile) {
+            launchEditProfileFragment(key);
+        } else if (id == R.id.activity_all_recipes_drawer_recipes) {
+            launchRecipeFragment(existingUser);
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_manage) {
 

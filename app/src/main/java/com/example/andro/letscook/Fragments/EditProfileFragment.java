@@ -282,7 +282,7 @@ public class EditProfileFragment extends Fragment {
         {
             Uri selectedimg = data.getData();
             Log.i("ImageData",selectedimg+"");
-            StorageReference storageReference=firebaseStorage.getReference().child("users").child(key);
+            StorageReference storageReference=firebaseStorage.getReference().child("users").child(currentUser.getUid());
             storageReference.putFile(selectedimg).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

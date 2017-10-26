@@ -82,15 +82,23 @@ public class AddIngredientFragment extends Fragment {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               addIngredient(id);
+                addIngredient(id);
+                launchAddDirectionFragment(id);
             }
         });
 
 
-
-
-
         return v;
+    }
+
+    public void launchAddDirectionFragment(String id){
+        AddDirectionFragment addDirectionFragment= new AddDirectionFragment();
+        Bundle bundle=new Bundle();
+        bundle.putString("id",id);
+        addDirectionFragment.setArguments(bundle);
+        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.content_all_recipies_frame_layout,addDirectionFragment).
+                setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right).commit();
     }
 
     public void launchAddIngredientFragment(String id){

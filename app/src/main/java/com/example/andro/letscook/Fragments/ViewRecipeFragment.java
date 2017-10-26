@@ -29,13 +29,18 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
+
+import rm.com.clocks.ClockImageView;
 
 
 public class ViewRecipeFragment extends Fragment {
 
     TextView recipeNameTextView, recipeTotalTimeTextView,recipeCookTimeTextView
             ,recipePrepTimeTextView,recipeServingTextView,recipeDescriptionTextView;
+
 
     ImageView recipeImageView;
 
@@ -55,6 +60,10 @@ public class ViewRecipeFragment extends Fragment {
 
     FirebaseFirestore db;
 
+    ClockImageView cookTimeClockImageView,prepTimeClockImageView,totalTimeClockImageView;
+
+    Recipe recipe;
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -65,12 +74,25 @@ public class ViewRecipeFragment extends Fragment {
 
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        ((AllRecipes)getActivity()).getSupportActionBar().setTitle(R.string.app_name);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        ((AllRecipes)getActivity()).getSupportActionBar().setTitle(recipe.getName());
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v=inflater.inflate(R.layout.view_recipe_fragment,container,false);
         Bundle bundle=getArguments();
-        Recipe recipe=(Recipe)bundle.getSerializable("Recipe");
+        recipe=(Recipe)bundle.getSerializable("Recipe");
 
         ((AllRecipes)getActivity()).getSupportActionBar().setTitle(recipe.getName());
 
@@ -90,8 +112,14 @@ public class ViewRecipeFragment extends Fragment {
         recipeServingTextView= v.findViewById(R.id.view_recipe_fragment_servings_text_view);
         recipeDescriptionTextView= v.findViewById(R.id.view_recipe_fragment_description_text_view);
 
+        //ClockImageView
+        prepTimeClockImageView= v.findViewById(R.id.view_recipe_fragment_prep_time_clock_image_view);
+        cookTimeClockImageView= v.findViewById(R.id.view_recipe_fragment_cook_time_clock_image_view);
+        totalTimeClockImageView= v.findViewById(R.id.view_recipe_fragment_total_time_clock_image_view);
+
 
         if(recipe!=null) {
+            Calendar cal=Calendar.getInstance(TimeZone.getDefault());
             //recipeNameTextView.setText(recipe.getName());
             recipeServingTextView.setText(Integer.toString(recipe.getServings()));
             recipePrepTimeTextView.setText(getTime(recipe.getPrepTime()));
@@ -100,6 +128,10 @@ public class ViewRecipeFragment extends Fragment {
             recipeDescriptionTextView.setText(recipe.getDescription());
             //Glide
             Glide.with(getContext().getApplicationContext()).load(recipe.getImageUrl()).into(recipeImageView);
+            getClockImageViewTime(recipe.getPrepTime(),prepTimeClockImageView,cal);
+            getClockImageViewTime(recipe.getCookTime(),cookTimeClockImageView,cal);
+            getClockImageViewTime((recipe.getCookTime()+recipe.getPrepTime()),totalTimeClockImageView,cal);
+
 
         }
         
@@ -132,6 +164,22 @@ public class ViewRecipeFragment extends Fragment {
         }
     }
 
+    public void getClockImageViewTime(int x,ClockImageView clockImageView,Calendar cal){
+        int hour=cal.get(Calendar.HOUR);
+        int min=cal.get(Calendar.MINUTE);
+        Log.i("TimeHai",hour+"h"+min+"m");
+        if((x+min)>=60){
+            clockImageView.setHours((hour+((x+min)/60)));
+            clockImageView.setMinutes(((x+min)%60));
+        }
+        if((x+min)<60){
+            clockImageView.setHours(hour);
+            clockImageView.setMinutes((x+min)%60);
+        }
+
+    }
+
+
     ValueEventListener directionValueEventListener= new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -160,6 +208,7 @@ public class ViewRecipeFragment extends Fragment {
 
                     RecyclerView directionRecyclerView = new RecyclerView(getContext());
                     directionRecyclerView.setAdapter(directionAdapter);
+                    directionRecyclerView.setNestedScrollingEnabled(false);
                     directionRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
                     directionAdapter.notifyDataSetChanged();
                     directionsLinearLayout.addView(headingTextView, textViewLayoutParams);
@@ -206,12 +255,13 @@ public class ViewRecipeFragment extends Fragment {
                     headingTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                     headingTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorText));
 
-                    RecyclerView directionRecyclerView = new RecyclerView(getContext());
-                    directionRecyclerView.setAdapter(ingredientAdapter);
-                    directionRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                    RecyclerView ingredientRecyclerView = new RecyclerView(getContext());
+                    ingredientRecyclerView.setAdapter(ingredientAdapter);
+                    ingredientRecyclerView.setNestedScrollingEnabled(false);
+                    ingredientRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
                     ingredientAdapter.notifyDataSetChanged();
                     ingredientsLinearLayout.addView(headingTextView, textViewLayoutParams);
-                    ingredientsLinearLayout.addView(directionRecyclerView, layoutParams);
+                    ingredientsLinearLayout.addView(ingredientRecyclerView, layoutParams);
                 }
             }
         }

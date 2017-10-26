@@ -59,6 +59,8 @@ dependencies {
     compile 'com.victor:lib:1.0.4'
     //Material EditText
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
+    //Clock Library
+    compile 'com.github.alxrm:animated-clock-icon:1.0.2'
 
     testCompile 'junit:junit:4.12'
 }
