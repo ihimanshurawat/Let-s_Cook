@@ -89,7 +89,7 @@ public class AllRecipes extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_recipes);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.app_bar_all_recipes_toolbar);
         setSupportActionBar(toolbar);
         mAuth= FirebaseAuthUtility.getAuth();
         currentUser=mAuth.getCurrentUser();
