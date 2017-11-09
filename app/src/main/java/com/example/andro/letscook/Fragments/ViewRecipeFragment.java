@@ -9,8 +9,13 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,7 +25,10 @@ import com.example.andro.letscook.Adapters.IngredientAdapter;
 import com.example.andro.letscook.AllRecipes;
 import com.example.andro.letscook.PojoClass.Recipe;
 import com.example.andro.letscook.R;
+import com.example.andro.letscook.Support.Constant;
 import com.example.andro.letscook.Support.FireStoreUtility;
+import com.example.andro.letscook.Support.FirebaseAuthUtility;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,7 +46,7 @@ import rm.com.clocks.ClockImageView;
 
 public class ViewRecipeFragment extends Fragment {
 
-    TextView recipeNameTextView, recipeTotalTimeTextView,recipeCookTimeTextView
+    TextView recipeTotalTimeTextView,recipeCookTimeTextView
             ,recipePrepTimeTextView,recipeServingTextView,recipeDescriptionTextView;
 
 
@@ -58,9 +66,11 @@ public class ViewRecipeFragment extends Fragment {
     ViewGroup.LayoutParams layoutParams;
     LinearLayout.LayoutParams textViewLayoutParams;
 
-    FirebaseFirestore db;
+    FirebaseUser user;
 
     ClockImageView cookTimeClockImageView,prepTimeClockImageView,totalTimeClockImageView;
+
+    ImageButton favouriteImageButton;
 
     Recipe recipe;
 
@@ -93,14 +103,20 @@ public class ViewRecipeFragment extends Fragment {
         View v=inflater.inflate(R.layout.view_recipe_fragment,container,false);
         Bundle bundle=getArguments();
         recipe=(Recipe)bundle.getSerializable("Recipe");
+        setHasOptionsMenu(true);
 
         ((AllRecipes)getActivity()).getSupportActionBar().setTitle(recipe.getName());
 
         firebaseDatabase=FirebaseDatabase.getInstance();
         databaseReference=firebaseDatabase.getReference();
+        user= FirebaseAuthUtility.getAuth().getCurrentUser();
 
         ingredientsLinearLayout=v.findViewById(R.id.view_recipe_fragment_ingredient_linear_layout);
         directionsLinearLayout=v.findViewById(R.id.view_recipe_fragment_directions_linear_layout);
+
+        //Favourite Button
+        favouriteImageButton= v.findViewById(R.id.view_recipe_fragment_favorite_image_button);
+
 
         //Recipe ImageView
         recipeImageView= v.findViewById(R.id.view_recipe_fragment_recipe_image_view);
@@ -146,10 +162,30 @@ public class ViewRecipeFragment extends Fragment {
         databaseReference.child("directions").
                 child(recipe.getId()).
                 addValueEventListener(directionValueEventListener);
+//        databaseReference.child("favourite").child(user.getUid()).
+//                child(recipe.getId()).addValueEventListener()
+//
+
+//        favouriteButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                databaseReference.child("favourite").child(user.getUid()).
+//            }
+//        });
 
 
 
         return v;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 
     public String getTime(int x){
@@ -178,6 +214,24 @@ public class ViewRecipeFragment extends Fragment {
         }
 
     }
+
+
+    ValueEventListener isFavouriteValueEventListener=new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            if(dataSnapshot.exists()){
+
+            }else{
+                favouriteImageButton.setTag(Constant.IS_NOT_FAV);
+                //favouriteImageButton.setImageResource(co);
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
 
 
     ValueEventListener directionValueEventListener= new ValueEventListener() {
@@ -271,5 +325,6 @@ public class ViewRecipeFragment extends Fragment {
 
         }
     };
+
 
 }

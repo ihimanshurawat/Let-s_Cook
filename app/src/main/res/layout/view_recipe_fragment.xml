@@ -20,6 +20,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:scaleType="fitXY"/>
+            <ImageButton
+                android:id="@+id/view_recipe_fragment_favorite_image_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="Favorite"
+                />
 
 
             <LinearLayout
