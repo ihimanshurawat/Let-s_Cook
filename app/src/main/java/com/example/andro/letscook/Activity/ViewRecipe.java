@@ -1,24 +1,24 @@
-package com.example.andro.letscook.Fragments;
+package com.example.andro.letscook.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
 import com.example.andro.letscook.Adapters.DirectionAdapter;
 import com.example.andro.letscook.Adapters.IngredientAdapter;
@@ -26,7 +26,6 @@ import com.example.andro.letscook.AllRecipes;
 import com.example.andro.letscook.PojoClass.Recipe;
 import com.example.andro.letscook.R;
 import com.example.andro.letscook.Support.Constant;
-import com.example.andro.letscook.Support.FireStoreUtility;
 import com.example.andro.letscook.Support.FirebaseAuthUtility;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,7 +33,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,12 +41,10 @@ import java.util.TimeZone;
 
 import rm.com.clocks.ClockImageView;
 
-
-public class ViewRecipeFragment extends Fragment {
+public class ViewRecipe extends AppCompatActivity {
 
     TextView recipeTotalTimeTextView,recipeCookTimeTextView
             ,recipePrepTimeTextView,recipeServingTextView,recipeDescriptionTextView;
-
 
     ImageView recipeImageView;
 
@@ -75,63 +71,55 @@ public class ViewRecipeFragment extends Fragment {
     Recipe recipe;
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_view_recipe);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        Intent i=getIntent();
+        recipe=(Recipe)i.getSerializableExtra("Recipe");
 
-        //Removing Event Listeners
-        databaseReference.child("ingredients").removeEventListener(ingredientValueEventListener);
-        databaseReference.child("directions").removeEventListener(directionValueEventListener);
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        ((AllRecipes)getActivity()).getSupportActionBar().setTitle(R.string.app_name);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        ((AllRecipes)getActivity()).getSupportActionBar().setTitle(recipe.getName());
-
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v=inflater.inflate(R.layout.view_recipe_fragment,container,false);
-        Bundle bundle=getArguments();
-        recipe=(Recipe)bundle.getSerializable("Recipe");
+        ActionBar ab=getSupportActionBar();
+        if(ab!=null){
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
 
 
-        ((AllRecipes)getActivity()).getSupportActionBar().setTitle(recipe.getName());
+        setTitle(recipe.getName());
 
         firebaseDatabase=FirebaseDatabase.getInstance();
         databaseReference=firebaseDatabase.getReference();
         user= FirebaseAuthUtility.getAuth().getCurrentUser();
 
-        ingredientsLinearLayout=v.findViewById(R.id.view_recipe_fragment_ingredient_linear_layout);
-        directionsLinearLayout=v.findViewById(R.id.view_recipe_fragment_directions_linear_layout);
+        ingredientsLinearLayout=findViewById(R.id.content_view_recipe_ingredient_linear_layout);
+        directionsLinearLayout=findViewById(R.id.content_view_recipe_directions_linear_layout);
 
         //Favourite Button
-        favouriteImageButton= v.findViewById(R.id.view_recipe_fragment_favorite_image_button);
+        favouriteImageButton= findViewById(R.id.content_view_recipe_favorite_image_button);
 
 
         //Recipe ImageView
-        recipeImageView= v.findViewById(R.id.view_recipe_fragment_recipe_image_view);
+        recipeImageView= findViewById(R.id.content_view_recipe_recipe_image_view);
 
-       // recipeNameTextView= v.findViewById(R.id.view_recipe_fragment_recipe_name_text_view);
-        recipeTotalTimeTextView= v.findViewById(R.id.view_recipe_fragment_total_time_text_view);
-        recipeCookTimeTextView= v.findViewById(R.id.view_recipe_fragment_cook_time_text_view);
-        recipePrepTimeTextView= v.findViewById(R.id.view_recipe_fragment_prep_time_text_view);
-        recipeServingTextView= v.findViewById(R.id.view_recipe_fragment_servings_text_view);
-        recipeDescriptionTextView= v.findViewById(R.id.view_recipe_fragment_description_text_view);
+        // recipeNameTextView= findViewById(R.id.content_view_recipe_recipe_name_text_view);
+        recipeTotalTimeTextView= findViewById(R.id.content_view_recipe_total_time_text_view);
+        recipeCookTimeTextView= findViewById(R.id.content_view_recipe_cook_time_text_view);
+        recipePrepTimeTextView= findViewById(R.id.content_view_recipe_prep_time_text_view);
+        recipeServingTextView= findViewById(R.id.content_view_recipe_servings_text_view);
+        recipeDescriptionTextView= findViewById(R.id.content_view_recipe_description_text_view);
 
         //ClockImageView
-        prepTimeClockImageView= v.findViewById(R.id.view_recipe_fragment_prep_time_clock_image_view);
-        cookTimeClockImageView= v.findViewById(R.id.view_recipe_fragment_cook_time_clock_image_view);
-        totalTimeClockImageView= v.findViewById(R.id.view_recipe_fragment_total_time_clock_image_view);
+        prepTimeClockImageView= findViewById(R.id.content_view_recipe_prep_time_clock_image_view);
+        cookTimeClockImageView= findViewById(R.id.content_view_recipe_cook_time_clock_image_view);
+        totalTimeClockImageView= findViewById(R.id.content_view_recipe_total_time_clock_image_view);
+
+        databaseReference.child("ingredients").
+                child(recipe.getId()).
+                addValueEventListener(ingredientValueEventListener);
+
+        databaseReference.child("directions").
+                child(recipe.getId()).
+                addValueEventListener(directionValueEventListener);
 
 
         if(recipe!=null) {
@@ -143,25 +131,19 @@ public class ViewRecipeFragment extends Fragment {
             recipeTotalTimeTextView.setText(getTime(recipe.getCookTime()+recipe.getPrepTime()));
             recipeDescriptionTextView.setText(recipe.getDescription());
             //Glide
-            Glide.with(getContext().getApplicationContext()).load(recipe.getImageUrl()).into(recipeImageView);
+            Glide.with(ViewRecipe.this).load(recipe.getImageUrl()).into(recipeImageView);
             getClockImageViewTime(recipe.getPrepTime(),prepTimeClockImageView,cal);
             getClockImageViewTime(recipe.getCookTime(),cookTimeClockImageView,cal);
             getClockImageViewTime((recipe.getCookTime()+recipe.getPrepTime()),totalTimeClockImageView,cal);
 
 
         }
-        
+
         layoutParams=new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         textViewLayoutParams= new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
 
-        databaseReference.child("ingredients").
-                child(recipe.getId()).
-                addValueEventListener(ingredientValueEventListener);
 
-        databaseReference.child("directions").
-                child(recipe.getId()).
-                addValueEventListener(directionValueEventListener);
 //        databaseReference.child("favourite").child(user.getUid()).
 //                child(recipe.getId()).addValueEventListener()
 //
@@ -173,20 +155,9 @@ public class ViewRecipeFragment extends Fragment {
 //            }
 //        });
 
-
-
-        return v;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
 
     public String getTime(int x){
 
@@ -241,7 +212,7 @@ public class ViewRecipeFragment extends Fragment {
                 String heading=null;
                 for(DataSnapshot children:dataSnapshot.getChildren()){
                     directionList=new ArrayList<>();
-                    directionAdapter=new DirectionAdapter(getContext(),directionList);
+                    directionAdapter=new DirectionAdapter(ViewRecipe.this,directionList);
                     for(DataSnapshot insideChildren: children.getChildren()){
                         if (insideChildren.getKey().equals("heading")) {
                             heading = insideChildren.getValue().toString();
@@ -249,7 +220,7 @@ public class ViewRecipeFragment extends Fragment {
                             directionList.add(insideChildren.getValue().toString());
                         }
                     }
-                    TextView headingTextView = new TextView(getContext());
+                    TextView headingTextView = new TextView(ViewRecipe.this);
                     if (heading != null) {
                         headingTextView.setText(heading);
                     }
@@ -258,12 +229,12 @@ public class ViewRecipeFragment extends Fragment {
                     textViewLayoutParams.setMargins(20, 5, 20, 5);
                     headingTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
                     headingTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    headingTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorText));
+                    headingTextView.setTextColor(ContextCompat.getColor(ViewRecipe.this, R.color.colorText));
 
-                    RecyclerView directionRecyclerView = new RecyclerView(getContext());
+                    RecyclerView directionRecyclerView = new RecyclerView(ViewRecipe.this);
                     directionRecyclerView.setAdapter(directionAdapter);
                     directionRecyclerView.setNestedScrollingEnabled(false);
-                    directionRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                    directionRecyclerView.setLayoutManager(new LinearLayoutManager(ViewRecipe.this, LinearLayoutManager.VERTICAL, false));
                     directionAdapter.notifyDataSetChanged();
                     directionsLinearLayout.addView(headingTextView, textViewLayoutParams);
                     directionsLinearLayout.addView(directionRecyclerView, layoutParams);
@@ -288,7 +259,7 @@ public class ViewRecipeFragment extends Fragment {
                 for(DataSnapshot children : dataSnapshot.getChildren()) {
                     Log.i("GetKey", children.getKey());
                     ingredientList = new ArrayList<>();
-                    ingredientAdapter = new IngredientAdapter(getContext(), ingredientList);
+                    ingredientAdapter = new IngredientAdapter(ViewRecipe.this, ingredientList);
                     for (DataSnapshot insideChildren : children.getChildren()) {
                         if (insideChildren.getKey().equals("heading")) {
                             heading = insideChildren.getValue().toString();
@@ -298,7 +269,7 @@ public class ViewRecipeFragment extends Fragment {
                         Log.i("IsInfinite", insideChildren.getKey());
                     }
 
-                    TextView headingTextView = new TextView(getContext());
+                    TextView headingTextView = new TextView(ViewRecipe.this);
                     if (heading != null) {
                         headingTextView.setText(heading);
                     }
@@ -307,12 +278,12 @@ public class ViewRecipeFragment extends Fragment {
                     textViewLayoutParams.setMargins(20, 5, 20, 5);
                     headingTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
                     headingTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    headingTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorText));
+                    headingTextView.setTextColor(ContextCompat.getColor(ViewRecipe.this, R.color.colorText));
 
-                    RecyclerView ingredientRecyclerView = new RecyclerView(getContext());
+                    RecyclerView ingredientRecyclerView = new RecyclerView(ViewRecipe.this);
                     ingredientRecyclerView.setAdapter(ingredientAdapter);
                     ingredientRecyclerView.setNestedScrollingEnabled(false);
-                    ingredientRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                    ingredientRecyclerView.setLayoutManager(new LinearLayoutManager(ViewRecipe.this, LinearLayoutManager.VERTICAL, false));
                     ingredientAdapter.notifyDataSetChanged();
                     ingredientsLinearLayout.addView(headingTextView, textViewLayoutParams);
                     ingredientsLinearLayout.addView(ingredientRecyclerView, layoutParams);
@@ -325,6 +296,8 @@ public class ViewRecipeFragment extends Fragment {
 
         }
     };
+
+
 
 
 }

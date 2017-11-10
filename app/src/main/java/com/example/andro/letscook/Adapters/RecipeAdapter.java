@@ -1,5 +1,6 @@
 package com.example.andro.letscook.Adapters;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.andro.letscook.Activity.ViewRecipe;
 import com.example.andro.letscook.Fragments.EditProfileFragment;
 import com.example.andro.letscook.Fragments.ViewRecipeFragment;
 import com.example.andro.letscook.PojoClass.Recipe;
@@ -78,20 +80,23 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         @Override
         public void onClick(View view) {
             Recipe recipe=recipeList.get(getAdapterPosition());
-            Toast.makeText(context,"Item Clicked",Toast.LENGTH_SHORT).show();
-            launchViewRecipeFragment(recipe);
+            launchViewRecipe(recipe);
 
         }
     }
 
-    private void launchViewRecipeFragment(Recipe recipe) {
-        ViewRecipeFragment viewRecipeFragment=new ViewRecipeFragment();
-        Bundle bundle=new Bundle();
-        bundle.putSerializable("Recipe",recipe);
-        viewRecipeFragment.setArguments(bundle);
-        FragmentTransaction fragmentTransaction= fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.content_all_recipies_frame_layout,viewRecipeFragment,"View Recipe")
-                .setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right).commit();
+    private void launchViewRecipe(Recipe recipe) {
+//        ViewRecipeFragment viewRecipeFragment=new ViewRecipeFragment();
+//        Bundle bundle=new Bundle();
+//        bundle.putSerializable("Recipe",recipe);
+//        viewRecipeFragment.setArguments(bundle);
+//        FragmentTransaction fragmentTransaction= fragmentManager.beginTransaction();
+//        fragmentTransaction.replace(R.id.content_all_recipies_frame_layout,viewRecipeFragment,"View Recipe")
+//                .setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right).commit();
+        Intent i=new Intent(context, ViewRecipe.class);
+        i.putExtra("Recipe",recipe);
+        context.startActivity(i);
+
     }
 
     private String getTime(int x){
