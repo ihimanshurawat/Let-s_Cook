@@ -2,6 +2,7 @@ package com.example.andro.letscook.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -27,6 +28,7 @@ import com.example.andro.letscook.PojoClass.Recipe;
 import com.example.andro.letscook.R;
 import com.example.andro.letscook.Support.Constant;
 import com.example.andro.letscook.Support.FirebaseAuthUtility;
+import com.example.andro.letscook.Support.Methods;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -41,7 +43,7 @@ import java.util.TimeZone;
 
 import rm.com.clocks.ClockImageView;
 
-public class ViewRecipe extends AppCompatActivity {
+public class ViewRecipe extends Methods {
 
     TextView recipeTotalTimeTextView,recipeCookTimeTextView
             ,recipePrepTimeTextView,recipeServingTextView,recipeDescriptionTextView;
@@ -74,18 +76,16 @@ public class ViewRecipe extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_recipe);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_view_recipe_toolbar);
         setSupportActionBar(toolbar);
+        CollapsingToolbarLayout collapsingToolbarLayout=findViewById(R.id.activity_view_recipe_collapsing_toolbar_layout);
+        collapsingToolbarLayout.setTitleEnabled(false);
+
         Intent i=getIntent();
         recipe=(Recipe)i.getSerializableExtra("Recipe");
 
-        ActionBar ab=getSupportActionBar();
-        if(ab!=null){
-            ab.setDisplayHomeAsUpEnabled(true);
-        }
+        initializeToolbar(R.id.activity_view_recipe_toolbar,recipe.getName());
 
-
-        setTitle(recipe.getName());
 
         firebaseDatabase=FirebaseDatabase.getInstance();
         databaseReference=firebaseDatabase.getReference();
@@ -99,7 +99,7 @@ public class ViewRecipe extends AppCompatActivity {
 
 
         //Recipe ImageView
-        recipeImageView= findViewById(R.id.content_view_recipe_recipe_image_view);
+        recipeImageView= findViewById(R.id.activity_view_recipe_recipe_image_view);
 
         // recipeNameTextView= findViewById(R.id.content_view_recipe_recipe_name_text_view);
         recipeTotalTimeTextView= findViewById(R.id.content_view_recipe_total_time_text_view);

@@ -33,5 +33,13 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppTheme.ViewRecipe" >
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+    </style>
 
 </resources>

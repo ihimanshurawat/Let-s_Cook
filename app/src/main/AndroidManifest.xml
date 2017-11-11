@@ -41,7 +41,7 @@
             android:label="@string/title_activity_view_recipe"
             android:screenOrientation="portrait"
             android:parentActivityName=".AllRecipes"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.ViewRecipe"/>
     </application>
 
 </manifest>

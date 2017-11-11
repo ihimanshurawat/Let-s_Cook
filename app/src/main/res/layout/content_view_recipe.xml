@@ -18,11 +18,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/content_view_recipe_recipe_image_view"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:scaleType="fitXY"/>
             <ImageButton
                 android:id="@+id/content_view_recipe_favorite_image_button"
                 android:layout_width="48dp"

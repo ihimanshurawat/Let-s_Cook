@@ -20,14 +20,13 @@ public class Methods extends AppCompatActivity{
     Toolbar toolbar;
 
 
-    public void initializeToolbar(int toolbarId, @DrawableRes int hamBurger){
+    public void initializeToolbar(int toolbarId,String title){
         toolbar=findViewById(toolbarId);
         setSupportActionBar(toolbar);
         TextView appBarTitleTextView=toolbar.findViewById(R.id.app_bar_all_recipes_app_bar_title_text_view);
-        appBarTitleTextView.setText(R.string.app_name);
+        appBarTitleTextView.setText(title);
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(hamBurger);
 
     }
 
