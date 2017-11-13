@@ -27,7 +27,6 @@ public class Methods extends AppCompatActivity{
         appBarTitleTextView.setText(title);
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
     }
 
     public void setFavourite(String recipeID, final DatabaseReference databaseReference, FirebaseUser user, final ImageButton button){

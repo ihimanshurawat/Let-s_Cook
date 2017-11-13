@@ -1,8 +1,12 @@
 package com.example.andro.letscook.Activity;
 
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -13,12 +17,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.andro.letscook.Adapters.DirectionAdapter;
@@ -43,7 +49,7 @@ import java.util.TimeZone;
 
 import rm.com.clocks.ClockImageView;
 
-public class ViewRecipe extends Methods {
+public class ViewRecipe extends AppCompatActivity {
 
     TextView recipeTotalTimeTextView,recipeCookTimeTextView
             ,recipePrepTimeTextView,recipeServingTextView,recipeDescriptionTextView;
@@ -72,20 +78,29 @@ public class ViewRecipe extends Methods {
 
     Recipe recipe;
 
+    Toolbar toolbar;
+
+    AppBarLayout appBarLayout;
+
+    int screenHeight,screenWidth;
+
+    CollapsingToolbarLayout collapsingToolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_recipe);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_view_recipe_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.activity_view_recipe_toolbar);
         setSupportActionBar(toolbar);
+        
         CollapsingToolbarLayout collapsingToolbarLayout=findViewById(R.id.activity_view_recipe_collapsing_toolbar_layout);
         collapsingToolbarLayout.setTitleEnabled(false);
 
         Intent i=getIntent();
         recipe=(Recipe)i.getSerializableExtra("Recipe");
 
-        initializeToolbar(R.id.activity_view_recipe_toolbar,recipe.getName());
-
+        //initializeToolbar(R.id.activity_view_recipe_toolbar,recipe.getName());
+        initCollapsibleToolbar(recipe.getName());
 
         firebaseDatabase=FirebaseDatabase.getInstance();
         databaseReference=firebaseDatabase.getReference();
@@ -298,6 +313,58 @@ public class ViewRecipe extends Methods {
     };
 
 
+    private int getStatusBarHeight() {
+        int height;
+
+        Resources myResources = getResources();
+        int idStatusBarHeight = myResources.getIdentifier(
+                "status_bar_height", "dimen", "android");
+        if (idStatusBarHeight > 0) {
+            height = getResources().getDimensionPixelSize(idStatusBarHeight);
+            Toast.makeText(this,
+                    "Status Bar Height = " + height,
+                    Toast.LENGTH_LONG).show();
+        }else{
+            height = 0;
+            Toast.makeText(this,
+                    "Resources NOT found",
+                    Toast.LENGTH_LONG).show();
+        }
+
+        return height;
+    }
+
+    //Toolbar
+    public void initializeToolbar(int toolbarId,String title){
+        toolbar=findViewById(toolbarId);
+        setSupportActionBar(toolbar);
+        TextView appBarTitleTextView=toolbar.findViewById(R.id.app_bar_all_recipes_app_bar_title_text_view);
+        appBarTitleTextView.setText(title);
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void initCollapsibleToolbar(String title) {
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        screenHeight = size.y;
+        screenWidth = size.x;
+        toolbar = (Toolbar) findViewById(R.id.activity_view_recipe_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        TextView appBarTitleTextView=toolbar.findViewById(R.id.app_bar_all_recipes_app_bar_title_text_view);
+        appBarTitleTextView.setText(title);
+        getSupportActionBar().setTitle("");
+        appBarLayout = findViewById(R.id.activity_view_recipe_app_bar_layout);
+        double d=screenHeight/2.5;
+        screenHeight=(int)d;
+        appBarLayout.setLayoutParams(new CoordinatorLayout.LayoutParams(screenWidth,screenHeight));
+        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.activity_view_recipe_collapsing_toolbar_layout);
+        collapsingToolbar.setTitleEnabled(false);
+
+    }
 
 
 }
