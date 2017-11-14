@@ -61,7 +61,6 @@ public class EditProfile extends AppCompatActivity {
 
     private String key;
 
-
     private String arr[];
 
     private DatabaseReference databaseReference;

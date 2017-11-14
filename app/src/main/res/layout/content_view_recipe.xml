@@ -14,17 +14,10 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <ImageButton
-                android:id="@+id/content_view_recipe_favorite_image_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:text="Favorite"
-                />
-
 
             <LinearLayout
                 android:layout_width="match_parent"

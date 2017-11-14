@@ -33,6 +33,7 @@ import com.example.andro.letscook.AllRecipes;
 import com.example.andro.letscook.PojoClass.Recipe;
 import com.example.andro.letscook.R;
 import com.example.andro.letscook.Support.Constant;
+import com.example.andro.letscook.Support.FireStoreUtility;
 import com.example.andro.letscook.Support.FirebaseAuthUtility;
 import com.example.andro.letscook.Support.Methods;
 import com.google.firebase.auth.FirebaseUser;
@@ -41,6 +42,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -51,40 +54,43 @@ import rm.com.clocks.ClockImageView;
 
 public class ViewRecipe extends AppCompatActivity {
 
-    TextView recipeTotalTimeTextView,recipeCookTimeTextView
+    private TextView recipeTotalTimeTextView,recipeCookTimeTextView
             ,recipePrepTimeTextView,recipeServingTextView,recipeDescriptionTextView;
 
-    ImageView recipeImageView;
+    private ImageView recipeImageView;
+    private List<String> ingredientList;
+    private List<String> directionList;
 
-    List<String> ingredientList;
-    List<String> directionList;
+    private FirebaseDatabase firebaseDatabase;
+    private FirebaseFirestore firebaseFirestore;
+    private DatabaseReference databaseReference;
+    private LinearLayout ingredientsLinearLayout;
+    private LinearLayout directionsLinearLayout;
 
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
-    LinearLayout ingredientsLinearLayout;
-    LinearLayout directionsLinearLayout;
+    private IngredientAdapter ingredientAdapter;
+    private DirectionAdapter directionAdapter;
 
-    IngredientAdapter ingredientAdapter;
-    DirectionAdapter directionAdapter;
+    private ViewGroup.LayoutParams layoutParams;
+    private LinearLayout.LayoutParams textViewLayoutParams;
 
-    ViewGroup.LayoutParams layoutParams;
-    LinearLayout.LayoutParams textViewLayoutParams;
+    private FirebaseUser user;
 
-    FirebaseUser user;
+    private ClockImageView cookTimeClockImageView,prepTimeClockImageView,totalTimeClockImageView;
 
-    ClockImageView cookTimeClockImageView,prepTimeClockImageView,totalTimeClockImageView;
+    private Recipe recipe;
 
-    ImageButton favouriteImageButton;
+    private Toolbar toolbar;
 
-    Recipe recipe;
+    private AppBarLayout appBarLayout;
 
-    Toolbar toolbar;
+    private int screenHeight,screenWidth;
 
-    AppBarLayout appBarLayout;
+    private CollapsingToolbarLayout collapsingToolbar;
 
-    int screenHeight,screenWidth;
+    private FloatingActionButton fab;
 
-    CollapsingToolbarLayout collapsingToolbar;
+    private Boolean isFav;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,22 +105,24 @@ public class ViewRecipe extends AppCompatActivity {
         Intent i=getIntent();
         recipe=(Recipe)i.getSerializableExtra("Recipe");
 
-        //initializeToolbar(R.id.activity_view_recipe_toolbar,recipe.getName());
-        initCollapsibleToolbar(recipe.getName());
+        //Setup Toolbar
+        initializeToolbar(R.id.activity_view_recipe_toolbar,recipe.getName());
+        //initCollapsibleToolbar(recipe.getName());
+
+        //Favourite Floating Action Button
+        fab=findViewById(R.id.activity_view_recipe_favourite_fab);
 
         firebaseDatabase=FirebaseDatabase.getInstance();
         databaseReference=firebaseDatabase.getReference();
+
+        firebaseFirestore= FireStoreUtility.getFirebaseFirestore();
+
         user= FirebaseAuthUtility.getAuth().getCurrentUser();
 
         ingredientsLinearLayout=findViewById(R.id.content_view_recipe_ingredient_linear_layout);
         directionsLinearLayout=findViewById(R.id.content_view_recipe_directions_linear_layout);
 
-        //Favourite Button
-        favouriteImageButton= findViewById(R.id.content_view_recipe_favorite_image_button);
-
-
-        //Recipe ImageView
-        recipeImageView= findViewById(R.id.activity_view_recipe_recipe_image_view);
+        recipeImageView=findViewById(R.id.activity_view_recipe_recipe_image_view);
 
         // recipeNameTextView= findViewById(R.id.content_view_recipe_recipe_name_text_view);
         recipeTotalTimeTextView= findViewById(R.id.content_view_recipe_total_time_text_view);
@@ -128,6 +136,58 @@ public class ViewRecipe extends AppCompatActivity {
         cookTimeClockImageView= findViewById(R.id.content_view_recipe_cook_time_clock_image_view);
         totalTimeClockImageView= findViewById(R.id.content_view_recipe_total_time_clock_image_view);
 
+        layoutParams=new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        textViewLayoutParams= new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+
+        setFavouriteResource(fab);
+        loadData();
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isFav){
+                    databaseReference.child("favourites").child(user.getUid()).child(recipe.getId()).removeValue();
+                    firebaseFirestore.collection("favourites").document(user.getUid()).collection("recipes").document(recipe.getId()).delete();
+                    setFavouriteResource(fab);
+                }else{
+                    databaseReference.child("favourites").child(user.getUid()).child(recipe.getId()).setValue(true);
+                    firebaseFirestore.collection("favourites").document(user.getUid()).collection("recipes").document(recipe.getId()).set(recipe);
+                    setFavouriteResource(fab);
+                }
+
+            }
+        });
+
+
+    }
+
+
+    private void setFavouriteResource(final FloatingActionButton fab) {
+        databaseReference.child("favourites").child(user.getUid()).child(recipe.getId()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    isFav=true;
+                    fab.setImageResource(R.drawable.favourite_is_fav);
+                }else{
+                    isFav=false;
+                    fab.setImageResource(R.drawable.favourite_is_not_fav);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         databaseReference.child("ingredients").
                 child(recipe.getId()).
                 addValueEventListener(ingredientValueEventListener);
@@ -136,43 +196,18 @@ public class ViewRecipe extends AppCompatActivity {
                 child(recipe.getId()).
                 addValueEventListener(directionValueEventListener);
 
-
-        if(recipe!=null) {
-            Calendar cal=Calendar.getInstance(TimeZone.getDefault());
-            //recipeNameTextView.setText(recipe.getName());
-            recipeServingTextView.setText(Integer.toString(recipe.getServings()));
-            recipePrepTimeTextView.setText(getTime(recipe.getPrepTime()));
-            recipeCookTimeTextView.setText(getTime(recipe.getCookTime()));
-            recipeTotalTimeTextView.setText(getTime(recipe.getCookTime()+recipe.getPrepTime()));
-            recipeDescriptionTextView.setText(recipe.getDescription());
-            //Glide
-            Glide.with(ViewRecipe.this).load(recipe.getImageUrl()).into(recipeImageView);
-            getClockImageViewTime(recipe.getPrepTime(),prepTimeClockImageView,cal);
-            getClockImageViewTime(recipe.getCookTime(),cookTimeClockImageView,cal);
-            getClockImageViewTime((recipe.getCookTime()+recipe.getPrepTime()),totalTimeClockImageView,cal);
-
-
-        }
-
-        layoutParams=new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        textViewLayoutParams= new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-
-
-//        databaseReference.child("favourite").child(user.getUid()).
-//                child(recipe.getId()).addValueEventListener()
-//
-
-//        favouriteButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                databaseReference.child("favourite").child(user.getUid()).
-//            }
-//        });
-
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
 
+        databaseReference.child("ingredients").
+                child(recipe.getId()).removeEventListener(ingredientValueEventListener);
+        databaseReference.child("directions").
+                child(recipe.getId()).removeEventListener(directionValueEventListener);
+
+    }
 
     public String getTime(int x){
 
@@ -200,24 +235,6 @@ public class ViewRecipe extends AppCompatActivity {
         }
 
     }
-
-
-    ValueEventListener isFavouriteValueEventListener=new ValueEventListener() {
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
-            if(dataSnapshot.exists()){
-
-            }else{
-                favouriteImageButton.setTag(Constant.IS_NOT_FAV);
-                //favouriteImageButton.setImageResource(co);
-            }
-        }
-
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-
-        }
-    };
 
 
     ValueEventListener directionValueEventListener= new ValueEventListener() {
@@ -312,30 +329,8 @@ public class ViewRecipe extends AppCompatActivity {
         }
     };
 
-
-    private int getStatusBarHeight() {
-        int height;
-
-        Resources myResources = getResources();
-        int idStatusBarHeight = myResources.getIdentifier(
-                "status_bar_height", "dimen", "android");
-        if (idStatusBarHeight > 0) {
-            height = getResources().getDimensionPixelSize(idStatusBarHeight);
-            Toast.makeText(this,
-                    "Status Bar Height = " + height,
-                    Toast.LENGTH_LONG).show();
-        }else{
-            height = 0;
-            Toast.makeText(this,
-                    "Resources NOT found",
-                    Toast.LENGTH_LONG).show();
-        }
-
-        return height;
-    }
-
     //Toolbar
-    public void initializeToolbar(int toolbarId,String title){
+    private void initializeToolbar(int toolbarId,String title){
         toolbar=findViewById(toolbarId);
         setSupportActionBar(toolbar);
         TextView appBarTitleTextView=toolbar.findViewById(R.id.app_bar_all_recipes_app_bar_title_text_view);
@@ -344,25 +339,45 @@ public class ViewRecipe extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void initCollapsibleToolbar(String title) {
+//    private void initCollapsibleToolbar(String title) {
+//
+//        Display display = getWindowManager().getDefaultDisplay();
+//        Point size = new Point();
+//        display.getSize(size);
+//        screenHeight = size.y;
+//        screenWidth = size.x;
+//        toolbar = (Toolbar) findViewById(R.id.activity_view_recipe_toolbar);
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        TextView appBarTitleTextView=toolbar.findViewById(R.id.app_bar_all_recipes_app_bar_title_text_view);
+//        appBarTitleTextView.setText(title);
+//        getSupportActionBar().setTitle("");
+//        appBarLayout = findViewById(R.id.activity_view_recipe_app_bar_layout);
+//        double d=screenHeight/2.5;
+//        screenHeight=(int)d;
+//        appBarLayout.setLayoutParams(new AppBarLayout.LayoutParams(screenWidth,screenHeight));
+//        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.activity_view_recipe_collapsing_toolbar_layout);
+//        collapsingToolbar.setTitleEnabled(false);
+//
+//    }
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        screenHeight = size.y;
-        screenWidth = size.x;
-        toolbar = (Toolbar) findViewById(R.id.activity_view_recipe_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        TextView appBarTitleTextView=toolbar.findViewById(R.id.app_bar_all_recipes_app_bar_title_text_view);
-        appBarTitleTextView.setText(title);
-        getSupportActionBar().setTitle("");
-        appBarLayout = findViewById(R.id.activity_view_recipe_app_bar_layout);
-        double d=screenHeight/2.5;
-        screenHeight=(int)d;
-        appBarLayout.setLayoutParams(new CoordinatorLayout.LayoutParams(screenWidth,screenHeight));
-        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.activity_view_recipe_collapsing_toolbar_layout);
-        collapsingToolbar.setTitleEnabled(false);
+    private void loadData(){
+
+        if(recipe!=null) {
+            Calendar cal=Calendar.getInstance(TimeZone.getDefault());
+            //recipeNameTextView.setText(recipe.getName());
+            recipeServingTextView.setText(Integer.toString(recipe.getServings()));
+            recipePrepTimeTextView.setText(getTime(recipe.getPrepTime()));
+            recipeCookTimeTextView.setText(getTime(recipe.getCookTime()));
+            recipeTotalTimeTextView.setText(getTime(recipe.getCookTime()+recipe.getPrepTime()));
+            recipeDescriptionTextView.setText(recipe.getDescription());
+            //Glide
+            Glide.with(ViewRecipe.this).load(recipe.getImageUrl()).into(recipeImageView);
+            getClockImageViewTime(recipe.getPrepTime(),prepTimeClockImageView,cal);
+            getClockImageViewTime(recipe.getCookTime(),cookTimeClockImageView,cal);
+            getClockImageViewTime((recipe.getCookTime()+recipe.getPrepTime()),totalTimeClockImageView,cal);
+        }
+
 
     }
 
