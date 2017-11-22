@@ -23,7 +23,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.andro.letscook.Activity.EditProfile;
 import com.example.andro.letscook.Fragments.AddRecipeFragment;
-import com.example.andro.letscook.Fragments.EditProfileFragment;
 import com.example.andro.letscook.Fragments.RecipesFragment;
 import com.example.andro.letscook.PojoClass.User;
 import com.example.andro.letscook.Support.DatabaseUtility;
@@ -267,13 +266,6 @@ public class AllRecipes extends AppCompatActivity
         Intent i=new Intent(AllRecipes.this, EditProfile.class);
         i.putExtra("Key",key);
         startActivity(i);
-//        EditProfileFragment editProfileFragment=new EditProfileFragment();
-//        Bundle keyBundle=new Bundle();
-//        keyBundle.putString("Key",key);
-//        editProfileFragment.setArguments(keyBundle);
-//        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-//        fragmentTransaction.replace(R.id.content_all_recipies_frame_layout,editProfileFragment,"Edit Profile")
-//                .setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right).commit();
     }
 
     ValueEventListener userProfileValueEventListener= new ValueEventListener() {

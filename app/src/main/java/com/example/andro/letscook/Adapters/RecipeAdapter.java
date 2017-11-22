@@ -15,8 +15,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.andro.letscook.Activity.ViewRecipe;
-import com.example.andro.letscook.Fragments.EditProfileFragment;
-import com.example.andro.letscook.Fragments.ViewRecipeFragment;
 import com.example.andro.letscook.PojoClass.Recipe;
 import com.example.andro.letscook.R;
 
@@ -86,17 +84,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     }
 
     private void launchViewRecipe(Recipe recipe) {
-//        ViewRecipeFragment viewRecipeFragment=new ViewRecipeFragment();
-//        Bundle bundle=new Bundle();
-//        bundle.putSerializable("Recipe",recipe);
-//        viewRecipeFragment.setArguments(bundle);
-//        FragmentTransaction fragmentTransaction= fragmentManager.beginTransaction();
-//        fragmentTransaction.replace(R.id.content_all_recipies_frame_layout,viewRecipeFragment,"View Recipe")
-//                .setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right).commit();
         Intent i=new Intent(context, ViewRecipe.class);
         i.putExtra("Recipe",recipe);
         context.startActivity(i);
-
     }
 
     private String getTime(int x){
