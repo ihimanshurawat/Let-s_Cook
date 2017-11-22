@@ -49,7 +49,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         Recipe recipe=recipeList.get(position);
         if(recipe!=null) {
             holder.recipeName.setText(recipe.getName());
-    //      holder.recipeFavourite.setText(recipe.getFavourites()+"");
+            holder.recipeFavourite.setText(recipe.getFavourites()+"");
             holder.recipeTotalTime.setText(getTime(recipe.getCookTime()+recipe.getPrepTime()));
             Glide.with(context.getApplicationContext()).load(recipe.getImageUrl()).apply(RequestOptions.circleCropTransform()).into(holder.recipeImageView);
         }
@@ -71,8 +71,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 
             recipeImageView=itemView.findViewById(R.id.recipes_fragment_item_view_image_view);
             recipeName=itemView.findViewById(R.id.recipes_fragment_item_view_recipe_name_text_view);
-            recipeTotalTime= itemView.findViewById(R.id.recipes_fragment_total_cook_time_text_view);
-          //  recipeFavourite=itemView.findViewById(R.id.recipes_fragment_recipe_favourite_text_view);
+            recipeTotalTime= itemView.findViewById(R.id.recipes_fragment_item_view_total_cook_time_text_view);
+            recipeFavourite=itemView.findViewById(R.id.recipes_fragment_item_view_favourite_text_view);
             itemView.setOnClickListener(this);
 
         }

@@ -93,9 +93,7 @@ public class AllRecipes extends AppCompatActivity
         setContentView(R.layout.activity_all_recipes);
         Toolbar toolbar = findViewById(R.id.app_bar_all_recipes_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.hamburger_icon);
-
+        
         mAuth= FirebaseAuthUtility.getAuth();
         currentUser=mAuth.getCurrentUser();
 

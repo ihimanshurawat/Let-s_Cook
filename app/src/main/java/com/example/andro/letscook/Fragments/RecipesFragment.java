@@ -100,7 +100,7 @@ public class RecipesFragment extends Fragment {
         dessertsRecyclerView.setAdapter(dessertsRecipeAdapter);
         dessertsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
 
-        db.collection("recipes").whereEqualTo("type","Vegetarian").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("recipes").whereEqualTo("type","Vegetarian").whereEqualTo("subType","Main Course").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
@@ -118,7 +118,7 @@ public class RecipesFragment extends Fragment {
             }
         });
 
-        db.collection("recipes").whereEqualTo("type","Non-vegetarian").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("recipes").whereEqualTo("type","Non-vegetarian").whereEqualTo("subType","Main Course").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
@@ -127,6 +127,7 @@ public class RecipesFragment extends Fragment {
                         Recipe recipe = documentSnapshot.toObject(Recipe.class);
                         nonVegetarianRecipeList.add(recipe);
                     }
+                    Collections.reverse(nonVegetarianRecipeList);
                     nonVegetarianBookLoading.stop();
                     nonVegetarianBookLoading.setVisibility(View.GONE);
                     nonVegetarianRecipeRecyclerView.setVisibility(View.VISIBLE);
@@ -136,7 +137,7 @@ public class RecipesFragment extends Fragment {
             }
         });
 
-        db.collection("recipes").whereEqualTo("type","Dessert").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("recipes").whereEqualTo("subType","Dessert").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()) {

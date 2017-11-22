@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -36,18 +37,25 @@ import com.example.andro.letscook.Support.Constant;
 import com.example.andro.letscook.Support.FireStoreUtility;
 import com.example.andro.letscook.Support.FirebaseAuthUtility;
 import com.example.andro.letscook.Support.Methods;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import rm.com.clocks.ClockImageView;
@@ -147,13 +155,17 @@ public class ViewRecipe extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(isFav){
-                    databaseReference.child("favourites").child(user.getUid()).child(recipe.getId()).removeValue();
+                    databaseReference.child("favourites").child("users").child(user.getUid()).child(recipe.getId()).removeValue();
+                    databaseReference.child("favourites").child("recipes").child(recipe.getId()).child(user.getUid()).removeValue();
                     firebaseFirestore.collection("favourites").document(user.getUid()).collection("recipes").document(recipe.getId()).delete();
                     setFavouriteResource(fab);
+                    setFavouriteCount();
                 }else{
-                    databaseReference.child("favourites").child(user.getUid()).child(recipe.getId()).setValue(true);
+                    databaseReference.child("favourites").child("users").child(user.getUid()).child(recipe.getId()).setValue(true);
+                    databaseReference.child("favourites").child("recipes").child(recipe.getId()).child(user.getUid()).setValue(true);
                     firebaseFirestore.collection("favourites").document(user.getUid()).collection("recipes").document(recipe.getId()).set(recipe);
                     setFavouriteResource(fab);
+                    setFavouriteCount();
                 }
 
             }
@@ -162,9 +174,30 @@ public class ViewRecipe extends AppCompatActivity {
 
     }
 
+    private void setFavouriteCount(){
+
+        databaseReference.child("favourites").child("recipes").child(recipe.getId()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+                FireStoreUtility.getFirebaseFirestore().collection("recipes").whereEqualTo("id",recipe.getId()).limit(1).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot documentSnapshots) {
+                        List<DocumentSnapshot> dSnapshot=documentSnapshots.getDocuments();
+                        FireStoreUtility.getFirebaseFirestore().collection("recipes").document(dSnapshot.get(0).getId()).update("favourites",dataSnapshot.getChildrenCount());
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     private void setFavouriteResource(final FloatingActionButton fab) {
-        databaseReference.child("favourites").child(user.getUid()).child(recipe.getId()).addValueEventListener(new ValueEventListener() {
+        databaseReference.child("favourites").child("users").child(user.getUid()).child(recipe.getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
@@ -175,7 +208,6 @@ public class ViewRecipe extends AppCompatActivity {
                     fab.setImageResource(R.drawable.favourite_is_not_fav);
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -211,7 +243,7 @@ public class ViewRecipe extends AppCompatActivity {
 
     public String getTime(int x){
 
-        if(x>60){
+        if(x>=60){
 
             return (x/60)+"h "+ (x%60)+"'";
         }
