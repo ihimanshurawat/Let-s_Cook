@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.andro.letscook.Activity.EditProfile;
+import com.example.andro.letscook.Activity.FavouriteRecipe;
 import com.example.andro.letscook.Fragments.AddRecipeFragment;
 import com.example.andro.letscook.Fragments.RecipesFragment;
 import com.example.andro.letscook.PojoClass.User;
@@ -233,7 +234,8 @@ public class AllRecipes extends AppCompatActivity
         } else if (id == R.id.activity_all_recipes_drawer_recipes) {
             launchRecipeFragment(existingUser);
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.activity_all_recipes_drawer_favourites) {
+            startActivity(new Intent(AllRecipes.this, FavouriteRecipe.class));
 
         } else if (id == R.id.nav_manage) {
 

@@ -86,17 +86,17 @@ public class RecipesFragment extends Fragment {
         dessertsRecyclerView=v.findViewById(R.id.recipes_fragment_desserts_recycler_view);
 
         vegetarianRecipeList= new ArrayList<>();
-        vegetarianRecipeAdapter=new RecipeAdapter(getContext(),vegetarianRecipeList,getActivity().getSupportFragmentManager());
+        vegetarianRecipeAdapter=new RecipeAdapter(getContext(),vegetarianRecipeList);
         vegetarianRecipeRecyclerView.setAdapter(vegetarianRecipeAdapter);
         vegetarianRecipeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
 
         nonVegetarianRecipeList = new ArrayList<>();
-        nonVegetarianRecipeAdapter=new RecipeAdapter(getContext(),nonVegetarianRecipeList,getActivity().getSupportFragmentManager());
+        nonVegetarianRecipeAdapter=new RecipeAdapter(getContext(),nonVegetarianRecipeList);
         nonVegetarianRecipeRecyclerView.setAdapter(nonVegetarianRecipeAdapter);
         nonVegetarianRecipeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
 
         dessertsRecipeList = new ArrayList<>();
-        dessertsRecipeAdapter=new RecipeAdapter(getContext(),dessertsRecipeList,getActivity().getSupportFragmentManager());
+        dessertsRecipeAdapter=new RecipeAdapter(getContext(),dessertsRecipeList);
         dessertsRecyclerView.setAdapter(dessertsRecipeAdapter);
         dessertsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
 

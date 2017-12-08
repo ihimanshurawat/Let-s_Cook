@@ -11,7 +11,7 @@
             android:icon="@drawable/cook_book_icon"
             android:title="Recipes" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/activity_all_recipes_drawer_favourites"
             android:icon="@drawable/favorite_icon"
             android:title="Favourites" />
 

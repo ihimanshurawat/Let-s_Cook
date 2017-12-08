@@ -25,13 +25,13 @@ import java.util.List;
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
 
     public Context context;
-    public FragmentManager fragmentManager;
+
     public List<Recipe> recipeList;
 
-    public RecipeAdapter(Context context,List<Recipe> recipeList,FragmentManager fragmentManager){
+    public RecipeAdapter(Context context,List<Recipe> recipeList){
         this.context=context;
         this.recipeList=recipeList;
-        this.fragmentManager=fragmentManager;
+
     }
 
     @Override

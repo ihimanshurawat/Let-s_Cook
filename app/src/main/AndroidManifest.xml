@@ -34,14 +34,15 @@
 
         <activity
             android:name=".Activity.EditProfile"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".AllRecipes" />
+            android:parentActivityName=".AllRecipes"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.ViewRecipe"
             android:label="@string/title_activity_view_recipe"
-            android:screenOrientation="portrait"
             android:parentActivityName=".AllRecipes"
-            android:theme="@style/AppTheme.ViewRecipe"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.ViewRecipe" />
+        <activity android:name=".Activity.FavouriteRecipe"></activity>
     </application>
 
 </manifest>
