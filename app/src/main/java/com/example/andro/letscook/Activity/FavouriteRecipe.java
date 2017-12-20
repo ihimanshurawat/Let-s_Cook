@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.example.andro.letscook.Adapters.RecipeAdapter;
 import com.example.andro.letscook.PojoClass.Recipe;
@@ -53,7 +54,14 @@ public class FavouriteRecipe extends AppCompatActivity {
             @Override
             public void onSuccess(QuerySnapshot documentSnapshots) {
                 if(!documentSnapshots.isEmpty()){
-                    favouriteRecipeList=documentSnapshots.toObjects(Recipe.class);
+                    Log.i("Works","Is In if");
+                    List<DocumentSnapshot> documents=documentSnapshots.getDocuments();
+                    for(int i=0;i<documents.size();i++){
+                        favouriteRecipeList.add(documents.get(i).toObject(Recipe.class));
+                    }
+
+                    //favouriteRecipeList=documentSnapshots.toObjects(Recipe.class);
+
                     favouriteRecipeAdapter.notifyDataSetChanged();
                 }
             }
