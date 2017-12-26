@@ -51,8 +51,7 @@ package com.example.andro.letscook;
 
 public class MainActivity extends AppCompatActivity {
 
-
-//Setting Up Google SignIn
+        //Setting Up Google SignIn
         public static final int RC_SIGN_IN=1;
         GoogleApiClient mGoogleApiClient;
 
@@ -78,9 +77,6 @@ public class MainActivity extends AppCompatActivity {
             super.onStart();
             //Attaching AuthStateListener
             mAuth.addAuthStateListener(loginStateListener);
-//            networkStateReceiver = new NetworkStateReceiver(this);
-//            networkStateReceiver.addListener(this);
-//            this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
 
         }
 
@@ -89,8 +85,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mAuth.removeAuthStateListener(loginStateListener);
-        //networkStateReceiver.removeListener(this);
-        //this.unregisterReceiver(networkStateReceiver);
 
     }
 
