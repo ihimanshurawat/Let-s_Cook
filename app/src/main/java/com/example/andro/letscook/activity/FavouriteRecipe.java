@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.example.andro.letscook.adapter.RecipeAdapter;
-import com.example.andro.letscook.PojoClass.Recipe;
+import com.example.andro.letscook.pojo.Recipe;
 import com.example.andro.letscook.R;
 import com.example.andro.letscook.support.FireStoreUtility;
 import com.example.andro.letscook.support.FirebaseAuthUtility;

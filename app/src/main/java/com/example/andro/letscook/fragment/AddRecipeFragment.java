@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.andro.letscook.PojoClass.Recipe;
+import com.example.andro.letscook.pojo.Recipe;
 import com.example.andro.letscook.R;
 import com.example.andro.letscook.support.DatabaseUtility;
 import com.example.andro.letscook.support.FireStoreUtility;
@@ -173,7 +173,7 @@ public class AddRecipeFragment extends Fragment {
         bundle.putString("id",id);
         addIngredientFragment.setArguments(bundle);
         FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.content_all_recipies_frame_layout,addIngredientFragment).
+        fragmentTransaction.replace(R.id.activity_add_recipe_frame_layout,addIngredientFragment).
                 setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right).commit();
     }
 

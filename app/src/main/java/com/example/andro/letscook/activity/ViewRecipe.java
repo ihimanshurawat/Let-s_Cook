@@ -22,7 +22,7 @@ import com.bumptech.glide.Glide;
 import com.example.andro.letscook.R;
 import com.example.andro.letscook.adapter.DirectionAdapter;
 import com.example.andro.letscook.adapter.IngredientAdapter;
-import com.example.andro.letscook.PojoClass.Recipe;
+import com.example.andro.letscook.pojo.Recipe;
 import com.example.andro.letscook.support.FireStoreUtility;
 import com.example.andro.letscook.support.FirebaseAuthUtility;
 import com.google.android.gms.tasks.OnSuccessListener;

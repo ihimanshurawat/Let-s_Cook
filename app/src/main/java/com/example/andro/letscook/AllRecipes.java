@@ -21,11 +21,11 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.andro.letscook.fragment.AddRecipeFragment;
+import com.example.andro.letscook.activity.AddRecipe;
 import com.example.andro.letscook.fragment.RecipesFragment;
-import com.example.andro.letscook.PojoClass.User;
 import com.example.andro.letscook.activity.EditProfile;
 import com.example.andro.letscook.activity.FavouriteRecipe;
+import com.example.andro.letscook.pojo.User;
 import com.example.andro.letscook.support.DatabaseUtility;
 import com.example.andro.letscook.support.FirebaseAuthUtility;
 import com.google.firebase.auth.FirebaseAuth;
@@ -214,10 +214,7 @@ public class AllRecipes extends AppCompatActivity
             return true;
         }
         if(id==R.id.all_recipies_add_recipie){
-            AddRecipeFragment addRecipeFragment=new AddRecipeFragment();
-            FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.content_all_recipies_frame_layout,addRecipeFragment,"Add Recipe Fragment")
-                    .commit();
+            startActivity(new Intent(AllRecipes.this, AddRecipe.class));
 
         }
 

@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
                         vibrator.vibrate(50);
 
                     ConnectivityManager connectivityManager
-                            = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                            = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
                     NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
                     if(activeNetworkInfo!=null&&activeNetworkInfo.isConnected()){
                         signIn();

@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.andro.letscook.activity.ViewRecipe;
-import com.example.andro.letscook.PojoClass.Recipe;
+import com.example.andro.letscook.pojo.Recipe;
 import com.example.andro.letscook.R;
 
 

@@ -3,9 +3,6 @@ package com.example.andro.letscook.support;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
-/**
- * Created by himanshurawat on 05/10/17.
- */
 
 public class FireStoreUtility {
     private static FirebaseFirestore firebaseFirestore;

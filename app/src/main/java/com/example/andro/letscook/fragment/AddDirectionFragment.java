@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.andro.letscook.PojoClass.Directions;
+import com.example.andro.letscook.pojo.Directions;
 import com.example.andro.letscook.R;
 import com.example.andro.letscook.support.DatabaseUtility;
 import com.google.firebase.database.DatabaseReference;
@@ -83,7 +83,7 @@ public class AddDirectionFragment extends Fragment {
             public void onClick(View v) {
                 addDirection(id);
                 Toast.makeText(getActivity(),"Recipe Successfully Added",Toast.LENGTH_SHORT).show();
-                getActivity().onBackPressed();
+                getActivity().finish();
             }
         });
 
@@ -200,7 +200,7 @@ public class AddDirectionFragment extends Fragment {
         bundle.putString("id",id);
         addDirectionFragment.setArguments(bundle);
         FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.content_all_recipies_frame_layout,addDirectionFragment).
+        fragmentTransaction.replace(R.id.activity_add_recipe_frame_layout,addDirectionFragment).
                 setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right).commit();
     }
 
