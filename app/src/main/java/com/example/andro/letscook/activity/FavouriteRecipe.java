@@ -1,4 +1,4 @@
-package com.example.andro.letscook.Activity;
+package com.example.andro.letscook.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,17 +7,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.example.andro.letscook.Adapters.RecipeAdapter;
+import com.example.andro.letscook.adapter.RecipeAdapter;
 import com.example.andro.letscook.PojoClass.Recipe;
 import com.example.andro.letscook.R;
-import com.example.andro.letscook.Support.FireStoreUtility;
-import com.example.andro.letscook.Support.FirebaseAuthUtility;
+import com.example.andro.letscook.support.FireStoreUtility;
+import com.example.andro.letscook.support.FirebaseAuthUtility;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;

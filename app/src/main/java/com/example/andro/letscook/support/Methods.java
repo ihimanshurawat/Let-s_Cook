@@ -1,7 +1,5 @@
-package com.example.andro.letscook.Support;
+package com.example.andro.letscook.support;
 
-import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageButton;

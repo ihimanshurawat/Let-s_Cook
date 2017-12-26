@@ -1,6 +1,5 @@
-package com.example.andro.letscook.Activity;
+package com.example.andro.letscook.activity;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -27,9 +26,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.example.andro.letscook.MainActivity;
 import com.example.andro.letscook.R;
-import com.example.andro.letscook.Support.DatabaseUtility;
-import com.example.andro.letscook.Support.FirebaseAuthUtility;
-import com.example.andro.letscook.Support.StorageUtility;
+import com.example.andro.letscook.support.DatabaseUtility;
+import com.example.andro.letscook.support.FirebaseAuthUtility;
+import com.example.andro.letscook.support.StorageUtility;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;

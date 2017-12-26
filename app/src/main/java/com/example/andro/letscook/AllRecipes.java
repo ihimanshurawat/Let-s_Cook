@@ -15,22 +15,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.crashlytics.android.Crashlytics;
-import com.example.andro.letscook.Activity.EditProfile;
-import com.example.andro.letscook.Activity.FavouriteRecipe;
-import com.example.andro.letscook.Fragments.AddRecipeFragment;
-import com.example.andro.letscook.Fragments.RecipesFragment;
+import com.example.andro.letscook.fragment.AddRecipeFragment;
+import com.example.andro.letscook.fragment.RecipesFragment;
 import com.example.andro.letscook.PojoClass.User;
-import com.example.andro.letscook.Support.DatabaseUtility;
-import com.example.andro.letscook.Support.FirebaseAuthUtility;
+import com.example.andro.letscook.activity.EditProfile;
+import com.example.andro.letscook.activity.FavouriteRecipe;
+import com.example.andro.letscook.support.DatabaseUtility;
+import com.example.andro.letscook.support.FirebaseAuthUtility;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -38,11 +35,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-
-import java.util.List;
-
-import io.fabric.sdk.android.Fabric;
 
 public class AllRecipes extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -82,7 +74,13 @@ public class AllRecipes extends AppCompatActivity
 
     private Context context;
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(mAuth.getCurrentUser()==null){
+            finish();
+        }
+    }
 
     @Override
     protected void onStop() {

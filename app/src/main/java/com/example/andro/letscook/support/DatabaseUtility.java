@@ -1,4 +1,4 @@
-package com.example.andro.letscook.Support;
+package com.example.andro.letscook.support;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;

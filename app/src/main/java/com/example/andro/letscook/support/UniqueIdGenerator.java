@@ -1,21 +1,23 @@
-package com.example.andro.letscook.Support;
+package com.example.andro.letscook.support;
 
 import java.util.UUID;
 
 public class UniqueIdGenerator {
 
-    private String uniqueID;
+
+    private StringBuffer bufferedUniqueID;
 
     public UniqueIdGenerator(){
-        uniqueID="";
+        bufferedUniqueID=new StringBuffer("");
     }
 
     public String getUniqueID(){
         String arr[]= UUID.randomUUID().toString().split("-");
         for(String id: arr){
-            uniqueID += id;
+            bufferedUniqueID.append(id);
         }
-        return uniqueID;
+
+        return bufferedUniqueID.toString();
     }
 
 }

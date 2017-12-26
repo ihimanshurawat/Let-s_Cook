@@ -33,16 +33,16 @@
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name=".Activity.EditProfile"
+            android:name=".activity.EditProfile"
             android:parentActivityName=".AllRecipes"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activity.ViewRecipe"
+            android:name=".activity.ViewRecipe"
             android:label="@string/title_activity_view_recipe"
             android:parentActivityName=".AllRecipes"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ViewRecipe" />
-        <activity android:name=".Activity.FavouriteRecipe"
+        <activity android:name=".activity.FavouriteRecipe"
             android:parentActivityName=".AllRecipes"
             android:label="Favourites"
             android:screenOrientation="portrait"

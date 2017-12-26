@@ -1,20 +1,16 @@
-package com.example.andro.letscook.Adapters;
+package com.example.andro.letscook.adapter;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.andro.letscook.Activity.ViewRecipe;
+import com.example.andro.letscook.activity.ViewRecipe;
 import com.example.andro.letscook.PojoClass.Recipe;
 import com.example.andro.letscook.R;
 

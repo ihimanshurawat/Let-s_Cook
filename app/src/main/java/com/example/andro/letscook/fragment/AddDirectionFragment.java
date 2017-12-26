@@ -1,4 +1,4 @@
-package com.example.andro.letscook.Fragments;
+package com.example.andro.letscook.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.example.andro.letscook.PojoClass.Directions;
 import com.example.andro.letscook.R;
-import com.example.andro.letscook.Support.DatabaseUtility;
+import com.example.andro.letscook.support.DatabaseUtility;
 import com.google.firebase.database.DatabaseReference;
 import com.rengwuxian.materialedittext.MaterialEditText;
 

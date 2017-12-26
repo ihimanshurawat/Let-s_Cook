@@ -1,9 +1,8 @@
-package com.example.andro.letscook.Fragments;
+package com.example.andro.letscook.fragment;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,15 +16,12 @@ import android.widget.Toast;
 
 import com.example.andro.letscook.PojoClass.Recipe;
 import com.example.andro.letscook.R;
-import com.example.andro.letscook.Support.DatabaseUtility;
-import com.example.andro.letscook.Support.FireStoreUtility;
-import com.example.andro.letscook.Support.StorageUtility;
-import com.example.andro.letscook.Support.UniqueIdGenerator;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.example.andro.letscook.support.DatabaseUtility;
+import com.example.andro.letscook.support.FireStoreUtility;
+import com.example.andro.letscook.support.StorageUtility;
+import com.example.andro.letscook.support.UniqueIdGenerator;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -33,7 +29,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 

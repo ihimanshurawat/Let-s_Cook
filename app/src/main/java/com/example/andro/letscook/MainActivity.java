@@ -1,9 +1,7 @@
 package com.example.andro.letscook;
 
-        import android.content.BroadcastReceiver;
         import android.content.Context;
         import android.content.Intent;
-        import android.content.IntentFilter;
         import android.net.ConnectivityManager;
         import android.net.NetworkInfo;
         import android.os.Build;
@@ -15,14 +13,11 @@ package com.example.andro.letscook;
         import android.support.v7.app.AppCompatActivity;
         import android.os.Bundle;
         import android.util.Log;
-        import android.view.HapticFeedbackConstants;
         import android.view.View;
-        import android.view.ViewGroup;
         import android.widget.Button;
         import android.widget.Toast;
 
-        import com.crashlytics.android.Crashlytics;
-        import com.example.andro.letscook.Support.FirebaseAuthUtility;
+        import com.example.andro.letscook.support.FirebaseAuthUtility;
         import com.google.android.gms.auth.api.Auth;
         import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
         import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -37,17 +32,12 @@ package com.example.andro.letscook;
         import com.google.firebase.auth.FirebaseUser;
         import com.google.firebase.auth.GoogleAuthProvider;
         import com.google.firebase.auth.TwitterAuthProvider;
-        import com.google.firebase.database.DatabaseReference;
-        import com.google.firebase.database.FirebaseDatabase;
         import com.twitter.sdk.android.core.Callback;
         import com.twitter.sdk.android.core.Result;
         import com.twitter.sdk.android.core.Twitter;
         import com.twitter.sdk.android.core.TwitterException;
         import com.twitter.sdk.android.core.TwitterSession;
         import com.twitter.sdk.android.core.identity.TwitterLoginButton;
-
-        import java.util.ArrayList;
-        import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
