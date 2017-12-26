@@ -99,6 +99,11 @@ public class ViewRecipe extends AppCompatActivity {
 
     private Boolean isFav;
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

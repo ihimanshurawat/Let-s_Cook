@@ -40,27 +40,27 @@ import java.util.List;
 
 public class RecipesFragment extends Fragment {
 
-    RecyclerView vegetarianRecipeRecyclerView;
-    List<Recipe> vegetarianRecipeList;
-    RecipeAdapter vegetarianRecipeAdapter;
+    private RecyclerView vegetarianRecipeRecyclerView;
+    private List<Recipe> vegetarianRecipeList;
+    private RecipeAdapter vegetarianRecipeAdapter;
 
-    RecyclerView nonVegetarianRecipeRecyclerView;
-    List<Recipe> nonVegetarianRecipeList;
-    RecipeAdapter nonVegetarianRecipeAdapter;
+    private RecyclerView nonVegetarianRecipeRecyclerView;
+    private List<Recipe> nonVegetarianRecipeList;
+    private RecipeAdapter nonVegetarianRecipeAdapter;
 
-    RecyclerView dessertsRecyclerView;
-    List<Recipe> dessertsRecipeList;
-    RecipeAdapter dessertsRecipeAdapter;
+    private RecyclerView dessertsRecyclerView;
+    private List<Recipe> dessertsRecipeList;
+    private RecipeAdapter dessertsRecipeAdapter;
 
-    DatabaseReference databaseReference;
+    private DatabaseReference databaseReference;
 
-    FirebaseFirestore db;
+    private FirebaseFirestore db;
 
     //BookLoading References
-    BookLoading vegetarianBookLoading,nonVegetarianBookLoading,dessertsBookLoading;
+    private BookLoading vegetarianBookLoading,nonVegetarianBookLoading,dessertsBookLoading;
 
     //User Reference
-    User existingUser;
+    private User existingUser;
 
     @Nullable
     @Override
@@ -69,8 +69,8 @@ public class RecipesFragment extends Fragment {
 
         Bundle bundle=getArguments();
 
-        db= FireStoreUtility.getFirebaseFirestore();
-        databaseReference= DatabaseUtility.getDatabase().getReference();
+        db=FireStoreUtility.getFirebaseFirestore();
+        databaseReference=DatabaseUtility.getDatabase().getReference();
 
         vegetarianBookLoading=v.findViewById(R.id.recipes_fragment_vegetarian_book_loading);
         nonVegetarianBookLoading=v.findViewById(R.id.recipes_fragment_non_vegetarian_book_loading);

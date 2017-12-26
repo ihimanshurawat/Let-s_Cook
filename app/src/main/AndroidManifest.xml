@@ -42,7 +42,11 @@
             android:parentActivityName=".AllRecipes"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ViewRecipe" />
-        <activity android:name=".Activity.FavouriteRecipe"></activity>
+        <activity android:name=".Activity.FavouriteRecipe"
+            android:parentActivityName=".AllRecipes"
+            android:label="Favourites"
+            android:screenOrientation="portrait"
+            />
     </application>
 
 </manifest>

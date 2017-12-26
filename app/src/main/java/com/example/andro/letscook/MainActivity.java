@@ -17,8 +17,11 @@ package com.example.andro.letscook;
         import android.util.Log;
         import android.view.HapticFeedbackConstants;
         import android.view.View;
+        import android.view.ViewGroup;
         import android.widget.Button;
         import android.widget.Toast;
+
+        import com.crashlytics.android.Crashlytics;
         import com.example.andro.letscook.Support.FirebaseAuthUtility;
         import com.google.android.gms.auth.api.Auth;
         import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -46,7 +49,7 @@ package com.example.andro.letscook;
         import java.util.ArrayList;
         import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements NetworkStateReceiver.NetworkStateReceiverListener{
+public class MainActivity extends AppCompatActivity {
 
 
 //Setting Up Google SignIn
@@ -67,9 +70,6 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
         //Vibrator Reference
         private Vibrator vibrator;
 
-        //Network State Broadcast Receiver Reference
-        private NetworkStateReceiver networkStateReceiver;
-
         //FirebaseAuthStateListener
         FirebaseAuth.AuthStateListener loginStateListener;
 
@@ -89,8 +89,8 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
     protected void onDestroy() {
         super.onDestroy();
         mAuth.removeAuthStateListener(loginStateListener);
-        networkStateReceiver.removeListener(this);
-        this.unregisterReceiver(networkStateReceiver);
+        //networkStateReceiver.removeListener(this);
+        //this.unregisterReceiver(networkStateReceiver);
 
     }
 
@@ -111,11 +111,6 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
             mAuth= FirebaseAuthUtility.getAuth();
 
             user=mAuth.getCurrentUser();
-
-
-            networkStateReceiver = new NetworkStateReceiver(this);
-            networkStateReceiver.addListener(this);
-            this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
 
 
 
@@ -156,6 +151,50 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
                     updateUI(firebaseAuth.getCurrentUser());
                 }
             };
+
+            twitterSignIn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
+                    } else
+                        vibrator.vibrate(50);
+
+                    ConnectivityManager connectivityManager
+                            = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
+                    if(activeNetworkInfo!=null&&activeNetworkInfo.isConnected()){
+                        //To Intentionally Click TwitterLoginButton
+                        twitterLoginButton.performClick();
+                    }else{
+                        Snackbar.make(twitterSignIn,"Internet Required",BaseTransientBottomBar.LENGTH_SHORT).show();
+                    }
+
+                }
+            });
+
+            googleSignIn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
+                    } else
+                        vibrator.vibrate(50);
+
+                    ConnectivityManager connectivityManager
+                            = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+                    if(activeNetworkInfo!=null&&activeNetworkInfo.isConnected()){
+                        signIn();
+                    }else{
+                        Snackbar.make(googleSignIn,"Internet Required",BaseTransientBottomBar.LENGTH_SHORT).show();
+                    }
+
+                }
+            });
+
         }
 
 
@@ -226,67 +265,6 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
                 });
     }
 
-
-    @Override
-    public void onNetworkAvailable() {
-
-        twitterSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
-                } else
-                    vibrator.vibrate(50);
-
-                //To Intentionally Click TwitterLoginButton
-                twitterLoginButton.performClick();
-
-            }
-        });
-
-        googleSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-
-                    vibrator.vibrate(VibrationEffect.createOneShot(50,VibrationEffect.DEFAULT_AMPLITUDE));
-                }
-                else
-                    vibrator.vibrate(50);
-                signIn();
-            }
-        });
-    }
-
-    @Override
-    public void onNetworkUnavailable() {
-        Toast.makeText(this,"Connect to the Internet for Better Experience",Toast.LENGTH_LONG).show();
-
-        googleSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                    vibrator.vibrate(VibrationEffect.createOneShot(50,VibrationEffect.DEFAULT_AMPLITUDE));
-                }
-                else
-                    vibrator.vibrate(50);
-                Snackbar.make(googleSignIn,"No Internet Detected",Snackbar.LENGTH_LONG).show();
-            }
-        });
-        twitterSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                    vibrator.vibrate(VibrationEffect.createOneShot(50,VibrationEffect.DEFAULT_AMPLITUDE));
-                }
-                else
-                    vibrator.vibrate(50);
-                Snackbar.make(googleSignIn,"No Internet Detected",Snackbar.LENGTH_LONG).show();
-            }
-        });
-    }
-
     public void updateUI(FirebaseUser user){
         if(user!=null){
             startActivity(new Intent(MainActivity.this,AllRecipes.class));
@@ -294,60 +272,5 @@ public class MainActivity extends AppCompatActivity implements NetworkStateRecei
     }
 
 
-}
-
-
-class NetworkStateReceiver extends BroadcastReceiver {
-
-    private ConnectivityManager mManager;
-    private List<NetworkStateReceiverListener> mListeners;
-    private boolean mConnected;
-
-    public NetworkStateReceiver(Context context) {
-        mListeners = new ArrayList<NetworkStateReceiverListener>();
-        mManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        checkStateChanged();
-    }
-
-    public void onReceive(Context context, Intent intent) {
-        if (intent == null || intent.getExtras() == null)
-            return;
-
-        if (checkStateChanged()) notifyStateToAll();
-    }
-
-    private boolean checkStateChanged() {
-        boolean prev = mConnected;
-        NetworkInfo activeNetwork = mManager.getActiveNetworkInfo();
-        mConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-        return prev != mConnected;
-    }
-
-    private void notifyStateToAll() {
-        for (NetworkStateReceiverListener listener : mListeners) {
-            notifyState(listener);
-        }
-    }
-
-    private void notifyState(NetworkStateReceiverListener listener) {
-        if (listener != null) {
-            if (mConnected) listener.onNetworkAvailable();
-            else listener.onNetworkUnavailable();
-        }
-    }
-
-    public void addListener(NetworkStateReceiverListener l) {
-        mListeners.add(l);
-        notifyState(l);
-    }
-
-    public void removeListener(NetworkStateReceiverListener l) {
-        mListeners.remove(l);
-    }
-
-    public interface NetworkStateReceiverListener {
-         void onNetworkAvailable();
-         void onNetworkUnavailable();
-    }
 }
 

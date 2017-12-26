@@ -15,12 +15,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.crashlytics.android.Crashlytics;
 import com.example.andro.letscook.Activity.EditProfile;
 import com.example.andro.letscook.Activity.FavouriteRecipe;
 import com.example.andro.letscook.Fragments.AddRecipeFragment;
@@ -39,44 +42,45 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
+import io.fabric.sdk.android.Fabric;
+
 public class AllRecipes extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     //Profile Items
-    ImageView profileImageView;
-    TextView nameTextView;
-    TextView emailTextView;
+    private ImageView profileImageView;
+    private TextView nameTextView;
+    private TextView emailTextView;
 
     //User Credentials
-    String userEmail;
-    String userName;
-    String userProfile;
+    private String userEmail;
+    private String userName;
+    private String userProfile;
 
     //Edit Profile
-    TextView editProfile;
+    private TextView editProfile;
 
     //Firebase User
-    FirebaseUser currentUser;
+    private FirebaseUser currentUser;
     //FirebaseAuth Reference
-    FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
     //Firebase DatabaseReference
-    DatabaseReference databaseReference;
+    private DatabaseReference databaseReference;
     //FireStore
-    FirebaseFirestore db;
+    private FirebaseFirestore db;
 
     //Drawer Reference
-    DrawerLayout drawer;
+    private DrawerLayout drawer;
 
     //FragmentManager Reference
-    FragmentManager fragmentManager;
-    String arr[];
+    private FragmentManager fragmentManager;
+    private String arr[];
 
-    String key;
+    private String key;
 
-    User existingUser;
+    private User existingUser;
 
-    Context context;
-
+    private Context context;
 
 
 
@@ -312,4 +316,7 @@ public class AllRecipes extends AppCompatActivity
             //Toast.makeText(AllRecipes.this,"Unable to Access Database",Toast.LENGTH_SHORT).show();
         }
     };
+
+
+
 }
