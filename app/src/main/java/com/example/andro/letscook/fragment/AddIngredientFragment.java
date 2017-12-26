@@ -19,21 +19,21 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 public class AddIngredientFragment extends Fragment {
 
 
-    FragmentManager fragmentManager;
-    DatabaseReference databaseReference;
+    private FragmentManager fragmentManager;
+    private DatabaseReference databaseReference;
 
-    MaterialEditText headingMaterialEditText,ingredient1MaterialEditText,ingredient2MaterialEditText,
+    private MaterialEditText headingMaterialEditText,ingredient1MaterialEditText,ingredient2MaterialEditText,
     ingredient3MaterialEditText,ingredient4MaterialEditText,ingredient5MaterialEditText,ingredient6MaterialEditText,
     ingredient7MaterialEditText,ingredient8MaterialEditText,ingredient9MaterialEditText,ingredient10MaterialEditText,
     ingredient11MaterialEditText,ingredient12MaterialEditText,ingredient13MaterialEditText,ingredient14MaterialEditText,
     ingredient15MaterialEditText;
 
-    Button addMoreIngredientButton,submitButton;
+    private Button addMoreIngredientButton,submitButton;
 
-    String heading,ingredient_1,ingredient_2,ingredient_3,ingredient_4,ingredient_5,ingredient_6,ingredient_7,
-            ingredient_8,ingredient_9,ingredient_10,ingredient_11,ingredient_12,ingredient_13,ingredient_14,ingredient_15;
+    private String heading,ingredient1,ingredient2,ingredient3,ingredient4,ingredient5,ingredient6,ingredient7,
+            ingredient8,ingredient9,ingredient10,ingredient11,ingredient12,ingredient13,ingredient14,ingredient15;
 
-    String id;
+    private String id;
 
 
     @Nullable
@@ -87,7 +87,6 @@ public class AddIngredientFragment extends Fragment {
             }
         });
 
-
         return v;
     }
 
@@ -120,97 +119,97 @@ public class AddIngredientFragment extends Fragment {
         }
         //Ingredient_1
         if(ingredient1MaterialEditText.getText().length()==0){
-            ingredient_1=null;
+            ingredient1=null;
         }else{
-            ingredient_1=ingredient1MaterialEditText.getText().toString();
+            ingredient1=ingredient1MaterialEditText.getText().toString();
         }
         //Ingredient_2
         if(ingredient2MaterialEditText.getText().length()==0){
-            ingredient_2=null;
+            ingredient2=null;
         }else{
-            ingredient_2=ingredient2MaterialEditText.getText().toString();
+            ingredient2=ingredient2MaterialEditText.getText().toString();
         }
         //Ingredient_3
         if(ingredient3MaterialEditText.getText().length()==0){
-            ingredient_3=null;
+            ingredient3=null;
         }else{
-            ingredient_3=ingredient3MaterialEditText.getText().toString();
+            ingredient3=ingredient3MaterialEditText.getText().toString();
         }
         //Ingredient_4
         if(ingredient4MaterialEditText.getText().length()==0){
-            ingredient_4=null;
+            ingredient4=null;
         }else{
-            ingredient_4=ingredient4MaterialEditText.getText().toString();
+            ingredient4=ingredient4MaterialEditText.getText().toString();
         }
         //Ingredient_5
         if(ingredient5MaterialEditText.getText().length()==0){
-            ingredient_5=null;
+            ingredient5=null;
         }else{
-            ingredient_5=ingredient5MaterialEditText.getText().toString();
+            ingredient5=ingredient5MaterialEditText.getText().toString();
         }
         //Ingredient_6
         if(ingredient6MaterialEditText.getText().length()==0){
-            ingredient_6=null;
+            ingredient6=null;
         }else{
-            ingredient_6=ingredient6MaterialEditText.getText().toString();
+            ingredient6=ingredient6MaterialEditText.getText().toString();
         }
         //Ingredient_7
         if(ingredient7MaterialEditText.getText().length()==0){
-            ingredient_7=null;
+            ingredient7=null;
         }else{
-            ingredient_7=ingredient7MaterialEditText.getText().toString();
+            ingredient7=ingredient7MaterialEditText.getText().toString();
         }
         //Ingredient_8
         if(ingredient8MaterialEditText.getText().length()==0){
-            ingredient_8=null;
+            ingredient8=null;
         }else{
-            ingredient_8=ingredient8MaterialEditText.getText().toString();
+            ingredient8=ingredient8MaterialEditText.getText().toString();
         }
         //Ingredient_9
         if(ingredient9MaterialEditText.getText().length()==0){
-            ingredient_9=null;
+            ingredient9=null;
         }else{
-            ingredient_9=ingredient9MaterialEditText.getText().toString();
+            ingredient9=ingredient9MaterialEditText.getText().toString();
         }
         //Ingredient_10
         if(ingredient10MaterialEditText.getText().length()==0){
-            ingredient_10=null;
+            ingredient10=null;
         }else{
-            ingredient_10=ingredient10MaterialEditText.getText().toString();
+            ingredient10=ingredient10MaterialEditText.getText().toString();
         }
         //Ingredient_11
         if(ingredient11MaterialEditText.getText().length()==0){
-            ingredient_11=null;
+            ingredient11=null;
         }else{
-            ingredient_11=ingredient11MaterialEditText.getText().toString();
+            ingredient11=ingredient11MaterialEditText.getText().toString();
         }
         //Ingredient_12
         if(ingredient12MaterialEditText.getText().length()==0){
-            ingredient_12=null;
+            ingredient12=null;
         }else{
-            ingredient_12=ingredient12MaterialEditText.getText().toString();
+            ingredient12=ingredient12MaterialEditText.getText().toString();
         }
         //Ingredient_13
         if(ingredient13MaterialEditText.getText().length()==0){
-            ingredient_13=null;
+            ingredient13=null;
         }else{
-            ingredient_13=ingredient13MaterialEditText.getText().toString();
+            ingredient13=ingredient13MaterialEditText.getText().toString();
         }
         //Ingredient_14
         if(ingredient14MaterialEditText.getText().length()==0){
-            ingredient_14=null;
+            ingredient14=null;
         }else{
-            ingredient_14=ingredient14MaterialEditText.getText().toString();
+            ingredient14=ingredient14MaterialEditText.getText().toString();
         }
         //Ingredient_2
         if(ingredient15MaterialEditText.getText().length()==0){
-            ingredient_15=null;
+            ingredient15=null;
         }else{
-            ingredient_15=ingredient15MaterialEditText.getText().toString();
+            ingredient15=ingredient15MaterialEditText.getText().toString();
         }
 
-        Ingredients ingredients=new Ingredients(heading,ingredient_1,ingredient_2,ingredient_3,ingredient_4,ingredient_5,ingredient_6,ingredient_7,
-                ingredient_8,ingredient_9,ingredient_10,ingredient_11,ingredient_12,ingredient_13,ingredient_14,ingredient_15);
+        Ingredients ingredients=new Ingredients(heading,ingredient1,ingredient2,ingredient3,ingredient4,ingredient5,ingredient6,ingredient7,
+                ingredient8,ingredient9,ingredient10,ingredient11,ingredient12,ingredient13,ingredient14,ingredient15);
         databaseReference.child("ingredients").child(id).push().setValue(ingredients);
     }
 }

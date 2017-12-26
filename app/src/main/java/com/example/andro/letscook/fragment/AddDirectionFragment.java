@@ -42,10 +42,8 @@ public class AddDirectionFragment extends Fragment {
         Bundle bundle=getArguments();
         id=bundle.getString("id");
 
-
         databaseReference= DatabaseUtility.getDatabase().getReference();
         fragmentManager=getActivity().getSupportFragmentManager();
-
 
         //MaterialEditText
         headingMaterialEditText=v.findViewById(R.id.add_direction_fragment_heading_edit_text);

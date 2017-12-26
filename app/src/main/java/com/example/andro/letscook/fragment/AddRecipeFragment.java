@@ -30,6 +30,7 @@ import com.google.firebase.storage.UploadTask;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -122,6 +123,7 @@ public class AddRecipeFragment extends Fragment {
                 type=recipeTypeMaterialEditText.getText().toString();
                 subType=recipeSubTypeMaterialEditText.getText().toString();
                 String []ingredient=recipeMainIngredientMaterialEditText.getText().toString().split(":");
+
                 for(String i:ingredient){
                     mainIngredient.add(i);
                 }
@@ -142,30 +144,26 @@ public class AddRecipeFragment extends Fragment {
         if(resultCode==RESULT_OK)
         {
             Uri selectedimg = data.getData();
-            Log.i("ImageData",selectedimg+"");
-            StorageReference storageReference=firebaseStorage.getReference().child("recipes").child(id);
-            storageReference.putFile(selectedimg).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    recipeUploadImage.setEnabled(true);
-                    recipeImageUrl=taskSnapshot.getDownloadUrl()+"";
-                    Toast.makeText(getContext(),"Image Uploaded",Toast.LENGTH_SHORT).show();
-
-                }
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-
-
-                @Override
-                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                    recipeUploadImage.setEnabled(false);
-
-                }
-            });
+            if(selectedimg!=null) {
+                Log.i("ImageData", selectedimg + "");
+                StorageReference storageReference = firebaseStorage.getReference().child("recipes").child(id);
+                storageReference.putFile(selectedimg).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        recipeUploadImage.setEnabled(true);
+                        recipeImageUrl = taskSnapshot.getDownloadUrl() + "";
+                        Toast.makeText(getContext(), "Image Uploaded", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
 
 
-
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        recipeUploadImage.setEnabled(false);
+                    }
+                });
+            }
         }
-
     }
     public void launchAddIngredientFragment(String id){
         AddIngredientFragment addIngredientFragment=new AddIngredientFragment();
