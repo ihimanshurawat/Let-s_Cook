@@ -85,7 +85,6 @@ public class EditProfile extends AppCompatActivity {
         Intent intent=getIntent();
         if(intent.getExtras()!=null){
             key=intent.getStringExtra("Key");
-
         }
 
         databaseReference= DatabaseUtility.getDatabase().getReference();
@@ -169,7 +168,6 @@ public class EditProfile extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 onSaveClicked();
-                finish();
             }
         });
 
@@ -237,32 +235,33 @@ public class EditProfile extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, final Intent data) {
-        if(resultCode==RESULT_OK)
-        {
+        if(resultCode==RESULT_OK) {
             Uri selectedimg = data.getData();
-            Log.i("ImageData",selectedimg+"");
-            StorageReference storageReference=firebaseStorage.getReference().child("users").child(currentUser.getUid());
-            storageReference.putFile(selectedimg).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+            Log.i("ImageData", selectedimg + "");
+            if (selectedimg != null) {
+                StorageReference storageReference = firebaseStorage.getReference().child("users").child(currentUser.getUid());
+                storageReference.putFile(selectedimg).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                    databaseReference.child("users").child(key).child("profileUrl").setValue(taskSnapshot.getDownloadUrl()+"");
-                    uploadButton.setEnabled(true);
-                    profileImageView.setVisibility(View.VISIBLE);
-                    rotateLoading.stop();
-
-
-                }
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        databaseReference.child("users").child(key).child("profileUrl").setValue(taskSnapshot.getDownloadUrl() + "");
+                        uploadButton.setEnabled(true);
+                        profileImageView.setVisibility(View.VISIBLE);
+                        rotateLoading.stop();
 
 
-                @Override
-                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                    rotateLoading.start();
-                    profileImageView.setVisibility(View.INVISIBLE);
-                    uploadButton.setEnabled(false);
-                }
-            });
+                    }
+                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+
+
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        rotateLoading.start();
+                        profileImageView.setVisibility(View.INVISIBLE);
+                        uploadButton.setEnabled(false);
+                    }
+                });
+            }
         }
     }
 
@@ -298,12 +297,14 @@ public class EditProfile extends AppCompatActivity {
                         databaseReference.child("users").child(key).child("description")
                                 .setValue(descriptionEditText.getText().toString().trim());
                         Toast.makeText(EditProfile.this, "Changes Saved", Toast.LENGTH_SHORT).show();
+                        finish();
 
                     }
                     if (!(nameEditText.getText().toString().equals(dataSnapshot.child("name").getValue().toString()))) {
                         name = nameEditText.getText().toString().trim();
                         databaseReference.child("users").child(key).child("name").setValue(name);
                         Toast.makeText(EditProfile.this, "Changes Saved", Toast.LENGTH_SHORT).show();
+                        finish();
                     }
                 }
 

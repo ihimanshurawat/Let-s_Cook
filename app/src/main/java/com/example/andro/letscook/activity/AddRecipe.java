@@ -17,12 +17,13 @@ import java.util.List;
 
 public class AddRecipe extends AppCompatActivity {
 
-    FragmentManager fragmentManager;
+    private FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_recipe);
+        setTitle("Add Recipe");
         fragmentManager=getSupportFragmentManager();
 
         AddRecipeFragment addRecipeFragment=new AddRecipeFragment();
