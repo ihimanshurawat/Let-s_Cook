@@ -20,19 +20,19 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class AddDirectionFragment extends Fragment {
 
-    DatabaseReference databaseReference;
+    private DatabaseReference databaseReference;
 
-    FragmentManager fragmentManager;
+    private FragmentManager fragmentManager;
 
-    String id;
+    private String id;
 
-    String heading,step1,step2,step3,step4,step5,step6,step7,step8,step9,step10,step11,step12,step13,step14,step15;
+    private String heading,step1,step2,step3,step4,step5,step6,step7,step8,step9,step10,step11,step12,step13,step14,step15;
 
-    MaterialEditText headingMaterialEditText,step1MaterialEditText,step2MaterialEditText,step3MaterialEditText,step4MaterialEditText,
+    private MaterialEditText headingMaterialEditText,step1MaterialEditText,step2MaterialEditText,step3MaterialEditText,step4MaterialEditText,
     step5MaterialEditText,step6MaterialEditText,step7MaterialEditText,step8MaterialEditText,step9MaterialEditText,step10MaterialEditText,
     step11MaterialEditText,step12MaterialEditText,step13MaterialEditText,step14MaterialEditText,step15MaterialEditText;
 
-    Button addMoreDirectionButton,submitButton;
+    private Button addMoreDirectionButton,submitButton;
 
     @Nullable
     @Override
